@@ -1,0 +1,33 @@
+---
+---
+
+div.name-header {
+	border-bottom: 2px solid #e67e22;
+	padding: 20px 0 0;
+}
+
+ul.socialbar {
+	li {
+		display: inline-block;
+		border-radius: 50px;
+		width: 50px;
+		height: 50px;
+		background-color: #e74c3c;
+		line-height: 50px;
+		transition-duration: .7s;
+		text-align: center;
+		&:hover {
+			background-color: #f39c12;
+			a {
+				color: #9b59b6;
+			}
+		}
+	}
+	a {
+		position: relative;
+		color: #2c3e50;
+		i {
+			vertical-align: middle;
+		}
+	}
+}
