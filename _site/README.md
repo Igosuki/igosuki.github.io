@@ -11,5 +11,5 @@ Use this to overcome the gh-pages shortcoming :
 	- `git checkout -b master;` 
 	- `git filter-branch --subdirectory-filter _site/ -f;`
 	- `git checkout source;` 
-	- `git push --all origin;};
+	- `git push --all origin;};`
 * `f"`
