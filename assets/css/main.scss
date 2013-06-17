@@ -2,17 +2,120 @@
 ---
 
 $grainedMonochrome:	"../img/100-90-5-monochrome.png" !default;
+$mainBgColor: #fff !default;
+$borderColor:	#e67e22 !default;
+$btnBgColor:	#e74c3c !default; 
+$altBtnBgColor:	#f39c12 !default; 
+$altTextColor: 	#9b59b6 !default;
+$socialBtnRadius:	40px !default;
+$inactiveLinkColor: #2c3e50 !default;
 
+//Top display stuff
 body {
 	background: url("#{$grainedMonochrome}");
 	background-repeat: repeat;
 	background-position: 0 0;
 	background-color: #eee; 
 	.container {
-		background: #fff;
+		background: $mainBgColor;
 	}
+}
+
+a {
+	color: $inactiveLinkColor;
 }
 
 .main-container {
 	height: 100%;
+}
+
+div.name-header {
+	border-bottom: 2px solid $borderColor;
+	padding: 20px 0 0;
+	h1 {
+		line-height: 20px;
+	}
+}
+
+@mixin text-transform {
+	&:hover {
+		> a {
+			color: $altTextColor;
+		}
+		background-color: $altBtnBgColor;
+	}	
+}
+
+@mixin zone-inset {
+	&:hover {
+		transition-duration: .5s;
+		-webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
+		box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
+	}
+}
+
+//Social bar and buttons
+ul.socialbar {
+	margin-bottom: 0px;
+	li {
+		display: inline-block;
+		border-radius: $socialBtnRadius $socialBtnRadius 0 0;
+		margin: 0px 2px 0px 2px;
+		width: $socialBtnRadius;
+		height: $socialBtnRadius;
+		background-color: $btnBgColor;
+		line-height: $socialBtnRadius;
+		transition-duration: .7s;
+		text-align: center;
+		@include text-transform;			
+	}
+	a {
+		position: relative;
+		color: $inactiveLinkColor;
+		i {
+			vertical-align: middle;
+		}
+	}
+}
+
+//Navbar
+.navbar-inner {
+	padding-left: 0px;
+	border-bottom: 2px solid $borderColor;
+	border-top: 0;
+	border-right: 0;
+	border-left: 0;
+	background: $mainBgColor;
+	.nav {
+		li:first-child {
+			padding-left: 20px;
+		}
+		> li {
+			@include text-transform;
+		}
+		li {
+			a {
+				color: $inactiveLinkColor;
+			}
+			@include zone-inset;
+		}
+	}
+}
+
+.well {
+	
+}
+
+small.highlight {
+	color: $borderColor;	
+}
+
+.posts {
+	list-style: none;
+	li {
+		display: block;
+		span {
+			margin-left: 5px;
+		}
+	}
 }
