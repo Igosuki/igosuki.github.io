@@ -1,0 +1,11 @@
+---
+---
+
+$grainedMonochrome:	"../img/100-90-5-monochrome.png" !default;
+
+html {
+	background: url("#{$grainedMonochrome}");
+	background-repeat: repeat;
+	background-position: 0 0;
+	background-color: #eee; 
+}
