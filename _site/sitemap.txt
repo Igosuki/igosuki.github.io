@@ -5,12 +5,14 @@ http://igosuki.github.io/assets/css/main.css
 http://igosuki.github.io/atom.xml
 http://igosuki.github.io/categories.html
 http://igosuki.github.io/index.html
+http://igosuki.github.io/music_therapy.html
 http://igosuki.github.io/new-page.html
 http://igosuki.github.io/pages.html
 http://igosuki.github.io/resume.html
 http://igosuki.github.io/rss.xml
 http://igosuki.github.io/sitemap.txt
 http://igosuki.github.io/tags.html
+http://igosuki.github.io/tutorials.html
 
 http://igosuki.github.io/2013/06/14/hello-world
 http://igosuki.github.io/lessons/2011/12/29/jekyll-introduction

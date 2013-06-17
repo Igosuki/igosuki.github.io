@@ -16,7 +16,8 @@ div.name-header {
   border-bottom: 2px solid #e67e22;
   padding: 20px 0 0; }
   div.name-header h1 {
-    line-height: 20px; }
+    line-height: 20px;
+    text-align: center; }
 
 ul.socialbar {
   margin-bottom: 0px; }
