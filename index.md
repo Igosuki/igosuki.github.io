@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Hello World!
-tagline: Supporting tagline
+title: Gepsens
+tagline: To burn always with this hard, gemlike flame, to maintain this ecstasy, is success in life. - Walter Pater
 ---
 {% include JB/setup %}
 

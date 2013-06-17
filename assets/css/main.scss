@@ -3,9 +3,16 @@
 
 $grainedMonochrome:	"../img/100-90-5-monochrome.png" !default;
 
-html {
+body {
 	background: url("#{$grainedMonochrome}");
 	background-repeat: repeat;
 	background-position: 0 0;
 	background-color: #eee; 
+	.container {
+		background: #fff;
+	}
+}
+
+.main-container {
+	height: 100%;
 }
