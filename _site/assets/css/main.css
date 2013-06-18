@@ -1,4 +1,5 @@
 body {
+  font-size: 18px;
   background: url("../img/100-90-5-monochrome.png");
   background-repeat: repeat;
   background-position: 0 0;
@@ -29,12 +30,15 @@ ul.socialbar {
     height: 40px;
     background-color: #e74c3c;
     line-height: 40px;
-    transition-duration: .7s;
+    transition-duration: 0.5s;
     text-align: center; }
     ul.socialbar li:hover {
       background-color: #f39c12; }
       ul.socialbar li:hover > a {
-        color: #9b59b6; }
+        border-radius: 0 0 20px 20px;
+        color: #6c71c4;
+        background-color: #f39c12;
+        transition-duration: 0.5s; }
   ul.socialbar a {
     position: relative;
     color: #2c3e50; }
@@ -43,24 +47,36 @@ ul.socialbar {
 
 .navbar-inner {
   padding-left: 0px;
-  border-bottom: 2px solid #e67e22;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  border-bottom: 0px;
   border-top: 0;
   border-right: 0;
   border-left: 0;
   background: white; }
-  .navbar-inner .nav > li:hover {
+  .navbar-inner .nav-interactive > li:hover {
     background-color: #f39c12; }
-    .navbar-inner .nav > li:hover > a {
-      color: #9b59b6; }
-  .navbar-inner .nav li a {
-    color: #2c3e50; }
-  .navbar-inner .nav li:hover {
-    transition-duration: .5s;
-    -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #e74c3c 0 1px 7px 0 inset;
-    box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #e74c3c 0 1px 7px 0 inset; }
-
-small.highlight {
-  color: #e67e22; }
+    .navbar-inner .nav-interactive > li:hover > a {
+      border-radius: 0 0 20px 20px;
+      color: #6c71c4;
+      background-color: #f39c12;
+      transition-duration: 0.5s; }
+  .navbar-inner .nav-interactive li {
+    border-radius: 0 0 20px 20px; }
+    .navbar-inner .nav-interactive li a {
+      color: #2c3e50; }
+    .navbar-inner .nav-interactive li:hover, .navbar-inner .nav-interactive li.active {
+      background-color: #f39c12;
+      transition-duration: 0.5s;
+      -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #e74c3c 0 1px 7px 0 inset;
+      box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #e74c3c 0 1px 7px 0 inset; }
+      .navbar-inner .nav-interactive li:hover span, .navbar-inner .nav-interactive li.active span {
+        font-weight: bold; }
+      .navbar-inner .nav-interactive li:hover > a, .navbar-inner .nav-interactive li.active > a {
+        border-radius: 0 0 20px 20px;
+        color: #6c71c4;
+        background-color: #f39c12;
+        transition-duration: 0.5s; }
 
 .navbar-search .search-query:focus {
   border-color: #e67e22;
@@ -76,3 +92,6 @@ small.highlight {
 
 .visible ul.typeahead {
   display: block; }
+
+small.highlight {
+  color: #e67e22; }

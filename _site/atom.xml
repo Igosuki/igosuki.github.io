@@ -4,7 +4,7 @@
  <title>Gepsens</title>
  <link href="http://igosuki.github.io/" rel="self"/>
  <link href="http://igosuki.github.io"/>
- <updated>2013-06-18T15:51:35+02:00</updated>
+ <updated>2013-06-18T17:54:54+02:00</updated>
  <id>http://igosuki.github.io</id>
  <author>
    <name>Guillaume Balaine</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Under Construction</title>
-   <link href="http://igosuki.github.io/2013/06/14/hello-world"/>
+   <link href="http://igosuki.github.io/2013/06/14/under-construction"/>
    <updated>2013-06-14T00:00:00+02:00</updated>
-   <id>http://igosuki.github.io/2013/06/14/hello-world</id>
+   <id>http://igosuki.github.io/2013/06/14/under-construction</id>
    <content type="html"></content>
  </entry>
  

@@ -1,17 +1,41 @@
 ---
 ---
 
+//Solarized
+$base03:    #002b36;
+$base02:    #073642;
+$base01:    #586e75;
+$base00:    #657b83;
+$base0:     #839496;
+$base1:     #93a1a1;
+$base2:     #eee8d5;
+$base3:     #fdf6e3;
+$yellow:    #b58900;
+$orange:    #cb4b16;
+$red:       #dc322f;
+$magenta:   #d33682;
+$violet:    #6c71c4;
+$blue:      #268bd2;
+$cyan:      #2aa198;
+$green:     #859900;
+$fontstack: "ff-din-web-pro-1","ff-din-web-pro-2",sans-serif;
+$hmargin:   70px;
+$vmargin:   20px;
+
+//Vars
 $grainedMonochrome:	"../img/100-90-5-monochrome.png" !default;
 $mainBgColor: #fff !default;
 $borderColor:	#e67e22 !default;
 $btnBgColor:	#e74c3c !default; 
 $altBtnBgColor:	#f39c12 !default; 
-$altTextColor: 	#9b59b6 !default;
+$altTextColor: 	$violet !default;
 $socialBtnRadius:	40px !default;
 $inactiveLinkColor: #2c3e50 !default;
+$basicDelay: .5s !default;
 
 //Top display stuff
 body {
+	font-size: 18px;
 	background: url("#{$grainedMonochrome}");
 	background-repeat: repeat;
 	background-position: 0 0;
@@ -39,20 +63,23 @@ div.name-header {
 }
 
 @mixin text-transform {
-	&:hover {
-		> a {
-			color: $altTextColor;
-		}
+	> a {
+		@include bottom-corner-round;
+		color: $altTextColor;
 		background-color: $altBtnBgColor;
-	}	
+		transition-duration: $basicDelay;
+	}
+	background-color: $altBtnBgColor;
 }
 
 @mixin zone-inset {
-	&:hover {
-		transition-duration: .5s;
-		-webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
-		box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
-	}
+	transition-duration: $basicDelay;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
+	box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
+}
+
+@mixin bottom-corner-round {
+	border-radius: 0 0 20px 20px; 
 }
 
 //Social bar and buttons
@@ -66,9 +93,11 @@ ul.socialbar {
 		height: $socialBtnRadius;
 		background-color: $btnBgColor;
 		line-height: $socialBtnRadius;
-		transition-duration: .7s;
+		transition-duration: $basicDelay;
 		text-align: center;
-		@include text-transform;			
+		&:hover {
+			@include text-transform;				
+		}
 	}
 	a {
 		position: relative;
@@ -82,30 +111,31 @@ ul.socialbar {
 //Navbar
 .navbar-inner {
 	padding-left: 0px;
-	border-bottom: 2px solid $borderColor;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	border-bottom: 0px;
 	border-top: 0;
 	border-right: 0;
 	border-left: 0;
 	background: $mainBgColor;
-	.nav {
-		> li {
+	.nav-interactive {
+		> li:hover {
 			@include text-transform;
 		}
 		li {
 			a {
 				color: $inactiveLinkColor;
 			}
-			@include zone-inset;
+			&:hover, &.active {
+				span {
+					font-weight: bold;
+				}
+				@include text-transform;
+				@include zone-inset;
+			}
+			@include bottom-corner-round;
 		}
 	}
-}
-
-.well {
-	
-}
-
-small.highlight {
-	color: $borderColor;	
 }
 
 .navbar-search .search-query:focus {
@@ -128,4 +158,8 @@ small.highlight {
 	ul.typeahead {
 		display: block;
 	}
+}
+
+small.highlight {
+	color: $borderColor;	
 }

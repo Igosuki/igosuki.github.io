@@ -47,3 +47,13 @@ function JekyllSearchController($scope, $location, $window) {
     };
     $scope.posts = JekyllApp.posts;
 }
+
+function NavController($scope, $location) {
+    $scope.navClass = function (page) {
+        var absUrl = $location.absUrl();
+        var currentPath = absUrl.substring(absUrl.lastIndexOf('/')).substring(1);
+        var currentRoute = currentPath || 'home';
+        return page === currentRoute ? 'active' : '';
+    };
+}
+
