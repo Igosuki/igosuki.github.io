@@ -88,9 +88,6 @@ ul.socialbar {
 	border-left: 0;
 	background: $mainBgColor;
 	.nav {
-		li:first-child {
-			padding-left: 20px;
-		}
 		> li {
 			@include text-transform;
 		}
@@ -111,6 +108,12 @@ small.highlight {
 	color: $borderColor;	
 }
 
+.navbar-search .search-query:focus {
+	border-color: $borderColor;
+	box-shadow: 0 0 10px $borderColor;
+	transition-duration: 0.2s;
+}
+
 .posts {
 	list-style: none;
 	li {
@@ -118,5 +121,11 @@ small.highlight {
 		span {
 			margin-left: 5px;
 		}
+	}
+}
+
+.visible {
+	ul.typeahead {
+		display: block;
 	}
 }

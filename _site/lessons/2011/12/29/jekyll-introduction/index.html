@@ -9,8 +9,11 @@
 
 	<!-- Enable responsive viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Libs -->
 	<link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/assets/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/flippant/flippant.css" rel="stylesheet">
+	<!-- Own CSS -->
 	<link href="/assets/css/cv.css" rel="stylesheet">
 	<link href="/assets/css/main.css" rel="stylesheet">
 
@@ -44,7 +47,7 @@
 					<div class="container-narrow">
 						<ul class="nav">
 							<li>
-								<a class="brand" href="/"><i class="icon-home"></i></a>
+								<a href="/"><i class="icon-home icon-large"></i></a>
 							</li>
 							
 				            
@@ -121,6 +124,27 @@
 
 
 
+				            <li>
+				            	<a onclick="javascript:flip()">
+				            		<i class="icon-plus icon-large"></i>
+				            	</a> 
+				            </li>
+						</ul>
+						<ul class="pull-right">
+							<li>
+								<div id="search-container" class="navbar-search" ng-app="JekyllApp" ng-controller="JekyllSearchController">
+									<input id="searchText" class="search-query" type="search" placeholder="Live Search Posts..." ng-model-instant ng-model="searchText" />
+									<div ng-class="{'visible': posts.length > 0 && searchText.trim().length > 0}">
+								    	<ul class="typeahead dropdown-menu">
+									      	<li ng-repeat="post in posts | filter:searchText">
+									        	<span ng-bind-html-unsafe="post.date | date:'MMM d, y' | highlight:searchText"></span> &raquo;
+									        	<a ng-href="{{ post.url }}" ng-click="externalLink()"
+									        	ng-bind-html-unsafe="post.title | highlight:searchText"></a>
+									      	</li>
+								    	</ul>
+							    	</div>
+								</div>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -131,7 +155,7 @@
 			<div class="span7"></div>
 		</div>
 		<div class="container-narrow">
-	      <div class="content">
+	      <div id="main-content" class="content">
 	        
 <div class="page-header">
   <h1>Jekyll Introduction <small>Supporting tagline</small></h1>
@@ -556,6 +580,39 @@ tags : [how-to, jekyll]
 	    </div>
 	</div>
 </div>
+<!-- JS Libs -->
+<script type="text/javascript" src="/assets/angular/angular.js"></script>
+<script type="text/javascript" src="/assets/flippant/flippant.js"></script>
+
+<!-- Custom code -->
+<script type="text/javascript" src="/assets/js/jekyllpostsearch.js"></script>
+<script type="text/javascript">
+   // Using liquid to populate JeykllApp.posts array
+   JekyllApp.posts = [
+{"title" : "Under Construction", "url" : "/2013/06/14/hello-world","date" : "14 Jun 2013"}
+,
+
+{"title" : "Jekyll Introduction", "url" : "/lessons/2011/12/29/jekyll-introduction","date" : "29 Dec 2011"}
+
+
+];
+
+;
+</script>
+<script type="text/javascript">
+var front = document.getElementById('main-content')
+	  , back_content = "&lt;h1>I'm the back!&lt;/h1>"
+	  , back;
+function flip() {
+	if(back) {
+		back.close();
+		back = null;
+	} else {
+		back = flippant.flip(front, back_content);
+	}
+}
+	//back.close();
+</script>
 
 </body>
 </html>

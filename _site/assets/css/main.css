@@ -48,8 +48,6 @@ ul.socialbar {
   border-right: 0;
   border-left: 0;
   background: white; }
-  .navbar-inner .nav li:first-child {
-    padding-left: 20px; }
   .navbar-inner .nav > li:hover {
     background-color: #f39c12; }
     .navbar-inner .nav > li:hover > a {
@@ -64,9 +62,17 @@ ul.socialbar {
 small.highlight {
   color: #e67e22; }
 
+.navbar-search .search-query:focus {
+  border-color: #e67e22;
+  box-shadow: 0 0 10px #e67e22;
+  transition-duration: 0.2s; }
+
 .posts {
   list-style: none; }
   .posts li {
     display: block; }
     .posts li span {
       margin-left: 5px; }
+
+.visible ul.typeahead {
+  display: block; }
