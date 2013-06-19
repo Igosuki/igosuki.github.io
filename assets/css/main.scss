@@ -66,6 +66,7 @@ div.name-header {
 	> a {
 		@include bottom-corner-round;
 		color: $altTextColor;
+		text-decoration: none;
 		background-color: $altBtnBgColor;
 		transition-duration: $basicDelay;
 	}

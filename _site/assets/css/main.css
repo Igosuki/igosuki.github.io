@@ -38,6 +38,7 @@ ul.socialbar {
       ul.socialbar li:hover > a {
         border-radius: 0 0 20px 20px;
         color: #6c71c4;
+        text-decoration: none;
         background-color: #f39c12;
         transition-duration: 0.5s; }
   ul.socialbar a {
@@ -60,6 +61,7 @@ ul.socialbar {
     .navbar-inner .nav-interactive > li:hover > a {
       border-radius: 0 0 20px 20px;
       color: #6c71c4;
+      text-decoration: none;
       background-color: #f39c12;
       transition-duration: 0.5s; }
   .navbar-inner .nav-interactive li {
@@ -76,6 +78,7 @@ ul.socialbar {
       .navbar-inner .nav-interactive li:hover > a, .navbar-inner .nav-interactive li.active > a {
         border-radius: 0 0 20px 20px;
         color: #6c71c4;
+        text-decoration: none;
         background-color: #f39c12;
         transition-duration: 0.5s; }
 
