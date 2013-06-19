@@ -22,7 +22,7 @@
 	<link href="{{ BASE_PATH }}{{ site.JB.atom_path }}" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
 	<link href="{{ BASE_PATH }}{{ site.JB.rss_path }}" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed"></head>
 <body>
-	<div class="container main-container" ng-app="JekyllApp">
+	<div class="container main-container" ng-app="gepsens">
 		<div class="row-fluid name-header">
 			<div class="span12">{% include themes/igosuki/socialbar.html %}</div>
 		</div>
@@ -75,9 +75,9 @@
 	      <hr>
 	      <footer>
 	        <p>&copy; {{ site.time | date: '%Y' }} {{ site.author.name }}
-	          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+	          with forked <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
 	          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a> 
-	          <a href="https://github.com/Igosuki/igosuki.github.io/tree/source" target="_newtab">Blog Source</a>
+	          <a href="https://github.com/Igosuki/igosuki.github.io/tree/source" target="_newtab"><i class="icon-chevron-sign-right"></i> Blog Source</a>
 	        </p>
 	      </footer>
 	    </div>
@@ -91,7 +91,7 @@
 <script type="text/javascript" src="{{BASE_PATH}}/assets/js/jekyllpostsearch.js"></script>
 <script type="text/javascript">
    // Using liquid to populate JeykllApp.posts array
-   JekyllApp.posts = {% include themes/igosuki/site_posts_as_json %};
+   gepsens.posts = {% include themes/igosuki/site_posts_as_json %};
 </script>
 <script type="text/javascript">
 var front = document.getElementById('main-content')

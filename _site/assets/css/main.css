@@ -31,7 +31,8 @@ ul.socialbar {
     background-color: #e74c3c;
     line-height: 40px;
     transition-duration: 0.5s;
-    text-align: center; }
+    text-align: center;
+    float: right; }
     ul.socialbar li:hover {
       background-color: #f39c12; }
       ul.socialbar li:hover > a {

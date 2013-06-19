@@ -2,11 +2,11 @@
  * Setup Module with `highlight` filter
  */
  
-var JekyllApp = angular.module('JekyllApp', [], function ($routeProvider, $locationProvider) {
+var gepsens = angular.module('gepsens', [], function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(false);
 });
  
-JekyllApp.filter('highlight', function () {
+gepsens.filter('highlight', function () {
     return function (text, filter) {
         if(text) {
             if (filter === '') {
@@ -45,7 +45,7 @@ function JekyllSearchController($scope, $location, $window) {
         // https://github.com/angular/angular.js/issues/1102
         $window.location.href = this.post.url;
     };
-    $scope.posts = JekyllApp.posts;
+    $scope.posts = gepsens.posts;
 }
 
 function NavController($scope, $location) {

@@ -95,6 +95,7 @@ ul.socialbar {
 		line-height: $socialBtnRadius;
 		transition-duration: $basicDelay;
 		text-align: center;
+		float: right;
 		&:hover {
 			@include text-transform;				
 		}
