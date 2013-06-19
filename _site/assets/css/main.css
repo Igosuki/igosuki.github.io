@@ -41,6 +41,8 @@ ul.socialbar {
         text-decoration: none;
         background-color: #f39c12;
         transition-duration: 0.5s; }
+      ul.socialbar li:hover a {
+        border-radius: 40px 40px 0 0; }
   ul.socialbar a {
     position: relative;
     color: #2c3e50; }
@@ -75,6 +77,8 @@ ul.socialbar {
       box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, #e74c3c 0 1px 7px 0 inset; }
       .navbar-inner .nav-interactive li:hover span, .navbar-inner .nav-interactive li.active span {
         font-weight: bold; }
+      .navbar-inner .nav-interactive li:hover a, .navbar-inner .nav-interactive li.active a {
+        border-radius: 0 0 40px 40px; }
       .navbar-inner .nav-interactive li:hover > a, .navbar-inner .nav-interactive li.active > a {
         border-radius: 0 0 20px 20px;
         color: #6c71c4;

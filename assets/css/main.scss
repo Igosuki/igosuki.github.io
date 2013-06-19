@@ -98,7 +98,10 @@ ul.socialbar {
 		text-align: center;
 		float: right;
 		&:hover {
-			@include text-transform;				
+			@include text-transform;	
+			a {
+				border-radius: $socialBtnRadius $socialBtnRadius 0 0;			
+			}
 		}
 	}
 	a {
@@ -131,6 +134,9 @@ ul.socialbar {
 			&:hover, &.active {
 				span {
 					font-weight: bold;
+				}
+				a {
+					border-radius: 0 0 $socialBtnRadius $socialBtnRadius;			
 				}
 				@include text-transform;
 				@include zone-inset;
