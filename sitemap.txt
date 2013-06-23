@@ -1,0 +1,12 @@
+
+/atom.xml
+/blog/archives/index.html
+/index.html
+/music-therapy.html
+/resume.html
+/robots.txt
+/rss.xml
+/sitemap.txt
+/tutorials.html
+
+/blog/2013/06/23/under-construction/
