@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Gepsens.com]]></title>
+  <link href="http://gepsens.com/atom.xml" rel="self"/>
+  <link href="http://gepsens.com/"/>
+  <updated>2013-06-23T23:32:05+02:00</updated>
+  <id>http://gepsens.com/</id>
+  <author>
+    <name><![CDATA[Guillaume Balaine]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
