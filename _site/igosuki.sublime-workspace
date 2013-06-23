@@ -1,0 +1,948 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"text",
+				"text-decoration"
+			],
+			[
+				"border",
+				"borderColor"
+			],
+			[
+				"social",
+				"socialBtnRadius"
+			],
+			[
+				"background",
+				"background-color"
+			],
+			[
+				"inline",
+				"inline-block"
+			],
+			[
+				"hobby",
+				"hobby1"
+			],
+			[
+				"list-",
+				"list-style-type"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "---\nlayout: page\ntitle: \"Resume\"\ndescription: \"My Resume\"\ngroup: navigation\n---\n{% include JB/setup %}\n\n<div class=\"row-fluid\">\n	<div class=\"span10\">\n		<span>Span10</span>\n	</div>\n	<div class=\"span2\">\n		<span>Span2</span>\n	</div>\n	<table>\n		<tr><td>\n	</table>\n</div>\n	\n",
+			"file": "resume.html",
+			"file_size": 239,
+			"file_write_time": 1371633809000000,
+			"settings":
+			{
+				"buffer_size": 269,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "assets/css/main.scss",
+			"settings":
+			{
+				"buffer_size": 3176,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "_includes/themes/igosuki/default.html",
+			"settings":
+			{
+				"buffer_size": 4457,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "_includes/themes/igosuki/socialbar.html",
+			"settings":
+			{
+				"buffer_size": 1224,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "index.md",
+			"settings":
+			{
+				"buffer_size": 526,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "_site/index.html",
+			"settings":
+			{
+				"buffer_size": 6379,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 47.0,
+		"selected_items":
+		[
+			[
+				"install pac",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"packag",
+				"Package Control: List Packages"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: instal",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: add",
+				"Package Control: Add Repository"
+			],
+			[
+				"comment",
+				"Toggle Comment"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ns",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: add re",
+				"Package Control: Add Repository"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 476.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/User/Distraction Free.sublime-settings",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/css/main.css",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/bootstrap/css/bootstrap-responsive.css",
+		"/Users/geps/Dev/src/igosuki.github.io/Gemfile",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/css/main.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/JB/pages_list",
+		"/Users/geps/Dev/src/igosuki.github.io/_posts/core-samples/2011-12-29-jekyll-introduction.md",
+		"/Users/geps/Dev/src/igosuki.github.io/_posts/2013-06-14-hello-world.md",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/igosuki/site_posts_as_json",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/bootstrap/css/bootstrap.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/igosuki/page.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/index.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_config.yml",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/js/jekyllpostsearch.js",
+		"/Users/geps/Dev/src/igosuki.github.io/index.md",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/igosuki/default.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/igosuki/socialbar.html",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/js/eventmanager.js",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/rss.xml",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/angular/bower.json",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/js/interactions.js",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/JB/analytics-providers/google",
+		"/Users/geps/Dev/src/igosuki.github.io/categories.html",
+		"/Users/geps/Dev/src/igosuki.github.io/archive.html",
+		"/Users/geps/Dev/src/igosuki.github.io/pages.html",
+		"/Users/geps/Dev/src/igosuki.github.io/tags.html",
+		"/Users/geps/Dev/src/igosuki.github.io/tutorials.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_layouts/post.html",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/css/_variables.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_layouts/default.html",
+		"/Users/geps/Dev/src/igosuki.github.io/music_therapy.html",
+		"/Users/geps/Dev/src/igosuki.github.io/music_therapy/index.html",
+		"/Users/geps/Dev/src/igosuki.github.io/resume.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/fontawesome/css/font-awesome.css",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/css/cv.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/bootstrap/css/bootstrap-responsive.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/css/cv.css",
+		"/Users/geps/Dev/src/igosuki.github.io/README.md",
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/resume.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/JB/analytics",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/sass/test.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/sass_converter.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/sass/test.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/less_converter.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/debug.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/JB/liquid_raw",
+		"/Users/geps/Dev/src/igosuki.github.io/_assets/css/cv.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_vendors/fontawesome/css/font-awesome.css",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/css/test.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/sass/test.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/jekyll_asset_pipeline.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/css/test.scss",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/jekyll_assets.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/_plugins/ext.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/_vendors/fontawesome/css/font-awesome.min.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/font-awesome-a431c88a210c86b1f3700b50e29c3868.css.gz",
+		"/Users/geps/Dev/src/igosuki.github.io/_vendors/fontawesome/font/fontawesome-webfont.eot",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/assets/bootstrap-4e1e7b1f085482b238e66fac42278eb1.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_vendors/fontawesome/font/fontawesome-webfont.svg",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/twitter/default.html",
+		"/Users/geps/Dev/src/igosuki.github.io/_site/404.html",
+		"/Users/geps/Dev/src/igosuki.github.io/Rakefile",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/twitter/post.html",
+		"/Users/geps/Dev/src/igosuki.github.io/.gitignore",
+		"/Users/geps/Dev/src/igosuki.github.io/less/bootstrap.less",
+		"/Users/geps/Dev/src/igosuki.github.io/_assets/style",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/twitter/settings.yml",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/themes/igosuki/settings.yml",
+		"/Users/geps/Dev/src/igosuki.github.io/_layouts/page.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/source/_includes/custom/after_footer.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/source/_includes/navigation.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/source/_layouts/default.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/plugins/include_array.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/index.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/_config.yml",
+		"/Users/geps/Dev/src/igosuki.github.io/_octorpress_config.yml",
+		"/Users/geps/Dev/src/igosuki.github.io/css/font-awesome.css",
+		"/Users/geps/Dev/src/igosuki.github.io/_includes/JB/sharing",
+		"/Users/geps/Dev/src/igosuki.github.io/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/source/images/bird_32_gray_fail.png",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/source/_includes/custom/navigation.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/public/blog/archives/index.html",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/sass/partials/_blog.scss",
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/geps/Dev/src/igosuki.github.io/octopress/config.rb",
+		"/Users/geps/Dev/src/igosuki.github.io/css/bootstrap.css",
+		"/Users/geps/Dev/src/igosuki.github.io/css/cv.css",
+		"/Users/geps/Dev/src/igosuki.github.io/css/font-awesome.min.css",
+		"/Users/geps/Library/Application Support/Sublime Text 2/Packages/User/SideBarEnhancements/Open With/Side Bar.sublime-menu",
+		"/Users/geps/Dev/src/igosuki.github.io/css/bootstrap-responsive.min.css",
+		"/Users/geps/Dev/src/cod_yo/app/index.html",
+		"/Users/geps/Dev/src/cod_yo/app/scripts/directives/font-icon.js",
+		"/Users/geps/Dev/src/cod_yo/node_modules/grunt-bower-requirejs/node_modules/bower/node_modules/hogan.js/web/index.html.mustache",
+		"/Users/geps/Dev/src/cod_yo/node_modules/grunt-contrib-compass/tasks/lib/compass.js",
+		"/Users/geps/Dev/src/musicall-website/dist/styles/59e0857f.main.css",
+		"/Users/geps/Dev/xke/May2013/v.bot/web/js/main.js",
+		"/Users/geps/Dev/xke/May2013/v.bot/web/js/app.js",
+		"/Users/geps/Dev/xke/May2013/v.bot/Server.groovy",
+		"/Users/geps/Dev/xke/May2013/v.bot/index.html",
+		"/Users/geps/Dev/xke/May2013/v.bot/web/index.html",
+		"/Users/geps/Dev/xke/May2013/v.bot/web/js/services.js",
+		"/Users/geps/Dev/xke/May2013/v.bot/web/js/controllers.js",
+		"/Users/geps/Dev/xke/May2013/index.html",
+		"/Users/geps/Dev/xke/May2013/scripts/angular/angular.min.js",
+		"/Users/geps/Dev/xke/May2013/scripts/vertxbus.js",
+		"/Users/geps/Dev/src/ellebomusic/Gruntfile.js",
+		"/Users/geps/Dev/src/ellebomusic/component.json",
+		"/Users/geps/Dev/src/ellebomusic/package.json",
+		"/Users/geps/Dev/src/ellebomusic/s3-deploy.sh",
+		"/Users/geps/Dev/src/ellebomusic/app/index.html",
+		"/Users/geps/Dev/src/ellebomusic/app/scripts/app.js",
+		"/Users/geps/Dev/src/ellebomusic/app/scripts/controllers/Carousel.js",
+		"/Users/geps/Dev/src/ellebomusic/app/scripts/controllers/main.js",
+		"/Users/geps/Dev/src/ellebomusic/app/scripts/controllers/Map.js",
+		"/Users/geps/Dev/src/ellebomusic/app/scripts/controllers/TypeAhead.js",
+		"/Users/geps/Dev/src/ellebomusic/app/views/main.html",
+		"/Users/geps/Dev/src/ellebomusic/dist/index.html",
+		"/Users/geps/Dev/src/ellebomusic/dist/scripts/417674d4.scripts.js",
+		"/Users/geps/Dev/src/ellebomusic/dist/views/main.html",
+		"/Users/geps/Dev/src/ellebomusic/musicall-website/.idea/.name",
+		"/Users/geps/Dev/src/ellebomusic/musicall-website/.idea/modules.xml",
+		"/Users/geps/Dev/src/ellebomusic/musicall-website/.idea/workspace.xml",
+		"/Users/geps/Dev/src/ellebomusic/node_modules/grunt-karma/node_modules/karma/node_modules/socket.io/node_modules/socket.io-client/node_modules/ws/build/Makefile",
+		"/Users/geps/Dev/src/ellebomusic/test/spec/controllers/Carousel.js",
+		"/Users/geps/Dev/src/ellebomusic/test/spec/controllers/main.js"
+	],
+	"find":
+	{
+		"height": 37.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"*",
+			"*.html",
+			"",
+			"*.css",
+			"",
+			"*.css",
+			"",
+			"*.css",
+			"*",
+			"-_site/*",
+			"-_site",
+			"",
+			"default.html",
+			"",
+			"*.html",
+			"*.css",
+			"",
+			"*.js",
+			"*.html",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"exclude_pattern",
+			"JekyllAPp",
+			"gepsen",
+			"JekyllApp",
+			"hello-world",
+			"basicDelay",
+			".5",
+			"zone-inset",
+			"page |",
+			"class=\"breadcrumb\"",
+			"breadcrumbs",
+			"page.",
+			":categor",
+			":category",
+			"highlight",
+			"10px 15px 10px",
+			"10 15 10",
+			"brand",
+			"socialbar",
+			"navigation",
+			"pages:",
+			"pages :",
+			"pages:",
+			"pages",
+			"site.pages",
+			"site :",
+			"site:",
+			"pages_list",
+			"pages",
+			"pages_list",
+			"icon-chevron-sign-right",
+			"icon-",
+			":before",
+			"icon-chevron-sign-right",
+			"class=\"posts\"",
+			"h1 small",
+			"page_list",
+			"icon-2x",
+			"icon-x2",
+			"name-header",
+			"tagline",
+			"ASSET_PATH",
+			"assets",
+			"ASSET_PATH",
+			"supporting",
+			"supporting t agline",
+			"- ",
+			"-",
+			"- ",
+			"navbar-inner",
+			"container-narrow",
+			"tidy",
+			"tag",
+			"$",
+			"safe",
+			"plugins",
+			"plugin",
+			"\\('../font/(.*)(v=.*)'\\)",
+			"\\('../font/(.*)(v=.*)='\\)",
+			"'../font/(.*)(v=.*)'",
+			"../font/",
+			"glyphicons",
+			"sass",
+			".nav-pills > .active > a",
+			"@-o-keyframes spin",
+			"@-o-keyframes",
+			"site",
+			"{{",
+			"for",
+			"EACH",
+			"case",
+			"each",
+			"plus",
+			"if",
+			"mixpanel",
+			"sharing",
+			"comments.provider",
+			"author.name",
+			"author",
+			"index.md",
+			"default",
+			"include_array",
+			"icon-linkedin",
+			"icon-file",
+			"stackexchange",
+			"exch",
+			"exc",
+			"stack",
+			".btn",
+			"mail",
+			"2x",
+			"icon",
+			"chrome",
+			"SNIPPET_API",
+			"styles/fonts",
+			"font",
+			"FontAwesome",
+			"\"FontAwesome\"",
+			"font-family: \"FontAwesome\";",
+			"/app/styles",
+			"fontawesome-webfont",
+			"woff",
+			"codYoApp",
+			"angular",
+			"musicall",
+			"express",
+			"'open'",
+			"path",
+			"grunt-contrib-connect",
+			"38001",
+			"action_side_navigation",
+			"mode_left",
+			"image_desc",
+			"bg_striped",
+			"DarkActionBar",
+			"android.library.reference.1=../../lib/android/SideNavigation-master/library",
+			"DarkActionBar",
+			"RESOURCE_ID",
+			"EXTRA_RESOURCE_ID",
+			"list-style-type",
+			"icomoon",
+			"radmin-icons",
+			"&#xe008;",
+			"data-icon",
+			"sample pages",
+			"where",
+			"/api",
+			"2.17"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"ellebomusic",
+			"<li>",
+			"../images/"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "resume.html",
+					"settings":
+					{
+						"buffer_size": 269,
+						"regions":
+						{
+							"TagLint":
+							{
+								"flags": 52,
+								"icon": "dot",
+								"regions":
+								[
+									[
+										241,
+										245
+									]
+								],
+								"scope": "variable.parameter"
+							}
+						},
+						"selection":
+						[
+							[
+								249,
+								249
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "assets/css/main.scss",
+					"settings":
+					{
+						"buffer_size": 3176,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1875,
+								1875
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Sass/Syntaxes/Sass.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1382.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "_includes/themes/igosuki/default.html",
+					"settings":
+					{
+						"buffer_size": 4457,
+						"regions":
+						{
+							"TagLint":
+							{
+								"flags": 52,
+								"icon": "dot",
+								"regions":
+								[
+									[
+										3645,
+										3651
+									]
+								],
+								"scope": "variable.parameter"
+							}
+						},
+						"selection":
+						[
+							[
+								252,
+								252
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "_includes/themes/igosuki/socialbar.html",
+					"settings":
+					{
+						"buffer_size": 1224,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								58,
+								58
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "index.md",
+					"settings":
+					{
+						"buffer_size": 526,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "_site/index.html",
+					"settings":
+					{
+						"buffer_size": 6379,
+						"regions":
+						{
+							"TagLint":
+							{
+								"flags": 52,
+								"icon": "dot",
+								"regions":
+								[
+									[
+										5461,
+										5467
+									]
+								],
+								"scope": "variable.parameter"
+							}
+						},
+						"selection":
+						[
+							[
+								1,
+								16
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"scss",
+				"assets/css/main.scss"
+			],
+			[
+				"css",
+				"_site/assets/css/main.css"
+			],
+			[
+				"index.html",
+				"_site/index.html"
+			],
+			[
+				"inde",
+				"index.md"
+			],
+			[
+				"default",
+				"_includes/themes/igosuki/default.html"
+			],
+			[
+				"socialb",
+				"_includes/themes/igosuki/socialbar.html"
+			],
+			[
+				"main",
+				"assets/css/main.scss"
+			],
+			[
+				"resul",
+				"resume.html"
+			],
+			[
+				"socl",
+				"_includes/themes/igosuki/socialbar.html"
+			],
+			[
+				"index.md",
+				"index.md"
+			],
+			[
+				"jekyl",
+				"assets/js/jekyllpostsearch.js"
+			],
+			[
+				"jekyll",
+				"assets/js/jekyllpostsearch.js"
+			],
+			[
+				"page_list",
+				"_includes/JB/pages_list"
+			],
+			[
+				"pages_list",
+				"_includes/JB/pages_list"
+			],
+			[
+				"page_i",
+				"_includes/JB/pages_list"
+			],
+			[
+				"music",
+				"music_therapy/index.html"
+			],
+			[
+				"main.",
+				"assets/css/main.scss"
+			],
+			[
+				"cv",
+				"assets/css/cv.scss"
+			],
+			[
+				"social",
+				"_includes/themes/igosuki/socialbar.html"
+			],
+			[
+				"main.sc",
+				"assets/css/main.scss"
+			],
+			[
+				"readme",
+				"README.md"
+			],
+			[
+				"_var",
+				"assets/css/_variables.scss"
+			],
+			[
+				"confi",
+				"_config.yml"
+			],
+			[
+				"config",
+				"_config.yml"
+			],
+			[
+				"converter",
+				"_plugins/sass_converter.rb"
+			],
+			[
+				"test.",
+				"assets/sass/test.scss"
+			],
+			[
+				"test",
+				"assets/sass/test.scss"
+			],
+			[
+				"gemf",
+				"Gemfile"
+			],
+			[
+				"sass",
+				"_plugins/sass_converter.rb"
+			],
+			[
+				"default.html",
+				"_layouts/default.html"
+			],
+			[
+				"default.tml",
+				"_includes/themes/igosuki/default.html"
+			],
+			[
+				"fontawesome.css",
+				"css/font-awesome.css"
+			],
+			[
+				"soc",
+				"_includes/themes/igosuki/socialbar.html"
+			],
+			[
+				"navigat",
+				"octopress/source/_includes/navigation.html"
+			],
+			[
+				"config.",
+				"octopress/_config.yml"
+			],
+			[
+				"index",
+				"index.html"
+			],
+			[
+				"font-awesome",
+				"css/font-awesome.css"
+			],
+			[
+				"app",
+				"app/scripts/app.js"
+			],
+			[
+				"ind",
+				"app/index.html"
+			],
+			[
+				"font",
+				"app/scripts/directives/font-icon.js"
+			],
+			[
+				"snippets.",
+				"app/views/snippets.html"
+			],
+			[
+				"snippet",
+				"app/scripts/controllers/snippets.js"
+			],
+			[
+				"main.html",
+				"app/views/main.html"
+			],
+			[
+				"main.xml",
+				"library/res/layout/main.xml"
+			],
+			[
+				"sidebar",
+				"pages/sidebar_menu.html"
+			],
+			[
+				"index.",
+				"docs/index.html"
+			],
+			[
+				"infra",
+				"manuscript/infra_nosql.md"
+			],
+			[
+				"ser",
+				"server.js"
+			],
+			[
+				"server.",
+				"src/main/template/server.handlebars"
+			],
+			[
+				"swa",
+				"lib/swagger.js"
+			],
+			[
+				"tools",
+				"release/target/housecream/js/utils/leaflet-tools.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 354.0,
+	"status_bar_visible": true
+}

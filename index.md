@@ -5,7 +5,7 @@ tagline:
 ---
 {% include JB/setup %}
 
-<div class="well">
+<div class="blockquote">
 	<h1><small>
 	To burn always with this hard, gemlike flame, to maintain this ecstasy, is success in life. 
 	</small>

@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/geps/Dev/src/igosuki.github.io",
+			"folder_exclude_patterns": ["_site"]
+		}
+	]
+}
