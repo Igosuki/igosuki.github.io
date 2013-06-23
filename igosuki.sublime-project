@@ -3,7 +3,7 @@
 	[
 		{
 			"path": "/Users/geps/Dev/src/igosuki.github.io",
-			"folder_exclude_patterns": ["_site"]
+			"folder_exclude_patterns": [".themes", "_site", "public", "igosuki.sublime-project", "igosuki.sublime-workspace"]
 		}
 	]
 }

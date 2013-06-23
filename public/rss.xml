@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+        <title>Gepsens.com</title>
+        <description>Gepsens.com - </description>
+        <link></link>
+        <link></link>
+        <lastBuildDate>2013-06-24T00:44:58+02:00</lastBuildDate>
+        <pubDate>2013-06-24T00:44:58+02:00</pubDate>
+        <ttl>1800</ttl>
+
+
+        <item>
+                <title>Under Construction</title>
+                <description>
+</description>
+                <link>/blog/2013/06/23/under-construction/</link>
+                <guid>/blog/2013/06/23/under-construction</guid>
+                <pubDate>2013-06-23T00:00:00+02:00</pubDate>
+        </item>
+
+
+</channel>
+</rss>

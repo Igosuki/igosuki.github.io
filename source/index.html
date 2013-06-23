@@ -31,3 +31,18 @@ layout: default
   </div>
 </div>
 
+<script type="text/javascript">
+  var front = document.getElementById('main-content')
+      , back_content = "&lt;h1>I'm the back!&lt;/h1>"
+      , back;
+  function flip() {
+    if(back) {
+      back.close();
+      back = null;
+    } else {
+      back = flippant.flip(front, back_content);
+    }
+  }
+  //back.close();
+</script>
+

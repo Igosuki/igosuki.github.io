@@ -1,15 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://gepsens.com/blog/2013/06/23/under-construction/</loc>
+        <lastmod>2013-06-23T23:54:38+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://gepsens.com/blog/archives/</loc>
-        <lastmod>2013-06-23T23:12:20+02:00</lastmod>
+        <lastmod>2013-06-24T00:35:21+02:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/</loc>
-        <lastmod>2013-06-23T23:12:20+02:00</lastmod>
+        <lastmod>2013-06-24T00:35:21+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gepsens.com/music-therapy.html</loc>
+        <lastmod>2013-06-24T00:35:21+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gepsens.com/resume.html</loc>
+        <lastmod>2013-06-24T00:35:21+02:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/robots.txt</loc>
-        <lastmod>2013-06-23T23:12:20+02:00</lastmod>
+        <lastmod>2013-06-23T23:38:56+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gepsens.com/rss.xml</loc>
+        <lastmod>2013-06-19T14:14:43+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gepsens.com/sitemap.txt</loc>
+        <lastmod>2013-06-19T14:14:43+02:00</lastmod>
+    </url>
+    <url>
+        <loc>http://gepsens.com/tutorials.html</loc>
+        <lastmod>2013-06-24T00:35:21+02:00</lastmod>
     </url>
 </urlset>
