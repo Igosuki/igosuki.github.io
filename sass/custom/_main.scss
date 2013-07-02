@@ -1,19 +1,49 @@
 @import "variables";
+@import "colors";
+
+//Inlay, blur, shadow, hover mixins
+
+@mixin round-corners  ($top-radius: 0, $bottom-radius: 0) {
+	border-radius: $top-radius $top-radius $bottom-radius $bottom-radius; 
+}
+
+@mixin text-transform {
+	> a {
+		@include round-corners(0, 20px);
+		color: $secondary-color;
+		text-decoration: none;
+		transition-duration: $basic-delay;
+	}
+	background-color: $alt-btn-bg-color;
+}
+
+@mixin zone-inset {
+	transition-duration: $basic-delay;
+	-webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btn-bg-color 0 1px 7px 0 inset; 
+	box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btn-bg-color 0 1px 7px 0 inset; 
+}
+
+@mixin round-btn ($top-radius, $bottom-radius : 0) {
+	@include round-corners($top-radius, $bottom-radius);
+	width: $top-radius;
+	height: $top-radius;
+	line-height: $top-radius;
+}
 
 //Top display stuff
 body {
-	font-size: 18px;
-	background: url("#{$grainedMonochrome}");
+	font-size: $main-size;
+	background: url("#{$grained-monochrome}");
 	background-repeat: repeat;
 	background-position: 0 0;
 	background-color: #eee; 
 	.container {
-		background: $mainBgColor;
+		background: $main-bg-color;
 	}
 }
 
 a {
-	color: $inactiveLinkColor;
+	color: $inactive-link-color;
 }
 
 .main-container {
@@ -21,7 +51,7 @@ a {
 }
 
 div.name-header {
-	border-bottom: 2px solid $borderColor;
+	border-bottom: 2px solid $border-color;
 	padding: 20px 0 0;
 	h1 {
 		line-height: 20px;
@@ -29,96 +59,19 @@ div.name-header {
 	}
 }
 
-@mixin text-transform {
-	> a {
-		@include bottom-corner-round;
-		color: $altTextColor;
-		text-decoration: none;
-		background-color: $altBtnBgColor;
-		transition-duration: $basicDelay;
-	}
-	background-color: $altBtnBgColor;
-}
-
-@mixin zone-inset {
-	transition-duration: $basicDelay;
-	-webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
-	box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0, $btnBgColor 0 1px 7px 0 inset; 
-}
-
-@mixin bottom-corner-round {
-	border-radius: 0 0 20px 20px; 
-}
-
-//Social bar and buttons
-ul.socialbar {
-	margin-bottom: 0px;
-	li {
-		display: inline-block;
-		border-radius: $socialBtnRadius $socialBtnRadius 0 0;
-		margin: 0px 2px 0px 2px;
-		width: $socialBtnRadius;
-		height: $socialBtnRadius;
-		background-color: $btnBgColor;
-		line-height: $socialBtnRadius;
-		transition-duration: $basicDelay;
-		text-align: center;
-		float: right;
-		&:hover {
-			@include text-transform;	
-			a {
-				border-radius: $socialBtnRadius $socialBtnRadius 0 0;			
-			}
-		}
-	}
-	a {
-		position: relative;
-		color: $inactiveLinkColor;
-		i {
-			vertical-align: middle;
+//Fixed navbar for smartphones
+@media only screen and (max-width: 768px) {
+	#main.container {
+		> .navbar {
+			width: 100%;
+			margin: auto;
+			z-index: 10000;
+			position:fixed;
 		}
 	}
 }
 
-//Navbar
-.navbar-inner {
-	padding-left: 0px;
-	padding-bottom: 0px;
-	margin-bottom: 0px;
-	border-bottom: 0px;
-	border-top: 0;
-	border-right: 0;
-	border-left: 0;
-	background: $mainBgColor;
-	.nav-interactive {
-		> li:hover {
-			@include text-transform;
-		}
-		li {
-			a {
-				color: $inactiveLinkColor;
-			}
-			&:hover, &.active {
-				span {
-					font-weight: bold;
-				}
-				a {
-					border-radius: 0 0 $socialBtnRadius $socialBtnRadius;			
-				}
-				@include text-transform;
-				@include zone-inset;
-			}
-			@include bottom-corner-round;
-		}
-	}
-}
-
-.navbar-search .search-query:focus {
-	border-color: $borderColor;
-	box-shadow: 0 0 10px $borderColor;
-	transition-duration: 0.2s;
-}
-
+//Cosmetic stuff
 .posts {
 	list-style: none;
 	li {
@@ -129,12 +82,103 @@ ul.socialbar {
 	}
 }
 
-.visible {
-	ul.typeahead {
-		display: block;
+small.emphasis {
+	color: $border-color;	
+}
+
+//Social bar and buttons
+ul.socialbar.nav {
+	margin-bottom: 0px;
+	> li {
+		display: inline-block;		
+		@media only screen and (min-width: 768px) {
+			@include round-btn($mid-btn-radius);	
+		}
+		@media only screen and (max-width: 768px) {
+			@include round-btn($small-btn-radius, $small-btn-radius);
+			font-size: 12px;
+		}
+		margin: 0px 2px 0px 2px;
+		background-color: $btn-bg-color;
+		transition-duration: $basic-delay;
+		text-align: center;
+		float: right;
+		&:hover {
+			@include text-transform;	
+			a {
+				@include round-corners($mid-btn-radius);			
+			}
+		}
+		> a {
+			margin-top: 0;
+			padding: 0;
+			position: relative;
+			color: $accent-color3;
+			i {
+				margin: auto;
+				vertical-align: middle;
+			}
+		}
 	}
 }
 
-small.highlight {
-	color: $borderColor;	
+//Navbar
+.main-nav {
+	border: 0;
+}
+.navbar-inner {
+	padding-left: 0px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+	border: 0;
+	.nav-interactive {
+		li {
+			a {
+				color: $inactive-link-color;
+			}
+			&:hover, &.active {
+				span {
+					font-weight: bold;
+				}
+				@include zone-inset;
+				@include text-transform;
+			}
+			@include round-corners(0, $small-btn-radius);
+			@media only screen and (max-width: $collapse-switch-width) {
+				@include round-corners($small-btn-radius, $small-btn-radius);
+			}
+		}
+	}
+}
+
+//Search container box
+#search-container.navbar-search .search-query:focus {
+	border-color: $border-color;
+	box-shadow: 0 0 10px $border-color;
+	transition-duration: 0.2s;
+	background-color: $primary-color;
+	text-color: $secondary-color;
+}
+
+#search-container.navbar-search .search-query {
+	background-color: $bg-color;
+	border-color: $primary-color;
+	font-size: $main-size;
+	color: $text-color;
+}
+
+//Styling for the search dropdown
+.visible {
+	ul.typeahead {
+		opacity: 1;
+		z-index: 1000;
+		visibility: visible;
+		display: block;
+		border-radius: 5px;
+		border-color: $primary-color;
+		position:absolute;
+		li > a {
+			color: $text-color;
+		}
+	}
 }

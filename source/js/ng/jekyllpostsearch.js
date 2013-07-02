@@ -46,6 +46,7 @@ function JekyllSearchController($scope, $location, $window) {
         $window.location.href = this.post.url;
     };
     $scope.posts = gepsens.posts;
+    $scope.postsLimit = 10;
 }
 
 function NavController($scope, $location) {

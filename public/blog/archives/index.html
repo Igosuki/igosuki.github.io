@@ -9,7 +9,7 @@
   <meta name="author" content="Guillaume Balaine">
 
   
-  <meta name="description" content=" Blog Archive 2013 Jun 23 Under Construction ">
+  <meta name="description" content=" Blog Archive 2013 Jul 01 Under Constructin 2 Jun 23 Under Construction ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,14 +19,14 @@
 
   
   <link rel="canonical" href="http://gepsens.com/blog/archives">
-  <link href="/favicon.png" rel="icon">
+  <link href="/favicon.ico" rel="icon">
   <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400' rel='stylesheet' type='text/css'>
   <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Gepsens.com" type="application/atom+xml">
   <!-- JS Libs -->
-  <script type="text/javascript" src="/js/angular/angular.js"></script>
   <script src="/js/jquery/jquery.js"></script>
+  <script type="text/javascript" src="/js/angular/angular.js"></script>
   <script type="text/javascript" src="/js/flippant/flippant.js"></script>
   <script src="/js/bootstrap-collapse.js"></script>
   <script src="/js/modernizr-2.0.js"></script>
@@ -35,6 +35,7 @@
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
 <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
 
   
   <script type="text/javascript">
@@ -52,40 +53,19 @@
 
 </head>
 
-<body   >
-  <div class="navbar navbar-inverse navbar-static-top">
-  	<div class="navbar-inner">
-  	  <div class="container">
+<body    ng-app="gepsens">
+  
+  <div class="container" id="main">
+    <div class="navbar navbar-inverse navbar-static-top">
+    <div class="navbar-inner">
+      <div class="container">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
           <span class="fui-menu-24"></span>
+          <i class="icon-collapse"></i>
         </a>
-  	  	<div class="nav-collapse collapse navbar-responsive-collapse" style="height:0;">
-  	      <ul class="nav">
-    
-</ul>
-
-<ul class="nav pull-right">
-    
-    <li><a href="http://github.com/Igosuki" title="Github Profile"><i class="icon-github-sign social-navbar"></i></a></li>
-    
-    
-    
-    <li><a href="http://twitter.com/Igosuki" title="Twitter Profile"><i class="icon-twitter-sign social-navbar"></i></a></li>
-    
-    
-    <li><a href="http://plus.google.com/100585065708829419031" title="Google+ Profile"><i class="icon-google-plus-sign social-navbar"></i></a></li>
-    
-    
-</ul>
-
-  	    </div>
-  	  </div>
-  	</div>
-  </div>
-  <div class="container" id="main" ng-app="gepsens">
-    <!--<div class="container main-container" >-->
-      <div class="row-fluid name-header">
-        <div class="span12">
+        <div class="nav-collapse collapse navbar-responsive-collapse" style="height:0;">
+          <div class="row-fluid name-header">
+            <div class="span12">
 <div class="text-right pull-right">
 	<ul class="nav unstyled inline socialbar">			
 		<li><a target="_newtab" href="http://plus.google.com/100585065708829419031"><i class="icon-large icon-google-plus"></i></a></li>
@@ -99,50 +79,64 @@
 	</ul>
 </div>
 </div>
-      </div>
-      <div class="row-fluid">
-        <div class="navbar">
-          <div class="navbar-inner main-nav">
-            <div class="container-narrow">
-              <ul class="nav nav-interactive"  ng-controller="NavController">
-                <li ng-class="navClass('home')">
-                  <a href="" ><i class="icon-home icon-large"></i></a>
-                </li>
-                
-                      
-                      Included file 'JB/pages_list' not found in _includes directory
-                      <li>
-                        <a onclick="javascript:flip()">
-                          <i class="icon-plus icon-large"></i>
-                        </a> 
-                      </li>
-              </ul>
-              <ul class="nav pull-right">
-                <li>
-                  <div id="search-container" class="navbar-search" ng-controller="JekyllSearchController">
-                    <input id="searchText" class="search-query" type="search" placeholder="Live Search Posts..." ng-model-instant ng-model="searchText" />
-                    <div ng-class="{'visible': posts.length > 0 && searchText.trim().length > 0}">
+          </div>
+          <div class="row-fluid">
+            <div class="navbar" ng-controller="JekyllSearchController">
+              <div class="navbar-inner main-nav">
+                <div class="container-narrow">
+                  <ul class="nav nav-interactive"  ng-controller="NavController">
+                    <li ng-class="navClass('home')">
+                      <a href="/" ><i class="icon-home icon-large"></i></a>
+                    </li>
+                    
+                        <li ><a href="/usa-trip.html">USA Trip</a></li>
+                    
+                        <li ><a href="/demos.html">Demos</a></li>
+                    
+                        <li ><a href="/tutorials.html">Tech Radar</a></li>
+                    
+                        <li ><a href="/tutorials.html">Tutorials</a></li>
+                    
+                        <li ><a href="/resume.html">Resume</a></li>
+                    
+                        <li ><a href="/music-therapy.html">Music Therapy</a></li>
+                    
+                        <li class="active"><a href="/blog/archives/index.html">Archives</a></li>
+                    
+                    <li>
+                      <a onclick="javascript:flip()">
+                        <i class="icon-plus icon-large"></i>
+                      </a> 
+                    </li>
+                  </ul>
+                  <ul class="nav pull-right">
+                    <li>
+                      <form id="search-container" class="navbar-form navbar-search"> 
+                        <input id="searchText" class="search-query" type="search" placeholder="Live Search Posts..." ng-model-instant ng-model="searchText">
+                        <div ng-class="{'visible': posts.length > 0 && searchText.trim().length > 0}" style="position:relative;">
                         <ul class="typeahead dropdown-menu">
-                            <li ng-repeat="post in posts | filter:searchText">
-                              <span ng-bind-html-unsafe="post.date | date:'MMM d, y' | highlight:searchText"></span> &raquo;
-                              <a ng-href="{{ post.url }}" ng-click="externalLink()"
-                              ng-bind-html-unsafe="post.title | highlight:searchText"></a>
+                            <li ng-repeat="post in posts | filter:searchText"ng-class="">
+                              
+                              <a ng-href="{{ post.url }}" ng-click="externalLink()">
+                                <span ng-bind-html-unsafe="post.date | date:'MMM d, y' | highlight:searchText"></span>
+                                <span ng-bind-html-unsafe="post.title | highlight:searchText"></span>
+                            </a>
                             </li>
                         </ul>
                       </div>
-                  </div>
-                </li>
-              </ul>
+                      </form>
+                      
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row-fluid">
-        <div class="span5">
-        </div>
-        <div class="span7"></div>
-      </div>
     </div>
+  </div>
+    <!--<div class="container main-container" >-->
     <div class="span12">
       <div class="row-fluid">
         <div id="content">
@@ -173,7 +167,32 @@
 	  
 <div class="row-fluid">
 	<div class="span1">
-		<h1 class="date-time"><time datetime="2013-06-23T00:00:00+02:00" pubdate><span class='month'>Jun</span> <span class='day'>23</span><span class='year'><!--2013--></span></time></h1>
+		<h1 class="date-time"><time datetime="2013-07-01T13:08:00-04:00" pubdate><span class='month'>Jul</span> <span class='day'>01</span><span class='year'><!--2013--></span></time></h1>
+	</div>
+	<div class="span10">
+		<h1><a href="/blog/2013/07/01/under-constructin-2/">Under Constructin 2</a></h1>
+	</div>
+</div>
+
+
+	  </article>
+	</div>
+  </div>
+
+  
+  <div class="row-fluid">
+	<div class="span1">
+	
+	</div>
+	
+	<div class="span11 border-top">
+	
+
+	  <article>
+	  
+<div class="row-fluid">
+	<div class="span1">
+		<h1 class="date-time"><time datetime="2013-06-23T23:54:00-04:00" pubdate><span class='month'>Jun</span> <span class='day'>23</span><span class='year'><!--2013--></span></time></h1>
 	</div>
 	<div class="span10">
 		<h1><a href="/blog/2013/06/23/under-construction/">Under Construction</a></h1>
@@ -198,7 +217,7 @@
         <footer class="footer-page" role="contentinfo">
           <p>
   Copyright &copy; 2013 - Guillaume Balaine -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> Using Bootstrap and Flat-UI - <a href="https://github.com/Igosuki/igosuki.github.io/tree/source" target="_newtab"><i class="icon-chevron-sign-right"></i> Blog Source</a>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span> Using Bootstrap and Flat-UI <a href="https://github.com/Igosuki/igosuki.github.io/tree/source" target="_newtab"><i class="icon-chevron-sign-right"></i> Blog Source</a>
 </p>
 
 
@@ -260,6 +279,9 @@
 <script type="text/javascript">
    // Using liquid to populate JeykllApp.posts array
    gepsens.posts = [
+{"title" : "Under Constructin 2", "url" : "/blog/2013/07/01/under-constructin-2/","date" : "01 Jul 2013"}
+,
+
 {"title" : "Under Construction", "url" : "/blog/2013/06/23/under-construction/","date" : "23 Jun 2013"}
 
 

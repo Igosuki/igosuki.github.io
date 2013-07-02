@@ -99,6 +99,8 @@ google_analytics_tracking_id: UA-41751272-1
 # Facebook Like
 facebook_like: true
 
+linkedin_user: guillaume-balaine
+
 sharing :
     provider : custom
     googleplus : 100585065708829419031 
@@ -119,3 +121,18 @@ analytics :
     piwik :
         baseURL : 'myserver.tld/piwik' # Piwik installation address (without protocol)
         idsite : '1'                   # the id of the site on Piwik
+navigation:
+- text: USA Trip
+  url: /usa-trip.html
+- text: Demos
+  url: /demos.html
+- text: Tech Radar
+  url: /tutorials.html
+- text: Tutorials
+  url: /tutorials.html
+- text: Resume
+  url: /resume.html
+- text: Music Therapy
+  url: /music-therapy.html
+- text: Archives
+  url: /blog/archives/index.html

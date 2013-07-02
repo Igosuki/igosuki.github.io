@@ -43,7 +43,6 @@
 //$pre-color: $base1;
 
 $noise-bg: image-url('noise.png') top left !default;
-
 $primary-color:     #ff5544; // Jumbotron, Horizontal Rules, Headings
 $secondary-color:   #3498DB; // Tags, Links, Main Heading, Quote Border
 $tertiary-color:    #1abc9c; // Hover-over color, Active Page color
@@ -51,7 +50,7 @@ $accent-color1:     #ECF0F1; // Hover-over background color for tags
 $accent-color2:     #ECF0F1; // Sub-headings, Date Stamp
 $accent-color3:     #ffffff;    // Navbar Text, Tag text
 $bg-color:          #34495e; // Background
-$navbar-color:      #2980B9; // Navbar
+$navbar-color:      white; // Navbar
 $code-bg-color:     #2C3E50; // Code background
 $quote-color:       #F39C12; // Quote Color
 $text-color:        #BDC3C7; // Body Text
