@@ -131,11 +131,17 @@ ul.socialbar.nav {
 .main-nav {
 	border: 0;
 }
-.navbar-inner {
+
+#main {
+	
+}
+
+.navbar-inner.main-nav {
 	padding-left: 0px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 	border: 0;
+	box-shadow: none;
 	.nav-interactive {
 		li {
 			a {
