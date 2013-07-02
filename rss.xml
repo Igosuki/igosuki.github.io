@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+        <title>Gepsens.com</title>
+        <description>Gepsens.com - </description>
+        <link></link>
+        <link></link>
+        <lastBuildDate>2013-07-02T12:43:32-04:00</lastBuildDate>
+        <pubDate>2013-07-02T12:43:32-04:00</pubDate>
+        <ttl>1800</ttl>
+
+
+        <item>
+                <title>Under Constructin 2</title>
+                <description>
+</description>
+                <link>/blog/2013/07/01/under-constructin-2/</link>
+                <guid>/blog/2013/07/01/under-constructin-2</guid>
+                <pubDate>2013-07-01T13:08:00-04:00</pubDate>
+        </item>
+
+        <item>
+                <title>Under Construction</title>
+                <description>&lt;ul&gt;
+&lt;li&gt;Something somehow&lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+                <link>/blog/2013/06/23/under-construction/</link>
+                <guid>/blog/2013/06/23/under-construction</guid>
+                <pubDate>2013-06-23T23:54:00-04:00</pubDate>
+        </item>
+
+
+</channel>
+</rss>

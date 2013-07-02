@@ -1,0 +1,63 @@
+/*
+Syntax error: Invalid US-ASCII character "\xE2"
+        on line 62 of /Users/geps/Dev/src/octopress/sass/_quotes.scss
+        from line 12 of /Users/geps/Dev/src/octopress/sass/screen.scss
+
+Backtrace:
+/Users/geps/Dev/src/octopress/sass/_quotes.scss:62
+/Users/geps/Dev/src/octopress/sass/screen.scss:12
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:358:in `block in check_encoding!'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:504:in `rescue in block in check_encoding'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:501:in `block in check_encoding'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:500:in `each'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:500:in `each_with_index'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:500:in `check_encoding'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/util.rb:554:in `check_sass_encoding'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:357:in `check_encoding!'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:324:in `_to_tree'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:259:in `to_tree'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:144:in `visit_import'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:37:in `visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:53:in `block in visit_children'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:53:in `map'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:53:in `visit_children'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:27:in `block in visit_children'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:39:in `with_environment'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:26:in `visit_children'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:37:in `block in visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:47:in `visit_root'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/base.rb:37:in `visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:18:in `visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/visitors/perform.rb:7:in `visit'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/tree/root_node.rb:20:in `render'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:300:in `_render'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/sass-3.1.20/lib/sass/engine.rb:247:in `render'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:140:in `block (2 levels) in compile'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:126:in `timed'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:139:in `block in compile'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/logger.rb:45:in `red'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:138:in `compile'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:118:in `compile_if_required'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:103:in `block (2 levels) in run'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:101:in `each'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:101:in `block in run'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:126:in `timed'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/compiler.rb:100:in `run'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/commands/update_project.rb:45:in `perform'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/commands/base.rb:18:in `execute'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/commands/project_base.rb:19:in `execute'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/exec/sub_command_ui.rb:43:in `perform!'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/lib/compass/exec/sub_command_ui.rb:15:in `run!'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/bin/compass:30:in `block in <top (required)>'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/bin/compass:44:in `call'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/gems/compass-0.12.2/bin/compass:44:in `<top (required)>'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/bin/compass:19:in `load'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/bin/compass:19:in `<main>'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/bin/ruby_noexec_wrapper:14:in `eval'
+/Users/geps/.rvm/gems/ruby-1.9.3-p429/bin/ruby_noexec_wrapper:14:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Syntax error: Invalid US-ASCII character \"\xE2\"\A         on line 62 of /Users/geps/Dev/src/octopress/sass/_quotes.scss\A         from line 12 of /Users/geps/Dev/src/octopress/sass/screen.scss"; }
