@@ -13,3 +13,16 @@ Use this to overcome the gh-pages shortcoming :
 	- `git checkout source;` 
 	- `git push --all origin;};`
 * `f"`
+
+If using octopress : 
+
+* `publish-octopress = "!f() {` 
+	- `rake generate;`
+	- `git add .;` 
+	- ````git commit -m \"`date`\";``` 
+	- `git branch -D master;`
+	- `git checkout -b master;` 
+	- `git filter-branch --subdirectory-filter public -f;`
+	- `git checkout source;` 
+	- `git push --all origin;};`
+* `f"`
