@@ -35,6 +35,11 @@
 	line-height: $top-radius;
 }
 
+@mixin separator-border {
+	border-top: 0;
+	border-bottom: 2px solid $border-color;
+}
+
 //Top display stuff
 body {
 	font-size: $main-size;
@@ -56,7 +61,7 @@ a {
 }
 
 div.name-header {
-	border-bottom: 2px solid $border-color;
+	@include separator-border;
 	padding: 20px 0 0;
 	h1 {
 		line-height: 20px;
@@ -64,19 +69,23 @@ div.name-header {
 	}
 }
 
-//Fixed navbar for smaller screens
+//Top-floater definitions 
 @media only screen and (max-width: 768px) {
+	%floattop {
+		width: 100%;
+		margin: auto;
+		z-index: 10000;
+		position:fixed;
+	}
+
 	#main.container {
 		> .navbar {
-			width: 100%;
-			margin: auto;
-			z-index: 10000;
-			position:fixed;
+			@extend %floattop;
 		}
 	}
 }
 
-//Cosmetic stuff
+//Cosmetics for text (mostly)
 .posts {
 	list-style: none;
 	li {
@@ -154,7 +163,15 @@ ul.socialbar.nav {
 			}
 			@media only screen and (max-width: $collapse-switch-width) {
 				@include round-corners($small-btn-radius, $small-btn-radius);
+				z-index: 3;
+				float: left;
 			}
+		}
+	}
+	@media only screen and (max-width: $collapse-switch-width) {
+		.navbar-form {
+			@include separator-border;
+			z-index: 2;
 		}
 	}
 }
@@ -173,6 +190,12 @@ ul.socialbar.nav {
 	border-color: $primary-color;
 	font-size: $main-size;
 	color: $text-color;
+}
+
+@media only screen and (max-width: 1280px) {
+	.search-query {
+		@extend input-small
+	}
 }
 
 //Styling for the search dropdown
