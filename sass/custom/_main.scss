@@ -9,10 +9,10 @@
 
 @mixin text-transform {
 	> a {
-		@include round-corners(0, 20px);
 		color: $secondary-color;
 		text-decoration: none;
 		transition-duration: $basic-delay;
+		border-radius: inherit !important;
 	}
 	background-color: $alt-btn-bg-color;
 }
@@ -64,7 +64,7 @@ div.name-header {
 	}
 }
 
-//Fixed navbar for smartphones
+//Fixed navbar for smaller screens
 @media only screen and (max-width: 768px) {
 	#main.container {
 		> .navbar {
@@ -105,14 +105,10 @@ ul.socialbar.nav {
 		}
 		margin: 0px 2px 0px 2px;
 		background-color: $btn-bg-color;
-		transition-duration: $basic-delay;
 		text-align: center;
 		float: right;
 		&:hover {
-			@include text-transform;	
-			a {
-				@include round-corners($mid-btn-radius);			
-			}
+			@include text-transform;
 		}
 		> a {
 			margin-top: 0;
@@ -143,7 +139,7 @@ ul.socialbar.nav {
 	border: 0;
 	box-shadow: none;
 	.nav-interactive {
-		li {
+		> li {
 			a {
 				color: $inactive-link-color;
 			}
