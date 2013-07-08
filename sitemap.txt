@@ -12,5 +12,4 @@
 /tutorials.html
 /usa-trip.html
 
-/blog/2013/07/01/under-constructin-2/
 /blog/2013/06/23/under-construction/

@@ -5,24 +5,15 @@
         <description>Gepsens.com - </description>
         <link></link>
         <link></link>
-        <lastBuildDate>2013-07-07T11:55:06-04:00</lastBuildDate>
-        <pubDate>2013-07-07T11:55:06-04:00</pubDate>
+        <lastBuildDate>2013-07-08T08:25:18-04:00</lastBuildDate>
+        <pubDate>2013-07-08T08:25:18-04:00</pubDate>
         <ttl>1800</ttl>
 
 
         <item>
-                <title>Under Constructin 2</title>
-                <description>
-</description>
-                <link>/blog/2013/07/01/under-constructin-2/</link>
-                <guid>/blog/2013/07/01/under-constructin-2</guid>
-                <pubDate>2013-07-01T13:08:00-04:00</pubDate>
-        </item>
-
-        <item>
                 <title>Under Construction</title>
                 <description>&lt;ul&gt;
-&lt;li&gt;Something somehow&lt;/li&gt;
+&lt;li&gt;Building this site with responsive design.&lt;/li&gt;
 &lt;/ul&gt;
 
 </description>
