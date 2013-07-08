@@ -1,0 +1,1 @@
+<p>Check out this <a href="http://igosuki.github.io/training_learning" target="new_tab" title="Angular iTunes explorer">iTunes media explorer</a> made with Angular (idea inspired by devgirl).</p>
