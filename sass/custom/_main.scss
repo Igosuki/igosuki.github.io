@@ -66,12 +66,12 @@ div.name-header {
 }
 
 //Top-floater definitions 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: $minify-switch-width) {
 	%floattop {
 		width: 100%;
 		margin: auto;
 		z-index: 10000;
-		position:fixed;
+		//position:fixed;
 	}
 	
 	.collapse-container {
@@ -109,10 +109,10 @@ ul.socialbar.nav {
 	margin-bottom: 0px;
 	> li {
 		display: inline-block;		
-		@media only screen and (min-width: 768px) {
+		@media only screen and (min-width: $minify-switch-width) {
 			@include round-btn($mid-btn-radius);	
 		}
-		@media only screen and (max-width: 768px) {
+		@media only screen and (max-width: $minify-switch-width) {
 			@include round-btn($small-btn-radius, $small-btn-radius);
 			font-size: 12px;
 		}
@@ -218,3 +218,19 @@ ul.socialbar.nav {
 	}
 }
 
+//Medallion
+@media only screen and (min-width: $minify-switch-width) {
+	.advert {
+		position:absolute;
+	}
+}
+
+.medallion {
+	width: 60px;
+	height: 60px; 
+	@include round-corners(60px, 60px);
+}
+
+.jumbotron {
+	padding: 50px 0;
+}
