@@ -198,7 +198,7 @@ ul.socialbar.nav {
 
 @media only screen and (max-width: 1280px) {
 	.search-query {
-		@extend input-small
+		@extend input-small !optional;
 	}
 }
 
@@ -233,4 +233,9 @@ ul.socialbar.nav {
 
 .jumbotron {
 	padding: 50px 0;
+}
+
+.resume-title {
+	text-align: center;
+	border-bottom: 3px solid $primary-color;
 }
