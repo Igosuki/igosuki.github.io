@@ -77,6 +77,10 @@ div.name-header {
 		z-index: 10000;
 		position:fixed;
 	}
+	
+	.collapse-container {
+		margin-right: 20px;
+	}
 
 	#main.container {
 		> .navbar {

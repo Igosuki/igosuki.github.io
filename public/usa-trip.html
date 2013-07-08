@@ -15,7 +15,12 @@
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <meta name="viewport" content="width=device-width">
+  
+  <!--[if lt IE 9]>
+  <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+  <![endif]-->
 
   
   <link rel="canonical" href="http://gepsens.com/usa-trip.html">
@@ -58,10 +63,12 @@
   <div class="container" id="main">
     <div class="navbar navbar-inverse navbar-static-top">
       <div class="container-fluid">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-          <span class="fui-menu-24"></span>
-          <i class="icon-collapse"></i>
-        </a>
+        <div class="collapse-container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="fui-menu-24"></span>
+            <i class="icon-collapse"></i>
+          </a>
+        </div>
         <div class="nav-collapse collapse navbar-responsive-collapse" style="height:0;">
           <div class="row-fluid name-header">
             <div class="span12">
@@ -92,7 +99,7 @@
                     
                     <li ><a href="/demos.html">Demos</a></li>
                     
-                    <li ><a href="/techradar.html">Tech Radar</a></li>
+                    <li ><a href="/tech-radar.html">Tech Radar</a></li>
                     
                     <li ><a href="/tutorials.html">Tutorials</a></li>
                     
@@ -245,9 +252,6 @@
 <script type="text/javascript">
    // Using liquid to populate JeykllApp.posts array
    gepsens.posts = [
-{"title" : "Under Constructin 2", "url" : "/blog/2013/07/01/under-constructin-2/","date" : "01 Jul 2013"}
-,
-
 {"title" : "Under Construction", "url" : "/blog/2013/06/23/under-construction/","date" : "23 Jun 2013"}
 
 

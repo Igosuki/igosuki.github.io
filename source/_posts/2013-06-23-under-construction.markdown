@@ -7,4 +7,4 @@ categories:
 tags: []
 ---
 
-* Something somehow
+* Building this site with responsive design.
