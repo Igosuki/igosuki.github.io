@@ -3,7 +3,10 @@
 /blog/archives/index.html
 /demos.html
 /index.html
+/insight.html
 /music-therapy.html
+/programming.html
+/readlist.html
 /resume.html
 /robots.txt
 /rss.xml
