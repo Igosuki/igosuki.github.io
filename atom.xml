@@ -4,7 +4,7 @@
   <title><![CDATA[Gepsens.com]]></title>
   <link href="http://gepsens.com/atom.xml" rel="self"/>
   <link href="http://gepsens.com/"/>
-  <updated>2013-07-17T15:47:56-04:00</updated>
+  <updated>2013-08-28T16:01:10-04:00</updated>
   <id>http://gepsens.com/</id>
   <author>
     <name><![CDATA[Guillaume Balaine]]></name>
@@ -19,6 +19,50 @@
     <updated>2013-06-23T23:54:00-04:00</updated>
     <id>http://gepsens.com/blog/2013/06/23/under-construction</id>
     <content type="html"><![CDATA[<p>I am currently building this website. In the meantime if you would like to contact me, please use the social bar, or have a look at my resume.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chaining jQuery and Angular promises]]></title>
+    <link href="http://gepsens.com/blog/2013/06/23/chain-promises/"/>
+    <updated>2013-06-23T23:54:00-04:00</updated>
+    <id>http://gepsens.com/blog/2013/06/23/chain-promises</id>
+    <content type="html"><![CDATA[<p>Sometimes, you might want to use a library that uses jQuery&rsquo;s deferred to win some time, unfortunately, you might be using another framework such as backbone, lodash, or angular.</p>
+
+<p>In the case of Angular, here is a simple snippet to help you chain jQuery&rsquo;s deferred and Angular&rsquo;s q.</p>
+
+<figure class='code'><figcaption><span>Chaining jQuery and Angular&#8217;s promises</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">jQueryDeferred</span> <span class="o">=</span> <span class="nx">fooLibrary</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">$scope</span><span class="p">.</span><span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">error</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+</span><span class='line'>  <span class="nx">fooLibrary</span><span class="p">.</span><span class="nx">promise</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">$scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And voila, this should work with most bindings out there.</p>
 ]]></content>
   </entry>
   

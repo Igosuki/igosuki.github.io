@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: techtalks | Gepsens.com]]></title>
+  <link href="http://gepsens.com/blog/categories/techtalks/atom.xml" rel="self"/>
+  <link href="http://gepsens.com/"/>
+  <updated>2013-08-28T16:01:10-04:00</updated>
+  <id>http://gepsens.com/</id>
+  <author>
+    <name><![CDATA[Guillaume Balaine]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Chaining jQuery and Angular promises]]></title>
+    <link href="http://gepsens.com/blog/2013/06/23/chain-promises/"/>
+    <updated>2013-06-23T23:54:00-04:00</updated>
+    <id>http://gepsens.com/blog/2013/06/23/chain-promises</id>
+    <content type="html"><![CDATA[<p>Sometimes, you might want to use a library that uses jQuery&rsquo;s deferred to win some time, unfortunately, you might be using another framework such as backbone, lodash, or angular.</p>
+
+<p>In the case of Angular, here is a simple snippet to help you chain jQuery&rsquo;s deferred and Angular&rsquo;s q.</p>
+
+<p>``` javascript Chaining jQuery and Angular&rsquo;s promises
+var jQueryDeferred = fooLibrary.fail(function(err) {</p>
+
+<pre><code>$scope.$apply(function() {
+  $scope.errors.push(err.error);
+});
+</code></pre>
+
+<p>  });
+  var deferred = $q.defer();
+  fooLibrary.promise().then(function(result) {</p>
+
+<pre><code>$scope.$apply(function() {
+  deferred.resolve(result);
+});
+</code></pre>
+
+<p>  });
+  return deferred.promise.then(function(result) {</p>
+
+<pre><code>return result;
+</code></pre>
+
+<p>  });
+```</p>
+
+<p>And voila, this should work with most bindings out there.</p>
+]]></content>
+  </entry>
+  
+</feed>
