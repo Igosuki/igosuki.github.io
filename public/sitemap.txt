@@ -14,5 +14,8 @@
 /tech-radar.html
 /tutorials.html
 /usa-trip.html
+blog/categories/techtalks/index.html
+blog/categories/techtalks/atom.xml
 
 /blog/2013/06/23/under-construction/
+/blog/2013/06/23/chain-promises/

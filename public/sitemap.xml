@@ -1,63 +1,67 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://gepsens.com/blog/2013/06/23/chain-promises/</loc>
+        <lastmod>2013-08-28T16:00:47-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://gepsens.com/blog/2013/06/23/under-construction/</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/blog/archives/</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-08-28T16:00:47-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/demos.html</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-08-28T16:00:47-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/insight.html</loc>
-        <lastmod>2013-07-09T12:33:28-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/music-therapy.html</loc>
-        <lastmod>2013-07-09T12:30:42-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/programming.html</loc>
-        <lastmod>2013-07-09T12:34:05-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/readlist.html</loc>
-        <lastmod>2013-07-09T12:35:37-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/resume.html</loc>
-        <lastmod>2013-07-17T15:47:11-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/robots.txt</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/rss.xml</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/sitemap.txt</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/tech-radar.html</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/tutorials.html</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
     <url>
         <loc>http://gepsens.com/usa-trip.html</loc>
-        <lastmod>2013-07-08T11:40:17-04:00</lastmod>
+        <lastmod>2013-07-17T15:47:58-04:00</lastmod>
     </url>
 </urlset>
