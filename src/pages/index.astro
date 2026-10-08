@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { SITE } from '../config';
+import { getPosts } from '../lib';
+
+const posts = await getPosts();
+const ideas = posts.filter((p) => p.data.kind === 'idea');
+const notes = posts.filter((p) => p.data.kind === 'note');
+---
+
+<Base>
+  <section class="hero col">
+    <h1>Startup ideas, each with a prototype that already works.</h1>
+    <p class="lede">
+      I'm Guillaume. I've been CTO five times and built about ten products from scratch. Here I build ideas in the open,
+      while they're still small enough to change. If one of them is yours to build, fund or sell, let's talk.
+    </p>
+    <p class="cta">
+      <a class="button" href={`mailto:${SITE.email}`}>Email me</a>
+      <a href="/about/">More about me</a>
+    </p>
+  </section>
+
+  <section class="block" aria-labelledby="ideas">
+    <h2 id="ideas" class="col">Ideas</h2>
+    <PostList posts={ideas} empty="The first idea is on the workbench." />
+  </section>
+
+  <section class="block" aria-labelledby="notes">
+    <h2 id="notes" class="col">Notes</h2>
+    <PostList posts={notes} empty="Nothing here yet." />
+  </section>
+</Base>
+
+<style>
+  .hero h1 {
+    font-size: clamp(2.5rem, 7.2vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.3rem;
+    line-height: 1.55;
+    max-width: 33rem;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+    font-family: var(--font-display);
+    margin-top: 1.75rem;
+  }
+  .button {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.6rem 1.1rem;
+    border-radius: 4px;
+  }
+  .button:hover {
+    background: var(--cobalt);
+    color: #fff;
+  }
+  .block {
+    margin-top: 5rem;
+  }
+  .block h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+    color: var(--graphite);
+    letter-spacing: 0;
+    font-weight: 500;
+  }
+  @media (min-width: 52rem) {
+    .hero h1 {
+      margin-left: -0.05em;
+    }
+  }
+</style>

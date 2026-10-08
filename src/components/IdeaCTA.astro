@@ -1,0 +1,51 @@
+---
+// Closes every idea post. Say who you want to hear from, specifically.
+import { SITE } from '../config';
+
+interface Props {
+  title: string;
+  ask?: string;
+}
+const {
+  title,
+  ask = 'If you know this industry, want to build this with me, or would fund it, I want to hear from you.',
+} = Astro.props;
+const subject = encodeURIComponent(`About: ${title}`);
+---
+
+<aside class="cta" aria-label="Get in touch">
+  <h2>Want to build this?</h2>
+  <p>{ask}</p>
+  <a class="button" href={`mailto:${SITE.email}?subject=${subject}`}>Email me about this idea</a>
+</aside>
+
+<style>
+  .cta {
+    margin: 4rem 0 0;
+    padding: 1.6rem 1.6rem 1.8rem;
+    background: var(--surface);
+    border-left: 4px solid var(--marker);
+    border-radius: 0 6px 6px 0;
+  }
+  .cta h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.4rem;
+  }
+  p {
+    margin-bottom: 1.2rem;
+  }
+  .button {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 500;
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+    padding: 0.6rem 1.1rem;
+    border-radius: 4px;
+  }
+  .button:hover {
+    background: var(--cobalt);
+    color: #fff;
+  }
+</style>

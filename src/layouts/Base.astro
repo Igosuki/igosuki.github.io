@@ -1,0 +1,127 @@
+---
+import '@fontsource/familjen-grotesk/latin-400.css';
+import '@fontsource/familjen-grotesk/latin-500.css';
+import '@fontsource/familjen-grotesk/latin-700.css';
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/newsreader/opsz-italic.css';
+import '../styles/global.css';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/#ideas', label: 'Ideas' },
+  { href: '/#notes', label: 'Notes' },
+  { href: '/about/', label: 'About' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <a class="skip sr-only" href="#main">Skip to content</a>
+    <header class="frame site-header">
+      <a class="wordmark" href="/">{SITE.name}</a>
+      <nav aria-label="Main">
+        {nav.map((n) => <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>)}
+      </nav>
+    </header>
+    <main id="main" class="frame">
+      <slot />
+    </main>
+    <footer class="frame site-footer">
+      <div class="col">
+        <p>
+          Have an idea, a workshop, a customer list, or funding? <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        </p>
+        <p class="links">
+          {SITE.links.map((l) => <a href={l.href} rel="me">{l.label}</a>)}
+          <a href="/rss.xml">RSS</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .skip:focus {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    height: auto;
+    clip: auto;
+    padding: 0.4rem 0.7rem;
+    background: var(--surface);
+    z-index: 10;
+  }
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    padding-top: 1.6rem;
+    padding-bottom: 3.5rem;
+    font-family: var(--font-display);
+  }
+  .wordmark {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  nav {
+    display: flex;
+    gap: 1.25rem;
+    font-size: 1rem;
+  }
+  nav a {
+    color: var(--graphite);
+    text-decoration: none;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+  .site-footer {
+    margin-top: 6rem;
+    padding-bottom: 3rem;
+    font-size: 1rem;
+    color: var(--graphite);
+  }
+  .site-footer .col {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-family: var(--font-display);
+  }
+</style>

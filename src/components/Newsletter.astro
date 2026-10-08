@@ -1,0 +1,62 @@
+---
+// Buttondown signup. Hidden until SITE.buttondown is set in src/config.ts.
+import { SITE } from '../config';
+const user = SITE.buttondown;
+---
+
+{
+  user && (
+    <form
+      class="signup"
+      action={`https://buttondown.com/api/emails/embed-subscribe/${user}`}
+      method="post"
+      target="_blank"
+    >
+      <label for="bd-email">Get the next idea by email. One message per post, nothing else.</label>
+      <div class="field">
+        <input id="bd-email" type="email" name="email" required placeholder="you@company.com" autocomplete="email" />
+        <button type="submit">Subscribe</button>
+      </div>
+    </form>
+  )
+}
+
+<style>
+  .signup {
+    margin-top: 3rem;
+    font-family: var(--font-display);
+  }
+  label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--graphite);
+  }
+  .field {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  input {
+    flex: 1 1 14rem;
+    font: inherit;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    color: var(--ink);
+  }
+  button {
+    font: inherit;
+    font-weight: 500;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+</style>

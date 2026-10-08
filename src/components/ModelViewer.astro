@@ -1,0 +1,139 @@
+---
+// Interactive 3D viewer for STL or GLB/GLTF files in /public.
+// Usage in an .mdx post:
+//   import ModelViewer from '../../components/ModelViewer.astro';
+//   <ModelViewer src="/models/table.stl" caption="Drag to rotate, scroll to zoom." />
+interface Props {
+  src: string;
+  caption?: string;
+  height?: string;
+  color?: string;
+  autoRotate?: boolean;
+}
+const { src, caption, height = '26rem', color = '#c89b6d', autoRotate = true } = Astro.props;
+---
+
+<figure class="viewer">
+  <model-viewer-3d data-src={src} data-color={color} data-autorotate={String(autoRotate)} style={`height:${height}`}>
+    <p class="fallback">Loading 3D model…</p>
+  </model-viewer-3d>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  import * as THREE from 'three';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+  import { STLLoader } from 'three/examples/jsm/loaders/STLLoader.js';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+  class ModelViewer3D extends HTMLElement {
+    connectedCallback() {
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          this.init().catch((err) => {
+            console.error(err);
+            this.innerHTML = `<p class="fallback">This model couldn't load. <a href="${this.dataset.src}">Download it instead.</a></p>`;
+          });
+        }
+      }, { rootMargin: '200px' });
+      io.observe(this);
+    }
+
+    async init() {
+      const src = this.dataset.src!;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const width = this.clientWidth;
+      const height = this.clientHeight;
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 10000);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f86, 1.6));
+      const key = new THREE.DirectionalLight(0xffffff, 2.2);
+      key.position.set(1, 2, 1.5);
+      scene.add(key);
+
+      let object: THREE.Object3D;
+      if (/\.(glb|gltf)$/i.test(src)) {
+        object = (await new GLTFLoader().loadAsync(src)).scene;
+      } else {
+        const geometry = await new STLLoader().loadAsync(src);
+        geometry.computeVertexNormals();
+        const material = new THREE.MeshStandardMaterial({
+          color: this.dataset.color,
+          roughness: 0.75,
+          metalness: 0,
+          flatShading: true,
+          side: THREE.DoubleSide,
+        });
+        object = new THREE.Mesh(geometry, material);
+        // CAD files are usually Z-up; three.js is Y-up.
+        object.rotation.x = -Math.PI / 2;
+      }
+      scene.add(object);
+
+      // Frame the model.
+      const box = new THREE.Box3().setFromObject(object);
+      const size = box.getSize(new THREE.Vector3()).length();
+      const center = box.getCenter(new THREE.Vector3());
+      object.position.sub(center);
+      camera.position.set(size * 0.75, size * 0.55, size * 0.95);
+      camera.lookAt(0, 0, 0);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.autoRotate = this.dataset.autorotate === 'true' && !reduceMotion;
+      controls.autoRotateSpeed = 1.2;
+      controls.addEventListener('start', () => (controls.autoRotate = false));
+
+      this.replaceChildren(renderer.domElement);
+      renderer.domElement.setAttribute('role', 'img');
+      renderer.domElement.setAttribute('aria-label', '3D model. Drag to rotate, scroll or pinch to zoom.');
+
+      new ResizeObserver(() => {
+        const w = this.clientWidth;
+        const h = this.clientHeight;
+        renderer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }).observe(this);
+
+      renderer.setAnimationLoop(() => {
+        controls.update();
+        renderer.render(scene, camera);
+      });
+    }
+  }
+
+  if (!customElements.get('model-viewer-3d')) customElements.define('model-viewer-3d', ModelViewer3D);
+</script>
+
+<style>
+  .viewer {
+    margin: 2rem 0;
+  }
+  model-viewer-3d {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: grab;
+    touch-action: none;
+  }
+  model-viewer-3d :global(canvas) {
+    display: block;
+  }
+  .fallback {
+    font-family: var(--font-display);
+    color: var(--graphite);
+    margin: 0;
+  }
+</style>

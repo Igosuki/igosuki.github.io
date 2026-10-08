@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config';
+---
+
+<Base title="About" description="Five-time CTO looking for co-founders. What I've built and what I'm looking for.">
+  <div class="col prose">
+    <h1>About</h1>
+
+    <p class="lede">
+      I'm Guillaume Balaine, a software engineer from Paris. I've been CTO of five startups and built about ten products
+      from scratch.
+    </p>
+
+    <!-- TODO: replace with your real story. Keep it concrete: companies, what you built, what happened. -->
+    <h2>What I've done</h2>
+    <ul>
+      <li>CTO, five times. <em>TODO: list the companies, one line each: what it did and what you built.</em></li>
+      <li>Principal engineer at Adikteev. <em>TODO: one line on the work.</em></li>
+      <li>About ten products shipped from scratch. <em>TODO: link the two or three you're proudest of.</em></li>
+    </ul>
+
+    <h2>What this site is</h2>
+    <p>
+      I get new startup ideas all the time, and I build a working prototype of the good ones quickly. Instead of keeping
+      them in a notes app, I publish them here, each with the prototype, why I think now is the moment, and what it
+      would take to turn it into a company.
+    </p>
+
+    <h2>Who I want to hear from</h2>
+    <ul>
+      <li>Founders with domain knowledge, customers or distribution, looking for a technical co-founder.</li>
+      <li>Investors and angels who meet strong non-technical founders.</li>
+      <li>People inside the industries I write about, who can tell me what I've got wrong.</li>
+    </ul>
+
+    <p>
+      Write to me at <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+    </p>
+  </div>
+</Base>
+
+<style>
+  .lede {
+    font-size: 1.3rem;
+    line-height: 1.5;
+  }
+  em {
+    color: var(--graphite);
+  }
+</style>

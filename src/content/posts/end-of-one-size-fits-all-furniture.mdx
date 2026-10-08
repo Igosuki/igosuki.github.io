@@ -1,0 +1,60 @@
+---
+title: The end of one-size-fits-all furniture
+description: I used AI and Japanese joinery to design my own furniture. Soon, everyone will.
+pubDate: 2026-10-08
+kind: idea
+status: looking-for-partners
+draft: true
+---
+
+import ModelViewer from '../../components/ModelViewer.astro';
+
+{/*
+  DRAFT. Visible in `npm run dev`, left out of the production build until you set `draft: false`.
+  Replace every TODO, update pubDate, then flip draft.
+*/}
+
+{/* 1. The hook: the walk-out-of-the-workshop moment, in two or three sentences. */}
+
+One morning I found out you could generate CAD from a text prompt. By lunch, I had a piece of furniture held together
+entirely by Japanese wood joints, no screws, no glue. **TODO: the moment you walked out of the workshop with it, or what
+comes next if you haven't yet.**
+
+<ModelViewer
+  src="/models/cross-lap-joint.stl"
+  caption="Placeholder: a cross-lap joint, exploded. Replace with your own model (STL or GLB in public/models)."
+/>
+
+## Why kigumi is a hard test
+
+Kigumi is the Japanese tradition of joining wood without nails or glue. The joints have to be cut to tight tolerances
+and often fit together in one specific order. If an AI-assisted workflow gets this right, ordinary furniture is easy.
+
+## How it works
+
+**TODO: name and link both projects, and credit their authors.**
+
+- A text-to-CAD tool: **TODO link**. I installed it as a plugin for Claude Code.
+- A kigumi CAD library: **TODO link**. It's not AI. It generates traditional joints from parameters.
+
+The interesting part is the split. The AI handles the creative part: what the piece looks like, its proportions, where
+the joints go. The joinery library handles the part that has to be exactly right: joints that actually fit. **TODO: the
+prompt you used, and a screenshot or two.**
+
+## What broke
+
+**TODO: where the AI got it wrong. Impossible assembly orders, joints in the wrong place, tolerances, grain direction.
+This section is what makes the post credible.**
+
+## The gap
+
+Designing is close to solved. Making it physically, on demand, isn't. Big retailers sell the same table to a million
+people because that's what their factories and logistics are built for. A local workshop with a CNC can make one table
+for one person, but today nobody connects the two.
+
+**TODO: what it costs and how long it took at the lab.**
+
+## The idea
+
+A service where you describe the furniture you want, see it in 3D, adjust it, and pick it up from a workshop near you,
+ready to assemble without tools. **TODO: who it's for, what you'd charge, what you'd need to test first.**

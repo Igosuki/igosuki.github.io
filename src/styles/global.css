@@ -1,0 +1,202 @@
+/*
+  Tokens. Cool workshop paper, ink, one cobalt for anything clickable,
+  and a highlighter yellow reserved for ideas that are looking for partners.
+*/
+:root {
+  --paper: #e9ece6;
+  --surface: #f6f7f3;
+  --ink: #18202b;
+  --graphite: #5a6371;
+  --rule: #c9cec6;
+  --cobalt: #2340c8;
+  --marker: #f5cb2e;
+  --marker-ink: #18202b;
+
+  --font-display: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+
+  --measure: 38rem;
+  --gutter: 9rem;
+  --side: 1rem;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121820;
+    --surface: #1a222c;
+    --ink: #e4e7e1;
+    --graphite: #9aa3ae;
+    --rule: #2c3540;
+    --cobalt: #93a6ff;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.1875rem;
+  line-height: 1.62;
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: var(--cobalt);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+:focus-visible {
+  outline: 2px solid var(--cobalt);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 2.2em 0 0.6em;
+}
+h1 {
+  font-size: clamp(2.2rem, 5vw, 3.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin-top: 0;
+}
+h2 {
+  font-size: 1.6rem;
+}
+h3 {
+  font-size: 1.25rem;
+}
+
+p,
+ul,
+ol,
+blockquote,
+pre,
+figure {
+  margin: 0 0 1.1em;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 3rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--graphite);
+  font-style: italic;
+}
+
+code {
+  font-size: 0.86em;
+  background: var(--surface);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+pre {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  padding: 1rem 1.1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+}
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+/* Shiki dual themes */
+.astro-code,
+.astro-code span {
+  background-color: var(--surface) !important;
+}
+@media (prefers-color-scheme: dark) {
+  .astro-code,
+  .astro-code span {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+  }
+}
+
+/* Page frame: one left-aligned column, with a margin column for dates on wide screens. */
+.frame {
+  max-width: calc(var(--measure) + var(--gutter) + 2 * var(--side));
+  margin: 0 auto;
+  padding: 0 var(--side);
+}
+.col {
+  max-width: var(--measure);
+}
+@media (min-width: 52rem) {
+  :root {
+    --side: 2rem;
+  }
+  .col {
+    margin-left: var(--gutter);
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The one loud thing: a highlighter swipe on ideas looking for partners. */
+.status {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--graphite);
+  white-space: nowrap;
+}
+.status--looking-for-partners {
+  color: var(--marker-ink);
+  background: linear-gradient(100deg, transparent 0.15em, var(--marker) 0.3em, var(--marker) calc(100% - 0.3em), transparent calc(100% - 0.1em));
+  padding: 0.05em 0.45em;
+  border-radius: 0.2em 0.5em 0.3em 0.4em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

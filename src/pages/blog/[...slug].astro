@@ -1,0 +1,93 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import IdeaCTA from '../../components/IdeaCTA.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import { STATUS_LABEL } from '../../config';
+import { formatDate, getPosts, postPath, type Post } from '../../lib';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: postPath(post) }, props: { post } }));
+}
+
+const { post } = Astro.props as { post: Post };
+const { Content } = await render(post);
+const { title, description, pubDate, updatedDate, kind, status, draft } = post.data;
+---
+
+<Base title={title} description={description}>
+  <article>
+    <header class="head">
+      <p class="meta">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        {status && <span class={`status status--${status}`}>{STATUS_LABEL[status]}</span>}
+        {draft && <span class="status">Draft, not published</span>}
+      </p>
+      <div class="col">
+        <h1>{title}</h1>
+        <p class="description">{description}</p>
+      </div>
+    </header>
+    <div class="col prose">
+      <Content />
+      {updatedDate && <p class="updated">Updated {formatDate(updatedDate)}.</p>}
+      {kind === 'idea' && <IdeaCTA title={title} />}
+      <Newsletter />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--graphite);
+    margin: 0 0 1rem;
+  }
+  .description {
+    font-size: 1.3rem;
+    line-height: 1.5;
+    color: var(--graphite);
+    margin-bottom: 3rem;
+  }
+  h1 {
+    text-wrap: balance;
+  }
+  .updated {
+    color: var(--graphite);
+    font-style: italic;
+  }
+  .prose :global(h2) {
+    margin-top: 2.4em;
+  }
+  .prose :global(img),
+  .prose :global(video) {
+    border-radius: 6px;
+  }
+  .prose :global(figure figcaption) {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--graphite);
+    margin-top: 0.5rem;
+  }
+  @media (min-width: 52rem) {
+    .head {
+      display: grid;
+      grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    }
+    .meta {
+      flex-direction: column;
+      align-items: flex-start;
+      padding-top: 0.6rem;
+      padding-right: 1.5rem;
+    }
+    .head .col {
+      margin-left: 0;
+    }
+  }
+</style>
