@@ -7,6 +7,8 @@ export const SITE = {
   email: 'igosuki.github@gmail.com',
   // TODO: your Buttondown username (https://buttondown.com). Leave empty to hide the signup form.
   buttondown: '',
+  // TODO: your GoatCounter code (https://www.goatcounter.com), e.g. 'gepsens' for gepsens.goatcounter.com. Leave empty to disable analytics.
+  goatcounter: '',
   links: [
     { label: 'GitHub', href: 'https://github.com/Igosuki' },
     // TODO: add LinkedIn / X / etc.

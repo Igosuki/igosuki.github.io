@@ -16,7 +16,7 @@ const { Content } = await render(post);
 const { title, description, pubDate, updatedDate, kind, status, draft, wip, tags, invite, image } = post.data;
 ---
 
-<Base title={title} description={description} image={image}>
+<Base title={title} description={description} image={image} article={{ published: pubDate, modified: updatedDate, tags }}>
   <article>
     <header class="head">
       <p class="meta">

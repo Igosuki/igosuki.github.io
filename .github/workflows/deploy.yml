@@ -32,3 +32,18 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v5
+
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit URLs to IndexNow
+        run: |
+          curl -fsS https://www.gepsens.com/sitemap-0.xml \
+            | grep -o '<loc>[^<]*</loc>' \
+            | sed -e 's#<loc>##' -e 's#</loc>##' \
+            | jq -R . | jq -s \
+              '{host: "www.gepsens.com", key: "1a51d33dcb8d9641c850cdda7946aaac", keyLocation: "https://www.gepsens.com/1a51d33dcb8d9641c850cdda7946aaac.txt", urlList: .}' \
+            | curl -fsS -X POST https://api.indexnow.org/indexnow \
+              -H 'Content-Type: application/json; charset=utf-8' \
+              --data-binary @-

@@ -58,3 +58,6 @@ One-time setup: in the repo's **Settings → Pages**, set **Source** to **GitHub
 This replaces a 2013 Octopress build. The one real post, `/blog/2013/06/23/chain-promises/`, keeps its URL via the
 `permalink` frontmatter field. The old feed URL `/atom.xml` serves the new RSS feed. Everything else from the old site
 was placeholder pages and was dropped; it's still in git history on `master` before this change.
+
+## Analytics 
+https://igosuki.goatcounter.com/
