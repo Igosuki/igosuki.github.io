@@ -20,6 +20,8 @@ const posts = defineCollection({
     draft: z.boolean().default(false),
     // Published, but marked as unfinished. Ignored when `draft` is set.
     wip: z.boolean().default(false),
+    // Email invitation at the end of the post. Ideas get one by default; this overrides its text.
+    invite: z.object({ heading: z.string().optional(), ask: z.string() }).optional(),
   }),
 });
 

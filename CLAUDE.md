@@ -8,7 +8,7 @@ Astro static site for www.gepsens.com, deployed to GitHub Pages by `.github/work
 - `src/lib.ts`: post helpers. Use `getPosts()` (handles drafts and sorting) and `postUrl()`; don't call `getCollection` directly.
 - `src/config.ts`: site name, contact email, Buttondown username, social links, status labels.
 - `src/layouts/Base.astro`: page shell (header, footer, fonts, meta).
-- `src/components/`: `PostList`, `IdeaCTA` (auto-added to `kind: idea` posts), `Newsletter`, `ModelViewer` (three.js, STL/GLB).
+- `src/components/`: `PostList`, `Invite` (email box: on every `kind: idea` post, on notes that set `invite`), `Newsletter`, `ModelViewer` (three.js, STL/GLB).
 - `src/styles/global.css`: design tokens and base typography.
 - `templates/idea.mdx`: starting point for a new idea post.
 

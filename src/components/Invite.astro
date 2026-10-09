@@ -1,22 +1,29 @@
 ---
-// Closes every idea post. Say who you want to hear from, specifically.
+// Closes a post with an invitation to email. Say who you want to hear from, specifically.
+// Ideas always get one; notes only when they set `invite` in the frontmatter.
 import { SITE } from '../config';
 
 interface Props {
   title: string;
+  kind: 'idea' | 'note';
+  heading?: string;
   ask?: string;
 }
+const isIdea = Astro.props.kind === 'idea';
 const {
   title,
+  heading = isIdea ? 'Want to build this?' : 'Get in touch',
   ask = 'If you know this industry, want to build this with me, or would fund it, I want to hear from you.',
 } = Astro.props;
 const subject = encodeURIComponent(`About: ${title}`);
 ---
 
-<aside class="cta" aria-label="Get in touch">
-  <h2>Want to build this?</h2>
+<aside class:list={['cta', { idea: isIdea }]} aria-label="Get in touch">
+  <h2>{heading}</h2>
   <p>{ask}</p>
-  <a class="button" href={`mailto:${SITE.email}?subject=${subject}`}>Email me about this idea</a>
+  <a class="button" href={`mailto:${SITE.email}?subject=${subject}`}>
+    {isIdea ? 'Email me about this idea' : 'Email me about this post'}
+  </a>
 </aside>
 
 <style>
@@ -24,8 +31,11 @@ const subject = encodeURIComponent(`About: ${title}`);
     margin: 4rem 0 0;
     padding: 1.6rem 1.6rem 1.8rem;
     background: var(--surface);
-    border-left: 4px solid var(--marker);
+    border-left: 4px solid var(--graphite);
     border-radius: 0 6px 6px 0;
+  }
+  .cta.idea {
+    border-left-color: var(--marker);
   }
   .cta h2 {
     margin: 0 0 0.5rem;
