@@ -14,6 +14,8 @@ const posts = defineCollection({
     // Only used for ideas: where the idea stands today.
     status: z.enum(['exploring', 'prototype', 'building', 'shelved']).optional(),
     tags: z.array(z.string()).default([]),
+    // Link preview image, a path under /public. 1200×630 renders best.
+    image: z.string().optional(),
     // Override the URL (used to keep old Octopress links working).
     permalink: z.string().optional(),
     // Drafts show up in `npm run dev` but are left out of the production build.
