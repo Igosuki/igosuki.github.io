@@ -1,0 +1,187 @@
+---
+title: A TV stand from a one-line prompt, then without screws
+description: I designed a solid-oak TV stand with Claude Code and the text-to-cad plugin, priced it at Leroy Merlin, then rebuilt it with Japanese joinery using kumiki.
+pubDate: 2026-10-08
+kind: note
+draft: true
+---
+
+import ModelViewer from '../../components/ModelViewer.astro';
+
+I wanted a TV stand in solid oak. Instead of browsing catalogues, I typed one line into Claude Code: "meuble TV en
+bois massif". A day later I had a parametric CAD model with opening doors, a cut list priced at Leroy Merlin, and a second
+version held together by dovetails and pegs instead of screws.
+
+This post walks through what I did, in order, and what went wrong along the way.
+
+## Installing text-to-cad
+
+[text-to-cad](https://github.com/earthtojake/text-to-cad) is a plugin that gives a coding agent a CAD toolchain. The
+agent writes Python with [build123d](https://github.com/gumyr/build123d), a library on top of the Open CASCADE kernel,
+and the plugin's `cadgen` tool turns that script into STEP, STL or GLB files. It also renders snapshots, checks geometry,
+and serves a local viewer in the browser.
+
+It needs [uv](https://docs.astral.sh/uv/). In Claude Code, installing it takes two commands:
+
+```bash
+claude plugin marketplace add earthtojake/text-to-cad#latest
+claude plugin install text-to-cad@earthtojake
+```
+
+After a restart, the agent gets a `cad` skill and a `cad_show` tool that opens a model in the viewer. The first run
+downloads cadgen and its headless renderer through uv. I used cadgen 0.7.15.
+
+## The first version
+
+From the one-line prompt, the agent wrote `src/meuble_tv.py`: one Python file, one decorated function that returns the
+whole assembly, with every dimension as a named constant at the top.
+
+```python
+WIDTH = 1500.0
+DEPTH = 450.0
+LEG_HEIGHT = 150.0
+TOP_T = 26.0
+SIDE_T = 18.0
+FRONT_T = 18.0
+GAP = 2.0
+
+
+@step(out="../STEP/meuble_tv.step", kinematics=KINEMATICS, materials=MATERIALS)
+@glb(out="../GLB/meuble_tv.glb")
+def meuble_tv():
+    return bd.Compound(
+        children=[_carcass(), _door(-1), _door(1), _drawer(), _legs()],
+        label="meuble_tv",
+    )
+```
+
+It picked the design on its own: three bays, fluted doors on the sides, an open niche over a drawer in the middle, two
+cable holes in the back, and tapered legs. Each board is a separate labelled solid, so the model doubles as a parts
+list. The `kinematics` declaration adds hinges for the doors and a slide for the drawer. The viewer turns them into
+sliders, and the snapshot tool can render the piece open.
+
+![The first version, closed: fluted doors, a niche over a drawer, tapered legs.](/images/meuble-tv/v1.png)
+
+![The same model rendered with the doors and drawer open.](/images/meuble-tv/v1-open.jpg)
+
+Before calling the model done, the agent checked it the way an engineer would. It listed every part with its bounding
+box, ran an overlap test on every pair of parts, and rendered snapshots that it read back before reporting. None of
+that was in my prompt. It comes from the plugin's instructions.
+
+<ModelViewer src="/models/meuble-tv.glb" caption="The screwed version. Drag to rotate, scroll to zoom." />
+
+### Small requests, honest answers
+
+When I asked for brass knobs, the agent noticed they already had a brass material, but their colour was so close to
+oak that they read as wood in the viewer. It made the colour brighter and the finish shinier, and left the geometry alone.
+
+## From model to shopping list
+
+Then I asked how I would order the wood from Leroy Merlin. This turned into the most useful part of the session.
+
+The first model used 30, 25, 20 and 12 mm boards, and Leroy Merlin doesn't sell those thicknesses in oak. Its in-store
+cutting service only cuts length and width, and only on boards bought there. So the agent rebuilt the model on stock
+thicknesses: an oak worktop of 26 mm for the top, glued oak panels of 18 mm for the case, and poplar plywood for the back
+and the drawer box. The outer size didn't change.
+
+It also read Leroy Merlin's cutting terms and pointed out two constraints that matter for furniture:
+
+- The saw tolerance is ±3 mm, too loose for doors with 2 mm gaps. The plan is to order the doors and drawer front a few
+  millimetres oversize and trim them at home.
+- No piece can be smaller than 200×200 or 600×100 mm, so the drawer sides come as one strip to cut at home, and the
+  legs are bought ready-made.
+
+A small script reads the saved STEP, measures every part and writes a cut list. A second file lists what to buy, with
+a reliability column that says which prices were read on the site and which are estimates. The total came to about
+€530, about €370 of it for the oak.
+
+```csv
+piece,qte,longueur_fil_mm,largeur_mm,epaisseur_mm,materiau,achat,prix_estime_eur
+fond,1,1500,450,18,chêne 18,tablette_chene_18,68.96
+porte,2,402,472,18,chêne 18,tablette_chene_18,38.77
+plateau,1,1500,450,26,chêne PdT 26,pdt_chene_26,119.00
+```
+
+Because the list is generated from the model, it stays correct when the model changes. That mattered right away.
+
+## Checking it against my living room
+
+The stand started at 1.80 m. When I asked for a picture of it in my living room, the agent measured the room from a
+single photo, using the width of my AV receiver (434 mm) as the scale. The gap between my floor-standing speakers came
+out at about 1.55–1.60 m, so a 1.80 m stand wouldn't fit. It asked before changing anything, then reduced the width to
+1.50 m and regenerated the cut list and prices.
+
+The photo montage itself was less successful. Claude can't generate images, so the agent matched a 3D render to the
+photo's camera, removed the old stand and pasted the render in. The geometry lined up within a pixel, but it still
+looked like a CAD render pasted onto a photo. To get a realistic picture you need an image model such as GPT Image or
+Nano Banana, and the montage is a good guide image for one.
+
+## Rebuilding it without screws
+
+The screwed version relies on dowels, hinges, metal drawer slides and screwed-on legs. I wanted to know what it would
+take to build it the Japanese way, with joints instead of hardware.
+
+[kumiki](https://github.com/minimapletinytools/kumiki) is a Python library for timber framing and woodworking. You
+describe timbers and boards, then call joint functions that cut both sides of a connection at once. It exports to STEP,
+which means its output can go straight into the same CAD project.
+
+I kept the first model untouched and asked for a fork. Claude handed the kumiki part to a sub-agent with a written
+brief: same envelope and layout, solid oak from a sawmill instead of Leroy Merlin panels, no metal anywhere. The
+sub-agent read the library's docs and patterns, built the piece in about 80 tool calls, and exported one STEP file
+with 40 named parts. Then the main agent wrapped that file in a cadgen model to add the oak colours, the door flutes
+and the moving parts.
+
+![The kumiki version: through dovetails at the corners, on a separate base.](/images/meuble-tv/kumiki.png)
+
+Every joint below comes from a kumiki function:
+
+| Connection | Joint |
+|---|---|
+| Top and bottom to the sides | Through dovetails, six per corner |
+| Dividers to the top and bottom | Sliding dovetails, stopped at the front |
+| Centre shelf | Housed in the dividers |
+| Back | Six 10 mm boards, tongue and groove, floating in grooves |
+| Doors | Pivots: round tenons top and bottom, with the hinge edge rounded so the door can swing |
+| Door backs | Sliding dovetail battens to keep the panels flat |
+| Drawer | Half-blind dovetails at the front, through dovetails at the back |
+| Base | Mortise and tenon, pegged with walnut pegs |
+| Case to base | A round tenon on top of each leg |
+
+![Opened: the battens on the door backs, the dovetailed drawer, the base.](/images/meuble-tv/kumiki-open.png)
+
+![From below and behind: the floating back boards and the pegged base frame.](/images/meuble-tv/kumiki-underside.png)
+
+The checks were the same as for the first version: the overall size is exactly 1500×450×600 mm and no two parts
+overlap. One more check made sense for pivot doors: the agent rotated each door to 30°, 60° and 90° and confirmed it
+never hits the case.
+
+<ModelViewer src="/models/meuble-tv-kumiki.glb" caption="The kumiki version: dovetails, pivots and a pegged base." />
+
+## What broke
+
+Most of the trouble came from the tools, not from the agent.
+
+- **kumiki's STEP export lost joints silently.** A sliding dovetail is mirrored at one end of a board, and the STEP
+  exporter forces every transform to be a plain rotation. The mirrored housing ended up in the wrong place and vanished
+  from the file. kumiki's own mesh view was correct. The overlap test caught it: 68,800 mm³ of solid wood where a
+  housing should have been. The sub-agent added a workaround that rebuilds those cuts before export, which makes the
+  script fragile across kumiki versions.
+- **Some kumiki joints are stubs.** The board-in-dado function only contains `assert False, "not implemented yet"`.
+  The shelf uses a housing joint instead.
+- **A blind mortise has to say so.** In kumiki, leaving the mortise depth unset means "through", which opened slots on
+  the outside faces of the legs until the depth was set explicitly.
+- **The renderer frames shots its own way.** For the photo montage, the photographic render mode moved the camera. The
+  agent placed marker spheres on the model to recover the mapping instead of guessing.
+
+The agent also made mistakes. Its first assumption about the speaker edge in my photo was wrong, and its first attempt
+at filling the wall behind the old stand left visible patches. It found both by looking at its own output, not because
+I pointed them out.
+
+## What I'd keep
+
+The split between the two tools worked well. text-to-cad covers the design: proportions, layout, colours, moving parts,
+checks, renders and the cut list. kumiki covers the joints, the part that has to be exactly right. Each tool exports
+STEP, so the agent can verify both with the same overlap and clearance checks.
+
+The next step is a cut list in rough sawmill boards with planing allowances, and one dimensioned drawing per part with
+the dovetail layout, so the screwless version can actually be made.
