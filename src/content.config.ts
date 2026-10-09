@@ -12,11 +12,14 @@ const posts = defineCollection({
     // "idea" posts are startup ideas with a prototype; "note" is everything else.
     kind: z.enum(['idea', 'note']).default('note'),
     // Only used for ideas: where the idea stands today.
-    status: z.enum(['exploring', 'prototype', 'looking-for-partners', 'building', 'shelved']).optional(),
+    status: z.enum(['exploring', 'prototype', 'building', 'shelved']).optional(),
+    tags: z.array(z.string()).default([]),
     // Override the URL (used to keep old Octopress links working).
     permalink: z.string().optional(),
     // Drafts show up in `npm run dev` but are left out of the production build.
     draft: z.boolean().default(false),
+    // Published, but marked as unfinished. Ignored when `draft` is set.
+    wip: z.boolean().default(false),
   }),
 });
 

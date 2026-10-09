@@ -3,6 +3,7 @@ title: Chaining jQuery and Angular promises
 description: A small snippet to bridge jQuery's deferred and Angular's $q.
 pubDate: 2013-06-23
 kind: note
+tags: [javascript, angular, jquery, promises]
 permalink: 2013/06/23/chain-promises
 ---
 

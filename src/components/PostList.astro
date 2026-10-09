@@ -23,8 +23,16 @@ const { posts, empty } = Astro.props;
               {post.data.draft && <span class="draft">draft</span>}
             </h3>
             <p>{post.data.description}</p>
+            {post.data.wip && !post.data.draft && <span class="status wip">Work in progress</span>}
             {post.data.status && (
               <span class={`status status--${post.data.status}`}>{STATUS_LABEL[post.data.status]}</span>
+            )}
+            {post.data.tags.length > 0 && (
+              <ul class="tags" role="list">
+                {post.data.tags.map((tag) => (
+                  <li class="tag">{tag}</li>
+                ))}
+              </ul>
             )}
           </div>
         </li>
@@ -78,6 +86,13 @@ const { posts, empty } = Astro.props;
     padding: 0 0.35em;
     margin-left: 0.5em;
     vertical-align: 0.2em;
+  }
+  .wip {
+    display: inline-block;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0 0.45em;
+    margin: 0 0.5rem 0.4rem 0;
   }
   .empty {
     color: var(--graphite);

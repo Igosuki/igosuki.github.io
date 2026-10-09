@@ -1,6 +1,6 @@
 /*
   Tokens. Cool workshop paper, ink, one cobalt for anything clickable,
-  and a highlighter yellow reserved for ideas that are looking for partners.
+  and a highlighter yellow reserved for the idea call-to-action.
 */
 :root {
   --paper: #e9ece6;
@@ -199,7 +199,6 @@ pre code {
   white-space: nowrap;
 }
 
-/* The one loud thing: a highlighter swipe on ideas looking for partners. */
 .status {
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -207,11 +206,23 @@ pre code {
   color: var(--graphite);
   white-space: nowrap;
 }
-.status--looking-for-partners {
-  color: var(--marker-ink);
-  background: linear-gradient(100deg, transparent 0.15em, var(--marker) 0.3em, var(--marker) calc(100% - 0.3em), transparent calc(100% - 0.1em));
-  padding: 0.05em 0.45em;
-  border-radius: 0.2em 0.5em 0.3em 0.4em;
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--graphite);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0 0.6em;
 }
 
 @media (prefers-reduced-motion: no-preference) {
