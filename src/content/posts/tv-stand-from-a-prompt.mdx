@@ -5,15 +5,25 @@ pubDate: 2026-10-08
 kind: note
 tags: [furniture, cad, joinery, claude-code]
 wip: true
+invite:
+  heading: Would your workshop take this file?
+  ask: >-
+    If you run a workshop, a CNC shop or a shared woodworking space and would cut from a file like this, or you've
+    tried and know why it doesn't work, I want to hear from you. If you replay the prompts and build something, I'd
+    like to see that too.
 ---
 
 import ModelViewer from '../../components/ModelViewer.astro';
+import Prompt from '../../components/Prompt.astro';
 
 I wanted a TV stand in solid oak. Instead of browsing catalogues, I typed one line into Claude Code: "meuble TV en
 bois massif". A day later I had a parametric CAD model with opening doors, a cut list priced at Leroy Merlin, and a second
 version held together by dovetails and pegs instead of screws.
 
-This post walks through what I did, in order, and what went wrong along the way.
+This post walks through what I did, in order, and what went wrong along the way. Each step has a prompt you can copy
+to replay it with your own piece of furniture. My own prompts were short, half in French, and I learned things as I
+went, so the ones below are rewritten in English with those lessons folded in. Put your own values where you see
+[square brackets].
 
 ## Installing text-to-cad
 
@@ -33,6 +43,22 @@ After a restart, the agent gets a `cad` skill and a `cad_show` tool that opens a
 downloads cadgen and its headless renderer through uv. I used cadgen 0.7.15.
 
 ## The first version
+
+My first prompt was "Create this CAD artifact: meuble TV en bois massif", and that was enough to get a model. A vague
+prompt lets the agent choose the design, which is fun the first time. If you already know what you want, say it:
+
+<Prompt>
+Create a CAD model of a [TV stand] in [solid oak], [1500 × 450 × 600] mm overall.
+
+Layout: [three bays, fluted doors on the sides, an open niche over a drawer in the middle, two cable holes in the
+back, tapered legs].
+
+Keep every dimension as a named constant at the top of the script. Make each board a separate labelled solid so the
+model doubles as a parts list. Declare the doors as hinges and the drawer as a slide so I can open them in the viewer.
+
+Before you report, list every part with its bounding box, check that no two parts overlap, and render snapshots closed
+and open, then look at them.
+</Prompt>
 
 From the one-line prompt, the agent wrote `src/meuble_tv.py`: one Python file, one decorated function that returns the
 whole assembly, with every dimension as a named constant at the top.
@@ -73,7 +99,7 @@ that was in my prompt. It comes from the plugin's instructions.
 
 ### Small requests, honest answers
 
-When I asked for brass knobs, the agent noticed they already had a brass material, but their colour was so close to
+When I asked for brass knobs ("les boutons doivent être en laiton"), the agent noticed they already had a brass material, but their colour was so close to
 oak that they read as wood in the viewer. It made the colour brighter and the finish shinier, and left the geometry alone.
 
 ## From model to shopping list
@@ -105,12 +131,37 @@ plateau,1,1500,450,26,chêne PdT 26,pdt_chene_26,119.00
 
 Because the list is generated from the model, it stays correct when the model changes. That mattered right away.
 
+It took me three prompts to get there: how would I order this, can't they cut to size, and where are the prices. One
+is enough:
+
+<Prompt>
+I want to buy the wood for this model at [Leroy Merlin, or your DIY store or timber merchant] and have it cut to size
+there.
+
+Read the store's cutting service terms: what it cuts, the tolerance, the smallest piece it accepts. Rebuild the model
+on board thicknesses the store actually sells, keeping the outer size the same. Anything the service can't cut
+accurately enough, like doors with 2 mm gaps, should be ordered oversize and trimmed at home.
+
+Then write a script that reads the exported STEP file and generates a cut list as CSV: part, quantity, length along
+the grain, width, thickness, material, which product to buy, estimated price. Add a shopping list with a column that
+says which prices you read on the store's site and which you estimated.
+</Prompt>
+
 ## Checking it against my living room
 
 The stand started at 1.80 m. When I asked for a picture of it in my living room, the agent measured the room from a
 single photo, using the width of my AV receiver (434 mm) as the scale. The gap between my floor-standing speakers came
 out at about 1.55–1.60 m, so a 1.80 m stand wouldn't fit. It asked before changing anything, then reduced the width to
 1.50 m and regenerated the cut list and prices.
+
+I only asked for a picture, and the size check came for free. Asking for it directly works better:
+
+<Prompt>
+Here is a photo of the room where the furniture will go: [path to the photo]. Use [an object you can measure, for
+example my AV receiver, 434 mm wide] as the scale. Estimate the space available [between the two speakers] and tell
+me whether the model fits. Ask me before changing any dimension. If it needs to change, regenerate the cut list and
+prices afterwards.
+</Prompt>
 
 The photo montage itself was less successful. Claude can't generate images, so the agent matched a 3D render to the
 photo's camera, removed the old stand and pasted the render in. The geometry lined up within a pixel, but it still
@@ -125,6 +176,22 @@ take to build it the Japanese way, with joints instead of hardware.
 [kumiki](https://github.com/minimapletinytools/kumiki) is a Python library for timber framing and woodworking. You
 describe timbers and boards, then call joint functions that cut both sides of a connection at once. It exports to STEP,
 which means its output can go straight into the same CAD project.
+
+I asked what it would take to build the piece without screws, then said yes to a fork. Here is the brief in one
+prompt:
+
+<Prompt>
+Fork this model into a screwless version using Japanese joinery with kumiki
+(https://github.com/minimapletinytools/kumiki). Leave the original model untouched.
+
+Keep the same outer size and layout. Use solid [oak] from a sawmill instead of store panels, and no metal anywhere:
+no screws, hinges, slides or dowels. Every connection should come from a kumiki joint function, chosen to suit the
+connection. Read kumiki's docs and examples before you start, and give the build to a sub-agent if the work is long.
+
+Export one STEP file with every part named, then bring it back into the CAD project for colours, moving parts and
+renders. Check the overall size, check that no two parts overlap, and swing each door through 30°, 60° and 90° to
+make sure it never hits the case.
+</Prompt>
 
 I kept the first model untouched and asked for a fork. Claude handed the kumiki part to a sub-agent with a written
 brief: same envelope and layout, solid oak from a sawmill instead of Leroy Merlin panels, no metal anywhere. The
@@ -185,4 +252,35 @@ checks, renders and the cut list. kumiki covers the joints, the part that has to
 STEP, so the agent can verify both with the same overlap and clearance checks.
 
 The next step is a cut list in rough sawmill boards with planing allowances, and one dimensioned drawing per part with
-the dovetail layout, so the screwless version can actually be made.
+the dovetail layout, so the screwless version can actually be made. I haven't run this one yet:
+
+<Prompt label="Prompt, not tried yet">
+From the screwless model, write a cut list in rough sawmill boards. Group the parts by board thickness, add allowances
+for planing and squaring, and note the grain direction of each part.
+
+Then make one dimensioned drawing per part, with every joint located and sized: dovetail layout, tenon lengths, peg
+holes. Number the parts so the drawings, the cut list and the 3D model use the same names.
+</Prompt>
+
+## From a file to a workshop
+
+Today the chain stops at my door with a pile of boards. The model, the cut list and the checks are exact to the
+millimetre. The store's saw is not, and it only cuts straight lines. Everything precise is still my job: trimming the
+doors, and every dovetail of the screwless version.
+
+But look at what the agent produced: a STEP file with named parts, a cut list generated from it, and a record of the
+checks it ran. That is close to what a workshop needs to make the piece. Some CNC shops already cut parts from a file you
+upload. I'd like a workshop that takes a CAD file made by an agent, checks it, quotes it, cuts every part with the
+joints already in, and delivers a bundle of oak to my door, ready to glue and peg.
+
+Or the other way round: I book a slot at a shared workshop, bring the file and the drawings, and cut the parts myself
+on their machines, with someone nearby who knows them. The agent's work becomes the plan I follow on the day.
+
+I don't know which of these makes more sense, and there are questions I can't answer yet:
+
+- What would a workshop want in the file? STEP gives the geometry, but not the grain direction, the visible faces or
+  the tolerances each joint needs.
+- Who checks the design? An overlap test proves the parts fit together in the model. It doesn't prove a joint will
+  hold, or that the wood will behave once it moves with the seasons.
+- Who pays for a mistake? If the file is wrong, the oak is already cut.
+- Could the workshop run its own agent to read the file, ask questions and send a quote?
