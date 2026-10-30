@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "test -z \"$(git status --porcelain)\" || { echo 'Commit or stash your changes first.'; exit 1; }; astro build && git push origin master",
-    "astro": "astro"
+    "astro": "astro",
+    "og": "node scripts/og.ts"
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.3",
@@ -21,7 +22,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@fontsource/newsreader": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
     "@types/three": "^0.186.0",
-    "typescript": "^6.0.3"
+    "github-slugger": "^2.0.0",
+    "satori": "^0.63.2",
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.1"
   }
 }

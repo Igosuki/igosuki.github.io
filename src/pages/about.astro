@@ -1,10 +1,42 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE } from '../config';
+
+const work = [
+  { when: '2025', role: 'Co-founder, stealth AI startup', what: 'an agent-based AI CFO' },
+  { when: '2023–25', role: 'CTO, DinMo', what: 'composable customer data platform' },
+  { when: '2022–23', role: 'CTO and co-founder, Parcels', what: 'fractional real estate investing' },
+  { when: '2021–23', role: 'Founder, Tradai', what: 'real-time trading platform in Rust' },
+  { when: '2016–21', role: 'Engineering manager, Adikteev', what: 'data and ML platform for ad tech' },
+  { when: '2014–16', role: 'CTO, Finexkap', what: 'working capital for small businesses' },
+  { when: '2013', role: 'Freelance, New York', what: 'contracting and a couple of small companies' },
+  { when: '2012–13', role: 'Engineer, Xebia', what: "backend for Orange's Libon app" },
+];
+
+const code = [
+  {
+    name: 'Apache DataFusion',
+    href: 'https://github.com/apache/datafusion/pulls?q=is%3Apr+author%3AIgosuki+is%3Amerged',
+    text: 'The Avro data source, indexed access into lists and structs, and part of the 2022 port to arrow2. Also Avro reading in arrow2 and nested map access in sqlparser-rs.',
+  },
+  {
+    name: 'binance-rs-async',
+    href: 'https://github.com/Igosuki/binance-rs-async',
+    text: 'An async Rust client for the Binance APIs, spot and futures. Over 200 stars and 120 forks, still maintained.',
+  },
+  {
+    name: 'compass-mixins',
+    href: 'https://github.com/Igosuki/compass-mixins',
+    text: "Compass's Sass mixins packaged for libsass and Bower, from 2013. Nearly 600 stars, mostly from people who wanted to drop Ruby from their build.",
+  },
+];
+
+const github = SITE.links.find((l) => l.label === 'GitHub')!;
+const linkedin = SITE.links.find((l) => l.label === 'LinkedIn')!;
 ---
 
-<Base profile title="About" description="Who I am, what I've built, and what this site is for.">
-  <div class="col prose">
+<Base profile title="About" description="Guillaume Balaine: CTO at three startups, founder of a few more, open source in Rust and data.">
+  <div class="col">
     <h1>About</h1>
 
     <img
@@ -17,34 +49,70 @@ import { SITE } from '../config';
     />
 
     <p class="lede">
-      I'm Guillaume Balaine, a former CTO from Paris working on AI agents and distributed systems. I've built and scaled
-      products in startups for the past 15 years.
+      I'm Guillaume Balaine. I've spent most of my career since 2012 as the first engineer or the CTO of a startup in
+      Paris or New York: CTO three times, founder a few more. The work is usually data-heavy systems and, lately, AI
+      agents.
+    </p>
+  </div>
+
+  <section aria-labelledby="work">
+    <h2 id="work" class="col">Work</h2>
+    <ol class="rows" role="list">
+      {
+        work.map((w) => (
+          <li class="row">
+            <span class="when">{w.when}</span>
+            <p>
+              <span class="role">{w.role}</span> <span class="what">{w.what}</span>
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="col more">
+      The long version is on <a href={linkedin.href}>LinkedIn</a>.
+    </p>
+  </section>
+
+  <section aria-labelledby="code">
+    <h2 id="code" class="col">Open source</h2>
+    <ul class="rows" role="list">
+      {
+        code.map((c) => (
+          <li class="row">
+            <span class="when" />
+            <div>
+              <h3>
+                <a href={c.href}>{c.name}</a>
+              </h3>
+              <p>{c.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="col more">
+      On <a href={github.href}>GitHub</a> since 2010, with 130-odd public repositories and over 100 merged pull requests.
+    </p>
+  </section>
+
+  <div class="col">
+    <h2>This site</h2>
+    <p>
+      Notes on software I find interesting and on how I work with coding agents. Now and then, a startup idea I've
+      prototyped, with the working prototype, why I think the timing is right, and what it would take to make it a
+      company.
     </p>
 
-    <!-- TODO: replace with your real story. Keep it concrete: companies, what you built, what happened. -->
-    <h2>What I've done</h2>
+    <h2>Get in touch if you're</h2>
     <ul>
-      <li>CTO, five times. <em>TODO: list the companies, one line each: what it did and what you built.</em></li>
-      <li>Principal engineer at Adikteev. <em>TODO: one line on the work.</em></li>
-      <li>About ten products shipped from scratch. <em>TODO: link the two or three you're proudest of.</em></li>
-    </ul>
-
-    <h2>What this site is</h2>
-    <p>
-      I get new startup ideas all the time, and I build a working prototype of the good ones quickly. Instead of keeping
-      them in a notes app, I publish them here, each with the prototype, why I think now is the moment, and what it
-      would take to turn it into a company.
-    </p>
-
-    <h2>Who I want to hear from</h2>
-    <ul>
-      <li>Founders with domain knowledge, customers or distribution, looking for a technical co-founder.</li>
-      <li>Investors and angels who meet strong non-technical founders.</li>
-      <li>People inside the industries I write about, who can tell me what I've got wrong.</li>
+      <li>a founder with domain knowledge, customers or distribution, looking for a technical co-founder;</li>
+      <li>an investor who meets strong non-technical founders;</li>
+      <li>working in an industry I've written about, and can tell me what I got wrong.</li>
     </ul>
 
     <p>
-      Write to me at <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
+      Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
     </p>
   </div>
 </Base>
@@ -62,7 +130,71 @@ import { SITE } from '../config';
     font-size: 1.3rem;
     line-height: 1.5;
   }
-  em {
+  section {
+    margin-top: 3.5rem;
+  }
+  section h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .row {
+    padding: 1.1rem 0;
+  }
+  .row + .row {
+    border-top: 1px solid var(--rule);
+  }
+  ol .row {
+    padding: 0.55rem 0;
+  }
+  .when {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
     color: var(--graphite);
+    font-variant-numeric: tabular-nums;
+  }
+  .when:empty {
+    display: none;
+  }
+  .row h3 {
+    margin: 0 0 0.3rem;
+    font-size: 1.15rem;
+  }
+  .row h3 a {
+    color: var(--ink);
+  }
+  .row h3 a:hover {
+    color: var(--cobalt);
+  }
+  .row p {
+    margin: 0;
+  }
+  .role {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .what {
+    color: var(--graphite);
+  }
+  .more {
+    margin-top: 0.75rem;
+    color: var(--graphite);
+  }
+  @media (min-width: 52rem) {
+    .row {
+      display: grid;
+      grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    }
+    .when,
+    .when:empty {
+      display: block;
+      padding-top: 0.2rem;
+      padding-right: 1.5rem;
+    }
   }
 </style>

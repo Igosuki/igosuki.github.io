@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Invite from '../../components/Invite.astro';
@@ -14,9 +16,15 @@ export async function getStaticPaths() {
 const { post } = Astro.props as { post: Post };
 const { Content } = await render(post);
 const { title, description, pubDate, updatedDate, kind, status, draft, wip, tags, invite, image } = post.data;
+
+const generatedCard = !image;
+if (generatedCard && !draft && !existsSync(join(process.cwd(), 'public/og', `${postPath(post)}.png`))) {
+  throw new Error(`Missing og image for "${postPath(post)}". Run \`npm run og\` and commit public/og/.`);
+}
+const ogImage = image ?? `/og/${postPath(post)}.png`;
 ---
 
-<Base title={title} description={description} image={image} article={{ published: pubDate, modified: updatedDate, tags }}>
+<Base title={title} description={description} image={ogImage} imageIs1200x630={generatedCard} article={{ published: pubDate, modified: updatedDate, tags }}>
   <article>
     <header class="head">
       <p class="meta">

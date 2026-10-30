@@ -11,15 +11,16 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageIs1200x630?: boolean;
   profile?: boolean;
   article?: { published: Date; modified?: Date; tags: string[] };
 }
 
-const { title, description = SITE.description, image, article, profile } = Astro.props;
+const { title, description = SITE.description, image, imageIs1200x630 = !image, article, profile } = Astro.props;
 const fullTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
-const imageUrl = new URL(image ?? SITE.ogImage, Astro.site).href;
+const imageUrl = new URL(image ?? SITE.ogImage, import.meta.env.DEV ? Astro.url : Astro.site).href;
 const imageAlt = title ?? SITE.name;
 const person = {
   '@type': 'Person',
@@ -97,7 +98,7 @@ const github = SITE.links.find((l) => l.label === 'GitHub');
     <meta property="og:image" content={imageUrl} />
     <meta property="og:image:alt" content={imageAlt} />
     {
-      !image && (
+      imageIs1200x630 && (
         <>
           <meta property="og:image:width" content="1200" />
           <meta property="og:image:height" content="630" />
