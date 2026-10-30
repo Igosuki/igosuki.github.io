@@ -1,6 +1,7 @@
 /*
   Tokens. Cool workshop paper, ink, one cobalt for anything clickable,
-  and a highlighter yellow reserved for the idea call-to-action.
+  a highlighter yellow reserved for the idea call-to-action,
+  and an alert red for broken states and focal elements in diagrams.
 */
 :root {
   --paper: #e9ece6;
@@ -11,6 +12,7 @@
   --cobalt: #2340c8;
   --marker: #f5cb2e;
   --marker-ink: #18202b;
+  --alert: #b8361c;
 
   --font-display: 'Familjen Grotesk', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
@@ -30,6 +32,7 @@
     --graphite: #9aa3ae;
     --rule: #2c3540;
     --cobalt: #93a6ff;
+    --alert: #ff8a6b;
   }
 }
 
@@ -137,6 +140,15 @@ td {
 th {
   font-family: var(--font-display);
   font-weight: 600;
+}
+:not(pre) > code {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 40rem) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
 }
 
 code {

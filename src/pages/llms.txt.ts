@@ -7,6 +7,6 @@ export async function GET(context: APIContext) {
   const lines = posts.map(
     (p) => `- [${p.data.title}](${new URL(postUrl(p), context.site).href}): ${p.data.description}`,
   );
-  const body = `# ${SITE.name}\n\n> ${SITE.description}\n\n## Posts\n\n${lines.join('\n')}\n`;
+  const body = `# ${SITE.name}\n\n> ${SITE.description}\n\n## Posts\n\n${lines.join('\n')}\n\n## Optional\n\n- [Full text of all posts](${new URL('/llms-full.txt', context.site).href})\n`;
   return new Response(body, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 }

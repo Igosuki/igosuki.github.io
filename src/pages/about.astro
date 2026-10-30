@@ -3,13 +3,22 @@ import Base from '../layouts/Base.astro';
 import { SITE } from '../config';
 ---
 
-<Base title="About" description="Who I am, what I've built, and what this site is for.">
+<Base profile title="About" description="Who I am, what I've built, and what this site is for.">
   <div class="col prose">
     <h1>About</h1>
 
+    <img
+      class="portrait"
+      src={SITE.photo}
+      alt="Portrait of Guillaume Balaine"
+      width="160"
+      height="160"
+      loading="eager"
+    />
+
     <p class="lede">
-      I'm Guillaume Balaine, a software engineer from Paris. I've built and scaled products in startups for the past 15
-      years.
+      I'm Guillaume Balaine, a former CTO from Paris working on AI agents and distributed systems. I've built and scaled
+      products in startups for the past 15 years.
     </p>
 
     <!-- TODO: replace with your real story. Keep it concrete: companies, what you built, what happened. -->
@@ -41,6 +50,14 @@ import { SITE } from '../config';
 </Base>
 
 <style>
+  .portrait {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin: 0 0 1.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
   .lede {
     font-size: 1.3rem;
     line-height: 1.5;
