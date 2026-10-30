@@ -16,6 +16,8 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     // Link preview image, a path under /public. 1200×630 renders best.
     image: z.string().optional(),
+    // 1-based position of the post's <figure> to pair with the title on the generated social card.
+    ogFigure: z.number().int().positive().optional(),
     // Override the URL (used to keep old Octopress links working).
     permalink: z.string().optional(),
     // Drafts show up in `npm run dev` but are left out of the production build.

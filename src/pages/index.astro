@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import PostList from '../components/PostList.astro';
-import { SITE } from '../config';
 import { getPosts } from '../lib';
 
 const posts = await getPosts();
@@ -16,10 +15,6 @@ const notes = posts.filter((p) => p.data.kind === 'note');
       I'm Guillaume. I've built and scaled products in startups for the past 15 years. I write about software I find
       interesting, how I work with coding agents, and now and then a startup idea I've prototyped. If one of those is
       yours to build, fund or sell, let's talk.
-    </p>
-    <p class="cta">
-      <a class="button" href={`mailto:${SITE.email}`}>Email me</a>
-      <a href="/about/">More about me</a>
     </p>
   </section>
 
@@ -47,27 +42,6 @@ const notes = posts.filter((p) => p.data.kind === 'note');
     line-height: 1.55;
     max-width: 33rem;
   }
-  .cta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 1.25rem;
-    font-family: var(--font-display);
-    margin-top: 1.75rem;
-  }
-  .button {
-    display: inline-block;
-    background: var(--ink);
-    color: var(--paper);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.6rem 1.1rem;
-    border-radius: 4px;
-  }
-  .button:hover {
-    background: var(--cobalt);
-    color: #fff;
-  }
   .block {
     margin-top: 5rem;
   }
@@ -81,6 +55,8 @@ const notes = posts.filter((p) => p.data.kind === 'note');
   @media (min-width: 52rem) {
     .hero h1 {
       margin-left: -0.05em;
+      /* Wider than the column, but stops short of the viewport's right edge. */
+      width: max(100%, min(54rem, 50vw + 10rem));
     }
   }
 </style>
