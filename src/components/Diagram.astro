@@ -1,0 +1,124 @@
+---
+// Figure wrapper for inline SVG diagrams. The SVG keeps its 608px viewBox width and scrolls on narrow screens.
+interface Props {
+  caption?: string;
+}
+const { caption } = Astro.props;
+---
+
+<figure class="diagram">
+  <div class="diagram-scroll"><slot /></div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style is:global>
+  .diagram {
+    margin: 1.8em 0 2em;
+  }
+  .diagram-scroll {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .diagram svg {
+    display: block;
+    width: 100%;
+    min-width: 608px;
+    height: auto;
+    font-family: var(--font-display);
+  }
+  .diagram figcaption {
+    margin-top: 0.6em;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: var(--graphite);
+  }
+
+  .diagram .d-paper {
+    fill: var(--paper);
+  }
+  .diagram .d-box {
+    fill: var(--surface);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .diagram .d-box-soft {
+    fill: var(--paper);
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .diagram .d-box-alert {
+    fill: color-mix(in srgb, var(--alert) 10%, var(--paper));
+    stroke: var(--alert);
+    stroke-width: 1.25;
+  }
+  .diagram .d-fill-ink {
+    fill: var(--ink);
+  }
+  .diagram .d-fill-graphite {
+    fill: var(--graphite);
+  }
+  .diagram .d-fill-alert {
+    fill: var(--alert);
+  }
+  .diagram .d-fill-rule {
+    fill: var(--rule);
+  }
+  .diagram .d-name {
+    fill: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .diagram .d-sub {
+    fill: var(--graphite);
+    font-size: 11px;
+    font-weight: 400;
+  }
+  .diagram .d-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .diagram .d-label {
+    fill: var(--graphite);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .diagram .d-eyebrow {
+    fill: var(--graphite);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .diagram .d-callout {
+    fill: var(--graphite);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-style: italic;
+  }
+  .diagram .d-text-alert {
+    fill: var(--alert);
+  }
+  .diagram .d-line {
+    fill: none;
+    stroke: var(--graphite);
+    stroke-width: 1.25;
+  }
+  .diagram .d-line-ink {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.5;
+  }
+  .diagram .d-line-alert {
+    fill: none;
+    stroke: var(--alert);
+    stroke-width: 1.5;
+  }
+  .diagram .d-rule {
+    fill: none;
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+  .diagram .d-dash {
+    stroke-dasharray: 5 4;
+  }
+</style>

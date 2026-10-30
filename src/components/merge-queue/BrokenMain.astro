@@ -1,0 +1,72 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="One broken change on main. Work lands on top of it, its revert conflicts, fixes stack up, and production stays on the last known good commit.">
+  <svg viewBox="0 0 608 272" role="img" aria-labelledby="mq-costs-title mq-costs-desc">
+    <title id="mq-costs-title">What a broken change costs on main</title>
+    <desc id="mq-costs-desc">
+      Production stays pinned to the last known good commit G while a broken change X lands on main, Y and Z land on top of
+      it, a new branch from Z inherits the break, the revert of X conflicts with Y, and fix-forward commits stack up.
+    </desc>
+    <defs>
+      <marker id="mq-costs-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+      <marker id="mq-costs-arrow-alert" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-alert"></polygon>
+      </marker>
+    </defs>
+
+    <line x1="24" y1="148" x2="152" y2="148" class="d-line"></line>
+    <line x1="152" y1="148" x2="596" y2="148" class="d-line-alert" marker-end="url(#mq-costs-arrow-alert)"></line>
+
+    <line x1="64" y1="64" x2="64" y2="136" class="d-line" marker-end="url(#mq-costs-arrow)"></line>
+    <rect x="72" y="90" width="84" height="14" class="d-paper"></rect>
+    <text x="76" y="100" class="d-label">Pre-deploy gate</text>
+
+    <path d="M384 136 V104 Q384 96 376 96 H232 Q224 96 224 104 V135" class="d-line d-dash" marker-end="url(#mq-costs-arrow)"></path>
+    <rect x="260" y="78" width="88" height="14" class="d-paper"></rect>
+    <text x="304" y="88" text-anchor="middle" class="d-label">Conflicts with Y</text>
+
+    <path d="M296 160 V228 Q296 236 304 236 H371" class="d-line" marker-end="url(#mq-costs-arrow)"></path>
+
+    <rect x="24" y="32" width="80" height="32" rx="6" class="d-box"></rect>
+    <text x="64" y="52" text-anchor="middle" class="d-name">Production</text>
+
+    <circle cx="64" cy="148" r="11" class="d-box"></circle>
+    <text x="64" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">G</text>
+    <text x="64" y="180" text-anchor="middle" class="d-sub">Last known good</text>
+
+    <circle cx="152" cy="148" r="11" class="d-box-alert"></circle>
+    <text x="152" y="152" text-anchor="middle" class="d-sub d-mono d-text-alert">X</text>
+    <text x="152" y="124" text-anchor="middle" class="d-name">Broken change</text>
+
+    <circle cx="224" cy="148" r="11" class="d-box"></circle>
+    <text x="224" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">Y</text>
+    <circle cx="296" cy="148" r="11" class="d-box"></circle>
+    <text x="296" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">Z</text>
+    <text x="284" y="200" text-anchor="end" class="d-callout">Y and Z land on top</text>
+    <text x="284" y="216" text-anchor="end" class="d-callout">before anyone notices</text>
+
+    <circle cx="384" cy="148" r="11" class="d-box-soft d-dash" style="stroke: var(--ink)"></circle>
+    <text x="384" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">X′</text>
+    <text x="384" y="180" text-anchor="middle" class="d-sub">Revert of X</text>
+
+    <circle cx="456" cy="148" r="11" class="d-box-soft d-dash" style="stroke: var(--ink)"></circle>
+    <text x="456" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">f1</text>
+    <circle cx="512" cy="148" r="11" class="d-box-soft d-dash" style="stroke: var(--ink)"></circle>
+    <text x="512" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">f2</text>
+    <circle cx="568" cy="148" r="11" class="d-box-soft d-dash" style="stroke: var(--ink)"></circle>
+    <text x="568" y="152" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">f3</text>
+    <text x="512" y="108" text-anchor="middle" class="d-name">Fixes stack forward</text>
+    <text x="512" y="122" text-anchor="middle" class="d-sub">without a rule, this snowballs</text>
+
+    <circle cx="384" cy="236" r="11" class="d-box"></circle>
+    <text x="384" y="240" text-anchor="middle" class="d-sub d-mono" style="fill: var(--ink)">B</text>
+    <text x="404" y="233" class="d-name">New branch inherits X</text>
+    <text x="404" y="248" class="d-sub">human or agent</text>
+
+    <text x="600" y="172" text-anchor="end" class="d-sub d-mono">main</text>
+  </svg>
+</Diagram>

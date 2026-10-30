@@ -1,0 +1,58 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="With a 1% failure rate per change, the chance that all 400 changes in flight pass is under 2%.">
+  <svg viewBox="0 0 608 288" role="img" aria-labelledby="mq-speculation-title mq-speculation-desc">
+    <title id="mq-speculation-title">Chance that every change in flight passes</title>
+    <desc id="mq-speculation-desc">
+      The probability that every change in flight passes, 0.99 to the power n, falls from 61% at 50 changes and 37% at
+      100 to 1.8% at 400 changes in flight.
+    </desc>
+
+    <text class="d-eyebrow" x="20" y="16">Chance that every change in flight passes</text>
+
+    <line class="d-rule" x1="56" y1="36" x2="584" y2="36"></line>
+    <line class="d-rule" x1="56" y1="86" x2="584" y2="86"></line>
+    <line class="d-rule" x1="56" y1="136" x2="584" y2="136"></line>
+    <line class="d-rule" x1="56" y1="186" x2="584" y2="186"></line>
+    <line class="d-line" style="stroke-width: 1" x1="56" y1="236" x2="584" y2="236"></line>
+
+    <g class="d-sub" text-anchor="end">
+      <text x="48" y="40">100%</text>
+      <text x="48" y="90">75%</text>
+      <text x="48" y="140">50%</text>
+      <text x="48" y="190">25%</text>
+      <text x="48" y="240">0%</text>
+    </g>
+    <g class="d-sub" text-anchor="middle">
+      <text x="56" y="252">0</text>
+      <text x="161.6" y="252">100</text>
+      <text x="267.2" y="252">200</text>
+      <text x="372.8" y="252">300</text>
+      <text x="478.4" y="252">400</text>
+      <text x="584" y="252">500</text>
+    </g>
+    <text class="d-sub" x="584" y="276" text-anchor="end">Changes in flight, each with a 1% chance of failing</text>
+
+    <line class="d-line d-dash" style="stroke-width: 1" x1="478.4" y1="112" x2="478.4" y2="226"></line>
+
+    <polyline
+      class="d-line-ink"
+      stroke-linejoin="round"
+      points="56.0,36.0 66.6,55.1 77.1,72.4 87.7,88.1 98.2,102.2 108.8,115.0 119.4,126.6 129.9,137.0 140.5,146.5 151.0,155.1 161.6,162.8 172.2,169.8 182.7,176.1 193.3,181.8 203.8,187.0 214.4,191.7 225.0,195.9 235.5,199.8 246.1,203.2 256.6,206.4 267.2,209.2 277.8,211.8 288.3,214.1 298.9,216.2 309.4,218.1 320.0,219.8 330.6,221.3 341.1,222.7 351.7,224.0 362.2,225.2 372.8,226.2 383.4,227.1 393.9,228.0 404.5,228.7 415.0,229.4 425.6,230.1 436.2,230.6 446.7,231.1 457.3,231.6 467.8,232.0 478.4,232.4 489.0,232.8 499.5,233.1 510.1,233.3 520.6,233.6 531.2,233.8 541.8,234.0 552.3,234.2 562.9,234.4 573.4,234.5 584.0,234.7"
+    ></polyline>
+
+    <circle class="d-fill-ink" cx="108.8" cy="115" r="3"></circle>
+    <text class="d-sub" x="120" y="108">50 in flight: 61%</text>
+    <circle class="d-fill-ink" cx="161.6" cy="162.8" r="3"></circle>
+    <text class="d-sub" x="172" y="156">100 in flight: 37%</text>
+
+    <rect class="d-paper" x="312" y="126" width="160" height="16"></rect>
+    <text class="d-name" x="468" y="120" text-anchor="end">400 in flight</text>
+    <text class="d-name d-text-alert" x="468" y="138" text-anchor="end">1.8% chance that all pass</text>
+    <text class="d-callout" x="468" y="158" text-anchor="end">21 merges/min × 20 min of CI</text>
+
+    <circle class="d-fill-alert" cx="478.4" cy="232.4" r="4"></circle>
+  </svg>
+</Diagram>

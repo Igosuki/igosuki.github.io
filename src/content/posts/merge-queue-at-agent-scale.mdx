@@ -1,0 +1,101 @@
+---
+title: The part of Anthropic's Scion post you can actually copy
+description: Everyone read about Scion, the new source control system. The bigger change is three sentences about dropping the merge queue for post-merge and pre-deploy testing.
+pubDate: 2026-10-19
+kind: note
+tags: [ci, source-control, agents, monorepo, adlc]
+---
+
+import MergeQueue from '../../components/merge-queue/MergeQueue.astro';
+import Speculation from '../../components/merge-queue/Speculation.astro';
+import GuaranteeMoved from '../../components/merge-queue/GuaranteeMoved.astro';
+import NotNew from '../../components/merge-queue/NotNew.astro';
+import BrokenMain from '../../components/merge-queue/BrokenMain.astro';
+import Pipeline from '../../components/merge-queue/Pipeline.astro';
+
+Last week Anthropic released [Redesigning source control at
+Anthropic](https://www.anthropic.com/engineering/redesigning-source-control). Most of the talks I saw were about Scion, the system that replaced git for their monorepo (changesets in Spanner, a central server for commits and merges, an optional working copy, large checkouts in a matter of seconds). This is great engineering that eliminates features made for humans that agents don't need. It's good engineering, and you might have to do something similar if you work on a large company's monorepo yourself.
+
+But the overlooked interesting part is a short paragraph further down, under "We're completely rethinking our priors":
+
+> A proper merge queue, for example, doesn't make much sense at agent scale. What does CI even mean when hundreds or
+> even thousands of changes can merge while tests are running? We haven't been able to effectively replicate the
+> industry standard of a global repository lock on the merge queue, so instead, we've invested in post-merge and
+> pre-deploy automated testing. This does mean that concurrent changes can conflict, but Claude can typically fix these
+> conflicts faster than humans can even identify them.
+
+It's a policy change rather than change of tools and this is the issue that most teams will run into first.
+
+**TLDR**
+
+> Git forges are about to become just "Forges" and scalable agentic development lifecycle control planes will use lock free post-merge and pre-deploy testing instead of merge queues.
+
+## What does a merge queue do
+
+<MergeQueue />
+
+A merge queue promises that main is always green. Each change is tested against the exact state of main it will land
+on, and only lands if that passes. To make the promise hold, the queue has to serialize: change B can't be tested on
+top of main until A has either landed or been rejected.
+
+A merge queue ensures that the target (main by default) branch remains stable throughout the merging process (and for a merge train, multiple merges at once). Any changes are verified with the current state of the target branch only, and are finalized by merging, provided that checks are passed. In order to be able to provide the aforementioned guarantee, the queue has to operate in a serial manner, which means that change B won't be tested until A has been either merged or rejected (or in the case of a merge train D, E, F won't be tested until A, B, C are merged).
+
+The method of serial testing is cumbersome, and therefore, more advanced queues (like GitHub’s merge queue, bors, Zuul and Uber’s SubmitQueue) do speculations. They perform tests simultaneously on A, A + B and A + B + C, while employing batching of 20 changes if needed. This method works well only when the failure rate is low.
+
+## Why speculation doesn’t work
+
+<Speculation />
+
+The number of changes in progress is defined by the merging rate multiplied by the time needed for verification. The examplifies indicate that in May, the merges had increased from an average of 2.5k to 30k in September. So now there are 21 merges per minute and if we put CI duration equal to 20 mins, then we have around 400 changes being executed at once.
+
+Let’s assume that 1% of changes cause failures. Consequently, the probability of all batches being successful among 400 total changes equals 0.99⁴⁰⁰ or around 2%. In simple words, practically every batch will fail and new 400 changes will have to be waited upon. Speculation doesn’t help here too.
+
+## What they did instead
+
+<GuaranteeMoved />
+
+They changed when and how the guarantee is going to work. The main function is no longer "always green." Today it is known as where review changes are. The guarantee is working during the deployment. Whatever code is deployed has passed all tests done on that particular commit and everything in between run tests after merge time. Something has to detect the failure and fix it after and the post does not mention this process anyhow but does refer to its elements. 
+There is one solution that includes automated bisect and revert pipeline and it relates to the API-first design of Scion. Another agent has a name Claude who is responsible for rebasing and eliminating conflicts that could not have happened if global lock was used.
+
+Here the connection between the two parts is being made. The solution is "how to find out what has changed between any two commits and which one has broken" and this is the reason why testing after merging works. It seems to be the infrastructure of the policy change of Scion.
+
+One detail worth mentioning, the post includes an "Antique merge queue" with its own monitoring agent. So there are still some forms of orderly merges somewhere.
+
+## This isn't new
+
+<NotNew />
+
+Large monorepos have stayed that way for a long time. Google's TAP runs tests continuously after submit and hunts for the change that broke them. Chromium development had build sheriffs to assist in reverting broken changes for over a decade. What is new, however, is how easily the limit is hit. It used to take thousands of engineers to produce enough changes to break a merge queue. Now a bunch of agents can do it (given enough token rate limits).
+
+## What it costs
+
+- Main can be red. Anyone branching from it, human or agent, can inherit a breakage. You need a "last known good"
+  commit and tools that start from it.
+- A broken change can land, and other changes can be built on top of it before anyone notices. The revert may then
+  conflict too.
+- "Fix forward" becomes tempting. With agents fixing conflicts in seconds, it's easy to stack fixes instead of reverting.
+  That needs a rule.
+- Your deploy gate is now load-bearing. If pre-deploy testing is weaker than the merge queue it replaced, you've
+  moved breakage to production.
+
+## The (not so) hidden costs
+
+<BrokenMain />
+
+- The target branch can be red. Any branch created afterwards, either manually or by the agent, inherits a fault from it. So instead tools branch from the last known good commit.
+- If a broken change lands other changes land on top, the revert will be costly.
+- Fix forward (not reverting but adding patches) becomes the tempting solution. Agents can just stack fixes for past mistakes, which can snowball. So these need rules.
+- The load has moved from the merge queue to preview deployments and Q/A.
+
+## Implementing pre-merge post-deploy
+
+<Pipeline />
+
+You don't need Scion or any of Anthropic's internal developer platform. 
+To make this switch, you need:
+
+1. pre-merge checks must be fast and per-change. Build, lint, type-check, tests for code the change touches. 
+2. post-merge tests run on main.
+3. pointers to the last green commit for each release branch. Preview deploys are only after that commit.
+4. automated bisecting and reverting for a red main.
+5. agents that can effectively rebase and fix conflicts.

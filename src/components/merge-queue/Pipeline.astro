@@ -1,0 +1,85 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="The five pieces. Checks before merge stay small; the full suite runs on main, and only green commits move the deploy pointer.">
+  <svg viewBox="0 0 608 312" role="img" aria-labelledby="mq-pipeline-title mq-pipeline-desc">
+    <title id="mq-pipeline-title">Pre-merge checks, post-merge tests, pre-deploy gate</title>
+    <desc id="mq-pipeline-desc">A change passes fast pre-merge checks and lands on main, a rebase agent handles conflicts, post-merge tests run on main, a red result triggers automated bisect and revert, and a green result advances the last green pointer that preview deploys start from.</desc>
+    <defs>
+      <marker id="mq-pipeline-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite" />
+      </marker>
+      <marker id="mq-pipeline-arrow-alert" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-alert" />
+      </marker>
+    </defs>
+
+    <text x="8" y="20" class="d-eyebrow">Before merge</text>
+    <text x="304" y="20" class="d-eyebrow">After merge</text>
+
+    <path d="M88 58 H119" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M272 58 H303" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M384 58 H415" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M48 84 V152 Q48 160 56 160 H119" class="d-line d-dash" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M272 160 H324 Q332 160 332 152 V85" class="d-line d-dash" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M464 84 V139" class="d-line-alert" marker-end="url(#mq-pipeline-arrow-alert)" />
+    <path d="M416 172 H364 Q356 172 356 164 V85" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M576 84 V247" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+    <path d="M416 274 H385" class="d-line" marker-end="url(#mq-pipeline-arrow)" />
+
+    <rect x="54" y="114" width="44" height="14" class="d-paper" />
+    <text x="56" y="124" class="d-label">conflict</text>
+    <rect x="280" y="110" width="46" height="14" class="d-paper" />
+    <text x="324" y="120" text-anchor="end" class="d-label">rebased</text>
+    <rect x="362" y="110" width="36" height="14" class="d-paper" />
+    <text x="364" y="120" class="d-label">revert</text>
+    <rect x="470" y="106" width="22" height="14" class="d-paper" />
+    <text x="472" y="116" class="d-label d-text-alert">red</text>
+    <rect x="536" y="210" width="34" height="14" class="d-paper" />
+    <text x="568" y="220" text-anchor="end" class="d-label">green</text>
+
+    <rect x="8" y="32" width="80" height="52" rx="6" class="d-box-soft" />
+    <text x="20" y="55" class="d-name">Change</text>
+    <text x="20" y="71" class="d-sub">per agent</text>
+
+    <rect x="120" y="32" width="152" height="52" rx="6" class="d-box" />
+    <rect x="130" y="50" width="16" height="16" rx="2" class="d-fill-ink" />
+    <text x="138" y="62" text-anchor="middle" class="d-name" style="font-size: 11px; fill: var(--paper)">1</text>
+    <text x="154" y="55" class="d-name">Pre-merge checks</text>
+    <text x="154" y="71" class="d-sub">touched code only</text>
+
+    <rect x="304" y="32" width="80" height="52" rx="6" class="d-box" />
+    <text x="316" y="55" class="d-name d-mono">main</text>
+    <text x="316" y="71" class="d-sub">may be red</text>
+
+    <rect x="416" y="32" width="184" height="52" rx="6" class="d-box" />
+    <rect x="426" y="50" width="16" height="16" rx="2" class="d-fill-ink" />
+    <text x="434" y="62" text-anchor="middle" class="d-name" style="font-size: 11px; fill: var(--paper)">2</text>
+    <text x="450" y="55" class="d-name">Post-merge tests</text>
+    <text x="450" y="71" class="d-sub">full suite, on main</text>
+
+    <rect x="120" y="140" width="152" height="52" rx="6" class="d-box-soft" />
+    <rect x="130" y="158" width="16" height="16" rx="2" class="d-fill-ink" />
+    <text x="138" y="170" text-anchor="middle" class="d-name" style="font-size: 11px; fill: var(--paper)">5</text>
+    <text x="154" y="163" class="d-name">Rebase agent</text>
+    <text x="154" y="179" class="d-sub">fixes conflicts</text>
+
+    <rect x="416" y="140" width="136" height="52" rx="6" class="d-box-alert" />
+    <rect x="426" y="158" width="16" height="16" rx="2" class="d-fill-ink" />
+    <text x="434" y="170" text-anchor="middle" class="d-name" style="font-size: 11px; fill: var(--paper)">4</text>
+    <text x="450" y="163" class="d-name">Bisect, revert</text>
+    <text x="450" y="179" class="d-sub">automated</text>
+
+    <rect x="416" y="248" width="184" height="52" rx="6" class="d-box" />
+    <rect x="426" y="266" width="16" height="16" rx="2" class="d-fill-ink" />
+    <text x="434" y="278" text-anchor="middle" class="d-name" style="font-size: 11px; fill: var(--paper)">3</text>
+    <text x="450" y="271" class="d-name">Last green pointer</text>
+    <text x="450" y="287" class="d-sub">per release branch</text>
+
+    <rect x="264" y="248" width="120" height="52" rx="6" class="d-box-soft" />
+    <text x="276" y="271" class="d-name">Preview deploy</text>
+    <text x="276" y="287" class="d-sub">from last green</text>
+
+  </svg>
+</Diagram>

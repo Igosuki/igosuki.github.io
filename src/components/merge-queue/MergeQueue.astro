@@ -1,0 +1,56 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="Three changes, one 20-minute CI run each. A serial queue lands them in an hour; a speculative queue tests the stacks in parallel and lands all three in twenty minutes, as long as none of them fails.">
+  <svg viewBox="0 0 608 324" role="img" aria-labelledby="mq-queue-title mq-queue-desc">
+    <title id="mq-queue-title">Serial and speculative merge queues</title>
+    <desc id="mq-queue-desc">A serial queue tests change A, then B on top of A, then C on top of both, one after another; a speculative queue tests A, A plus B, and A plus B plus C at the same time.</desc>
+    <defs></defs>
+
+    <line x1="264" y1="20" x2="264" y2="300" class="d-rule" />
+    <line x1="424" y1="20" x2="424" y2="300" class="d-rule" />
+    <line x1="584" y1="20" x2="584" y2="300" class="d-rule" />
+
+    <text x="0" y="12" class="d-eyebrow">Serial queue</text>
+
+    <text x="0" y="44" class="d-name">Change A</text>
+    <rect x="104" y="28" width="160" height="24" rx="4" class="d-box" />
+    <text x="112" y="44" class="d-sub">tests on main</text>
+
+    <text x="0" y="84" class="d-name">Change B</text>
+    <rect x="104" y="68" width="156" height="24" rx="4" class="d-box-soft d-dash" />
+    <text x="112" y="84" class="d-sub">waits for A</text>
+    <rect x="264" y="68" width="160" height="24" rx="4" class="d-box" />
+    <text x="272" y="84" class="d-sub">tests on main + A</text>
+
+    <text x="0" y="124" class="d-name">Change C</text>
+    <rect x="104" y="108" width="316" height="24" rx="4" class="d-box-soft d-dash" />
+    <text x="112" y="124" class="d-sub">waits for A and B</text>
+    <rect x="424" y="108" width="160" height="24" rx="4" class="d-box" />
+    <text x="432" y="124" class="d-sub">tests on main + A + B</text>
+
+    <text x="0" y="164" class="d-eyebrow">Speculative queue</text>
+
+    <text x="0" y="196" class="d-name">Change A</text>
+    <rect x="104" y="180" width="160" height="24" rx="4" class="d-box" />
+    <text x="112" y="196" class="d-sub">tests on main</text>
+
+    <text x="0" y="236" class="d-name">Change B</text>
+    <rect x="104" y="220" width="160" height="24" rx="4" class="d-box" />
+    <text x="112" y="236" class="d-sub">tests on main + A</text>
+
+    <text x="0" y="276" class="d-name">Change C</text>
+    <rect x="104" y="260" width="160" height="24" rx="4" class="d-box" />
+    <text x="112" y="276" class="d-sub">tests on main + A + B</text>
+
+    <rect x="280" y="222" width="196" height="20" class="d-paper" />
+    <text x="284" y="236" class="d-callout">Works while failures are rare</text>
+
+    <line x1="104" y1="300" x2="584" y2="300" class="d-line" />
+    <text x="104" y="316" class="d-label">0</text>
+    <text x="264" y="316" text-anchor="middle" class="d-label">20 min</text>
+    <text x="424" y="316" text-anchor="middle" class="d-label">40 min</text>
+    <text x="584" y="316" text-anchor="end" class="d-label">60 min</text>
+  </svg>
+</Diagram>

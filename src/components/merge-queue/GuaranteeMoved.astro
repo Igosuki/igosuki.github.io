@@ -1,0 +1,81 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="Before, the guarantee sits at the merge queue, which lets one change through at a time. After, changes land on main straight away, and the guarantee moves to the deploy gate, which only takes commits that passed the post-merge tests.">
+  <svg viewBox="0 0 608 368" role="img" aria-labelledby="mq-guarantee-title mq-guarantee-desc">
+    <title id="mq-guarantee-title">Where the green guarantee moved</title>
+    <desc id="mq-guarantee-desc">With a merge queue, a global lock keeps main always green before deploy; without it, changes land on a main that may be red, post-merge tests with a bisect and revert agent repair it, and a pre-deploy gate only ships the last green commit.</desc>
+    <defs>
+      <marker id="mq-guarantee-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+    </defs>
+
+    <text x="8" y="20" class="d-eyebrow">Before: merge queue</text>
+    <text x="8" y="160" class="d-eyebrow">After: test after merge, gate before deploy</text>
+    <line x1="8" y1="132" x2="600" y2="132" class="d-rule"></line>
+
+    <path d="M128 80 H166" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M288 80 H326" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M448 80 H478" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+
+    <path d="M128 236 H166" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M288 236 H326" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M448 236 H478" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M196 212 V196 Q196 188 188 188 H76 Q68 188 68 196 V210" class="d-line d-dash" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M212 260 V298" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M244 300 V262" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+    <path d="M288 324 H380 Q388 324 388 316 V262" class="d-line" marker-end="url(#mq-guarantee-arrow)"></path>
+
+    <rect x="80" y="168" width="104" height="12" class="d-paper"></rect>
+    <text x="132" y="177" text-anchor="middle" class="d-label">conflicts rebased</text>
+    <rect x="132" y="276" width="72" height="12" class="d-paper"></rect>
+    <text x="204" y="285" text-anchor="end" class="d-label">every commit</text>
+    <rect x="252" y="276" width="40" height="12" class="d-paper"></rect>
+    <text x="252" y="285" class="d-label">revert</text>
+    <rect x="396" y="284" width="56" height="12" class="d-paper"></rect>
+    <text x="396" y="293" class="d-label">last green</text>
+
+    <text x="228" y="44" text-anchor="middle" class="d-label">guarantee</text>
+    <path d="M180 52 V48 H276 V52" class="d-rule" style="stroke: var(--graphite)"></path>
+    <text x="388" y="200" text-anchor="middle" class="d-label d-text-alert">guarantee</text>
+    <path d="M340 208 V204 H436 V208" class="d-rule" style="stroke: var(--alert)"></path>
+
+    <rect x="8" y="56" width="120" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="20" y="77" class="d-name">Changes</text>
+    <text x="20" y="93" class="d-sub">agents and humans</text>
+
+    <rect x="168" y="56" width="120" height="48" rx="6" class="d-box"></rect>
+    <text x="180" y="77" class="d-name">Merge queue</text>
+    <text x="180" y="93" class="d-sub">global lock, serial</text>
+
+    <rect x="328" y="56" width="120" height="48" rx="6" class="d-box"></rect>
+    <text x="340" y="77" class="d-name">Main</text>
+    <text x="340" y="93" class="d-sub">always green</text>
+
+    <rect x="480" y="56" width="120" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="492" y="77" class="d-name">Deploy</text>
+    <text x="492" y="93" class="d-sub">production</text>
+
+    <rect x="8" y="212" width="120" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="20" y="233" class="d-name">Changes</text>
+    <text x="20" y="249" class="d-sub">agents and humans</text>
+
+    <rect x="168" y="212" width="120" height="48" rx="6" class="d-box"></rect>
+    <text x="180" y="233" class="d-name">Main</text>
+    <text x="180" y="249" class="d-sub">may be red</text>
+
+    <rect x="328" y="212" width="120" height="48" rx="6" class="d-box-alert"></rect>
+    <text x="340" y="233" class="d-name">Pre-deploy gate</text>
+    <text x="340" y="249" class="d-sub">tests that commit</text>
+
+    <rect x="480" y="212" width="120" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="492" y="233" class="d-name">Deploy</text>
+    <text x="492" y="249" class="d-sub">production</text>
+
+    <rect x="168" y="300" width="120" height="48" rx="6" class="d-box"></rect>
+    <text x="180" y="321" class="d-name">Post-merge tests</text>
+    <text x="180" y="337" class="d-sub">bisect and revert</text>
+  </svg>
+</Diagram>

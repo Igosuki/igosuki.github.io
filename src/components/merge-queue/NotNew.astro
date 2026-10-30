@@ -1,0 +1,54 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="The same policy, three times. What changed is who produces enough changes to outrun a merge queue.">
+  <svg viewBox="0 0 608 180" role="img" aria-labelledby="mq-history-title mq-history-desc">
+    <title id="mq-history-title">Post-merge testing before agents</title>
+    <desc id="mq-history-desc">
+      Google TAP in the 2000s and Chromium build sheriffs in the 2010s already tested after merge and reverted
+      breakage, driven by thousands of engineers; in 2026 Anthropic's Scion hits the same limit with a handful of
+      agents.
+    </desc>
+    <defs>
+      <marker id="mq-history-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+    </defs>
+
+    <line x1="32" y1="116" x2="584" y2="116" class="d-line" marker-end="url(#mq-history-arrow)"></line>
+
+    <rect x="32" y="112" width="172" height="8" rx="2" class="d-fill-rule"></rect>
+    <rect x="212" y="112" width="168" height="8" rx="2" class="d-fill-rule"></rect>
+
+    <line x1="120" y1="76" x2="120" y2="108" class="d-rule"></line>
+    <line x1="296" y1="76" x2="296" y2="108" class="d-rule"></line>
+    <line x1="488" y1="76" x2="488" y2="108" class="d-rule"></line>
+
+    <circle cx="120" cy="116" r="4" class="d-fill-ink"></circle>
+    <circle cx="296" cy="116" r="4" class="d-fill-ink"></circle>
+    <circle cx="488" cy="116" r="6" class="d-fill-alert"></circle>
+
+    <g text-anchor="middle">
+      <text x="120" y="32" class="d-name">Google TAP</text>
+      <text x="120" y="50" class="d-sub">Tests run after submit,</text>
+      <text x="120" y="64" class="d-sub">then hunt for the culprit</text>
+
+      <text x="296" y="32" class="d-name">Chromium build sheriffs</text>
+      <text x="296" y="50" class="d-sub">People on duty revert</text>
+      <text x="296" y="64" class="d-sub">broken changes</text>
+
+      <text x="488" y="32" class="d-name d-text-alert">Anthropic Scion</text>
+      <text x="488" y="50" class="d-sub">Post-merge and</text>
+      <text x="488" y="64" class="d-sub">pre-deploy testing</text>
+
+      <text x="120" y="144" class="d-eyebrow">2000s</text>
+      <text x="296" y="144" class="d-eyebrow">2010s</text>
+      <text x="488" y="144" class="d-eyebrow">2026</text>
+
+      <text x="120" y="164" class="d-sub">Thousands of engineers</text>
+      <text x="296" y="164" class="d-sub">Thousands of engineers</text>
+      <text x="488" y="164" class="d-sub">A handful of agents</text>
+    </g>
+  </svg>
+</Diagram>

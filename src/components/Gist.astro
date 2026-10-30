@@ -1,0 +1,122 @@
+---
+// Files from a public GitHub gist, fetched at build time. Omit `file` to embed every file in the gist.
+import { Code } from 'astro:components';
+
+interface Props {
+  id: string;
+  file?: string;
+  open?: boolean;
+}
+interface GistFile {
+  filename: string;
+  language: string | null;
+  content?: string;
+  truncated?: boolean;
+  raw_url: string;
+}
+interface GistData {
+  html_url: string;
+  files: Record<string, GistFile>;
+}
+
+// Frontmatter reruns per render, so the cache lives on globalThis to span embeds within a build.
+const cache = ((globalThis as any).__gistCache ??= new Map<string, Promise<GistData>>()) as Map<string, Promise<GistData>>;
+
+function loadGist(id: string): Promise<GistData> {
+  let gist = cache.get(id);
+  if (!gist) {
+    const token = process.env.GITHUB_TOKEN ?? import.meta.env.GITHUB_TOKEN;
+    gist = fetch(`https://api.github.com/gists/${id}`, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    }).then(async (res) => {
+      if (!res.ok) throw new Error(`Gist ${id}: GitHub API returned HTTP ${res.status}`);
+      return (await res.json()) as GistData;
+    });
+    cache.set(id, gist);
+  }
+  return gist;
+}
+
+const langs: Record<string, string> = { fish: 'fish', sh: 'bash', bash: 'bash', md: 'md', json: 'json', py: 'python' };
+
+const { id, file, open = false } = Astro.props;
+const gist = await loadGist(id);
+
+if (file && !gist.files[file]) {
+  throw new Error(`Gist ${id}: no file "${file}" (has: ${Object.keys(gist.files).join(', ')})`);
+}
+const selected = file ? [gist.files[file]] : Object.values(gist.files);
+
+const entries = await Promise.all(
+  selected.map(async (f) => {
+    let content = f.content ?? '';
+    if (f.truncated) {
+      const res = await fetch(f.raw_url);
+      if (!res.ok) throw new Error(`Gist ${id}: file "${f.filename}" raw fetch returned HTTP ${res.status}`);
+      content = await res.text();
+    }
+    const code = content.replace(/\n$/, '');
+    const ext = f.filename.split('.').pop()?.toLowerCase() ?? '';
+    const lang = langs[(f.language ?? '').toLowerCase()] ?? langs[ext] ?? 'txt';
+    const lines = code === '' ? 0 : code.split('\n').length;
+    const href = `${gist.html_url}#file-${f.filename.toLowerCase().replace(/[^a-z0-9]/g, '-')}`;
+    return { name: f.filename, code, lang, lines, href };
+  }),
+);
+---
+
+{
+  entries.map((e) => (
+    <details class="gist" open={open}>
+      <summary>
+        <span class="name">{e.name}</span>
+        <span class="meta">{e.lines} {e.lines === 1 ? 'line' : 'lines'}</span>
+        <a href={e.href} onclick="event.stopPropagation()">on GitHub</a>
+      </summary>
+      <Code code={e.code} lang={e.lang as any} themes={{ light: 'github-light', dark: 'github-dark' }} />
+    </details>
+  ))
+}
+
+<style>
+  .gist {
+    margin: 0 0 1.4em;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .gist + .gist {
+    margin-top: -0.8em;
+  }
+  summary {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 0.45rem 1.1rem;
+    background: var(--surface);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .gist[open] > summary {
+    border-bottom: 1px solid var(--rule);
+  }
+  .name {
+    font-family: ui-monospace, monospace;
+  }
+  .meta {
+    color: var(--graphite);
+  }
+  a {
+    margin-left: auto;
+    color: var(--cobalt);
+  }
+  .gist :global(pre) {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+</style>
