@@ -1,0 +1,297 @@
+---
+title: Search finds the node, the graph finds the context
+description: Progressive disclosure for agents usually means RAG and tools. A knowledge graph adds a third move. Find a few nodes with search, then grow the context along edges until it's just big enough. With a demo you can replay.
+pubDate: 2026-10-20
+kind: note
+tags: [agents, context, knowledge-graphs, rag]
+draft: true
+---
+
+import GraphExplorer from '../../components/GraphExplorer.astro';
+
+The context window is a budget. Every token the model doesn't need costs money and latency, and it costs accuracy too:
+models get worse at using what's in the window as it fills up, especially in the middle of it ([Liu et al.,
+2023](https://arxiv.org/abs/2307.03172)). So the goal isn't to fit as much as possible. It's to find the smallest
+context that still answers the question.
+
+Progressive disclosure is the usual answer. Give the model a little, and let it ask for more. Anthropic's [Agent
+Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills) work this way: a
+short description of each skill is always in context, the full instructions load when the skill is used, and the files
+they reference load after that. Claude Code can keep tool definitions deferred the same way, loading each one when a
+tool search surfaces it.
+
+That covers instructions and tools. For the knowledge itself, most agents use retrieval, tools, or both. I think a
+third piece, a graph, gets you much closer to that smallest context.
+
+To check that, I built a small demo: a made-up shop (23 Python modules and 11 docs) turned into a graph, and Claude
+Code answering questions about it through two commands. The numbers below come from it, and you can replay the runs or
+try your own question at the end of the post. The code is in
+[demos/graph-context](https://github.com/Igosuki/igosuki.github.io/tree/master/demos/graph-context).
+
+## Two ways agents load context today
+
+**Retrieval (RAG).** Embed the question, return the top k chunks. It's one shot and cheap, but chunks are picked by
+how similar they are to the question, and the thing you need often isn't.
+
+The shop has a planted bug. Checkout fails for EU customers because an environment variable is missing:
+`tax.vat_rate` raises `TaxRegistrationError` when `SHOP_OSS_ID` isn't set, and `checkout.place_order` turns that into
+a generic `CheckoutFailed("pricing_unavailable")`. Here's how an embedding model ranks the 99 nodes for "Why does
+checkout fail for EU customers?":
+
+```python
+model = TextEmbedding("BAAI/bge-small-en-v1.5")
+chunks = np.array(list(model.embed([graph.nodes[i]["text"] for i in ids])))
+query = next(iter(model.query_embed([question])))
+ranked = [ids[i] for i in np.argsort(-(chunks @ query))]
+```
+
+```text
+ 1  shop.errors.CheckoutFailed
+ 2  shop.checkout
+ 3  shop.config
+ 4  shop.checkout.place_order
+ 5  shop.notifications.send_payment_failed
+    ...
+18  docs/vat.md
+38  shop.tax.vat_rate
+```
+
+The top five is all checkout, because checkout reads like the question. The function that raises the error comes 38th.
+It mentions the EU, but it's a table of rates and a lookup by country code, and that doesn't read like a question about
+checkout failing. To get all three nodes the answer rests on into context, k has to be 38: about 5,600 tokens, most of
+them noise. The code a query depends on rarely looks like the query.
+
+It isn't always like that. For "Who gets notified when a refund is issued?" the answer is code about refunds and
+notifications, which does read like the question, and the top four hits hold all of it in 391 tokens. Retrieval does
+well when the answer describes the question, and badly when the answer is a dependency.
+
+**Tools.** Give the agent grep, read and list, and let it do the retrieval itself. This is accurate, because the model
+decides what to look at next based on what it just read. It pays for that in round trips, and it often reads far more
+than it needs.
+
+## What a graph adds
+
+Both approaches treat the corpus as a flat pile of text. Most corpora aren't flat. Code has calls, imports and types.
+Documentation has links. A company's knowledge has people, projects, decisions and the reasons between them. A graph
+stores those relations as edges, so "what else do I need to understand this?" becomes a traversal instead of another
+search.
+
+For code, the edges are cheap. The demo builds them with Python's `ast` module: modules, functions and classes become
+nodes, and imports, definitions and calls become edges. Docs become nodes too, connected by their markdown links and by
+the symbols they mention in backticks. Resolving a call is a name lookup:
+
+```python
+def resolve_call(self, call: ast.Call, module, owner_class, env) -> str | None:
+    func = call.func
+    if isinstance(func, ast.Name):
+        return env.get(func.id)
+    if isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name):
+        if func.value.id == "self" and owner_class:
+            return f"{owner_class}.{func.attr}"
+        base = env.get(func.value.id)
+        if base:
+            return f"{base}.{func.attr}"
+    return None
+```
+
+`env` maps imported names to node ids. A method call on a local variable resolves to nothing, because finding its
+target would take types, and a local that happens to share a module's name resolves to the wrong place. For 99 nodes
+and 270 edges, with no model involved, that's good enough.
+
+The retrieval pattern has three steps:
+
+1. Search to find a few seed nodes. Hybrid search (keywords plus embeddings) works well here, because it only has to
+   find an entry point, not the whole answer. The demo uses keywords (BM25) alone.
+2. Expand from the seeds along edges.
+3. Add nodes in order of score, at the most detail the remaining budget allows, and skip the ones that don't fit at
+   all.
+
+What you hand the model is a subgraph: the seeds, the nodes that connect them, and their closest neighbours.
+
+This is why expanding a graph beats raising k. More chunks from a similarity search are more of the same: text that
+looks like the question. Expanding the graph adds what's connected to the seeds: what they call, what calls them,
+what they link to. Those nodes are selected by relation, not resemblance. Some will still look like the seeds (sibling
+docs, overloads), but most won't, and that's usually the part that was missing. On the EU question, a 1,000-token
+expansion has all three answer nodes in context, where embeddings needed 5,600 tokens. Only one of the three is there
+in full, though; the other two are summaries. More on that below.
+
+## The smallest effective context
+
+In theory there's a precise answer to "what's the smallest context?" Given the seed nodes, the smallest connected
+subgraph that contains them all is a Steiner tree. The prize-collecting variant (PCST) relaxes that: each node has a
+prize, each edge has a cost, and you look for the tree with the most prize for the least cost, without having to
+include every node. [G-Retriever](https://arxiv.org/abs/2402.07630) uses PCST to pick its subgraph. Its prizes come
+from rank in a top-k similarity search, for edges as well as nodes, and every edge has the same fixed cost. The
+subgraph then reaches the model twice: as text, and as a soft prompt produced by a graph neural network.
+
+For a context budget I'd adapt that and price by tokens. Tokens belong to nodes, and PCST puts costs on edges, so fold
+them into the prize instead: a node is worth its relevance minus its tokens. That's exact, with one catch. The usual
+approximation algorithms assume prizes aren't negative, and a connector node worth less than its tokens turns the
+problem into a node-weighted Steiner tree. Both are NP-hard, but approximations are fast at the sizes involved.
+
+[HippoRAG](https://arxiv.org/abs/2405.14831) takes a softer route. It runs Personalized PageRank starting from the
+entities named in the query, then adds up the PageRank mass of the nodes each passage contains and returns the
+top-scoring passages. That last step matters: the graph does the ranking, but what reaches the model is plain text,
+with no graph encoder involved. Either way the idea is the same. Relevance starts at the nodes the query matched,
+spreads along the structure, and you cut where the budget ends.
+
+The demo uses neither. It does a greedy best-first walk, which is easier to read and to watch.
+
+## Making it progressive
+
+You don't have to put the whole subgraph in the window as full text. Render each node at a level of detail set by its
+score:
+
+- the highest-scoring nodes get their full content,
+- the rest get a signature and a one-line summary,
+- nodes that don't fit even as a summary get a stub: a name, plus the edge that leads to them unless they're a seed.
+
+Score decays with each hop, so detail mostly follows distance from the seeds, but not always. A neighbour of a strong
+seed can outscore a weak seed, and then it gets more detail than that seed does. That's what you want: detail goes
+where the relevance is, not where search happened to land.
+
+Here's the loop from the demo:
+
+```python
+def build_context(query, graph, budget, max_stubs=MAX_STUBS):
+    tie = itertools.count()
+    frontier = [(-hit.score, next(tie), hit.node, None) for hit in graph.search(query, k=SEEDS)]
+    heapq.heapify(frontier)
+    picked, stubs, spent = {}, {}, 0
+    while frontier:
+        neg_score, _, node, via = heapq.heappop(frontier)
+        score = -neg_score
+        if node in picked:
+            continue
+        view = graph.render_within(node, detail_for(score), budget - spent)
+        if view is None:
+            stubs.setdefault(node, via)
+            continue
+        view.score, view.via = score, via
+        picked[node] = view
+        spent += view.tokens
+        edges = graph.edges(node)
+        for edge in edges:
+            score_next = score * edge.weight * DECAY / len(edges)
+            heapq.heappush(frontier, (-score_next, next(tie), edge.target, edge))
+    return picked, [(n, v) for n, v in stubs.items() if n not in picked][:max_stubs]
+```
+
+Seed scores are scaled so the best is 1.0, nodes at 0.5 or above get full text, and `DECAY` is 0.8. `graph.edges`
+returns incoming edges as well as outgoing ones, each labelled with its direction, so the loop reaches callers.
+`render_within` tries the detail level the score earns, then cheaper ones, and returns `None` when even a summary
+doesn't fit. The counter breaks ties, so the heap never has to compare two nodes. Stubs come out in score order,
+because the heap pops the best first, and they sit outside the budget; they're a name and an edge each, so a cap on
+their number is enough.
+
+Dividing by `len(edges)` splits a node's score among its neighbours, the way PageRank splits its mass. I added it for
+hubs, but in the demo it matters more for everything else. Without it, scores barely fall from one hop to the next,
+neighbours keep earning full text, and the budget runs out on a handful of nodes:
+
+| Question        | With the split | Without   |
+| --------------- | -------------- | --------- |
+| EU checkout     | 21 nodes, 3/3  | 9, 2/3    |
+| Card declined   | 18 nodes, 3/3  | 12, 1/3   |
+| Refund notified | 18 nodes, 3/3  | 11, 3/3   |
+
+Each cell is the number of nodes in context and how many of the question's three answer nodes are among them.
+
+This is what the model gets back from a search, trimmed:
+
+```text
+## shop.checkout (full)
+"""Turns a cart into a paid order."""
+...
+## docs/vat.md (full)
+...
+When it is not set, `vat_rate` refuses to guess and raises `TaxRegistrationError`
+...
+## shop.tax.vat_rate (summary)
+def vat_rate(country: str) -> Decimal
+Rate applied to goods delivered to `country`.
+...
+Not opened (call expand to read):
+- shop.tax.tax_amount (mentions)
+- shop.pricing.total (called_by)
+- shop.log.event (calls)
+...
+```
+
+Then give the model an `expand(node)` tool, which returns one node in full plus stubs for its neighbours. It starts
+with a map where the relevant parts are already open and the stubs show what else is there, and it opens more when it
+needs to. The graph decides what's adjacent; the model decides what's worth opening.
+
+## Letting the agent drive
+
+The agent in the demo is Claude Code, with two commands and nothing else:
+
+```sh
+uv run graphctx search <query words>
+uv run graphctx expand <node id>
+```
+
+`record.py` runs it headless on each question and logs every call:
+
+```python
+cmd = ["claude", "-p", PROMPT.format(question=question), "--output-format", "stream-json", "--verbose",
+       "--tools", "Bash", "--allowedTools", "Bash(uv run graphctx:*)",
+       "--strict-mcp-config", "--setting-sources", "project", "--max-turns", "16"]
+```
+
+`--setting-sources project` keeps my own Claude Code settings out of the run. One of my hooks rewrites shell commands
+to compress their output, which broke both the permission rule and what the model saw.
+
+All three runs used Opus 5.5:
+
+| Question        | Tool calls                | Tokens received | Answer                                          |
+| --------------- | ------------------------- | --------------- | ----------------------------------------------- |
+| EU checkout     | search                    | 1,341           | Finds the bug: the empty `SHOP_OSS_ID`          |
+| Card declined   | search, expand checkout   | 1,775           | Hard declines and retries, then the cleanup     |
+| Refund notified | search, expand config     | 1,655           | All three recipients and the condition for each |
+
+The EU run is a single search, and two things did the work. `docs/vat.md` states the rule in prose and was one of the
+seeds; the graph pulled in the code around it, as summaries. The agent didn't open `pricing.total`. It says so, and
+infers the link from the `called_by` edge on the stub, which is what stubs are for. The same search also pulled in
+things it didn't need, the declined-payments runbook in full among them, because "fails" and "customers" match it. A
+1,000-token budget leaves room for that kind of noise.
+
+## Where it breaks
+
+- **Building the graph is the hard part.** For code, edges are cheap, but a parser only gives you syntax. Knowing that
+  a call resolves to a given definition takes name and type resolution. Indexers that match on names alone, like the
+  demo's, guess at it for overloads, methods with the same name and re-exports. GitHub's stack graphs resolve names
+  precisely from tree-sitter grammars, but not types, which method calls on objects need. Only compiler- or LSP-backed
+  indexes come close to exact. Even the guesses are far more reliable than what you get from prose, where you extract
+  entities and relations with a model, and you get noise: duplicates ("Postgres", "PostgreSQL", "the database"),
+  missing relations, wrong ones. A wrong edge is worse than no edge, because it pulls in context that looks relevant
+  and isn't.
+- **Hubs.** A `logger` node or a "Python" entity is connected to everything. With a naive breadth-first expansion, one
+  hop through it and the budget is gone. Splitting a node's score across its edges gives each of a hub's neighbours a
+  sliver, so they sink to the bottom of the frontier. In the demo, `shop.log` has 23 edges, and at most two `log` nodes
+  make it into any of the three searches. The neighbours still get pushed onto the heap, so cap how many edges you follow from one
+  node, and restrict which edge types to follow depending on the question.
+- **Missing edges.** Dynamic dispatch, reflection, wiring done in config, two documents about the same idea that never
+  link to each other. Keep search available alongside the graph. The graph adds to search; it doesn't replace it.
+- **Staleness.** The graph has to change when the corpus does. Reindexing a changed file is cheap for code and
+  expensive when every update means another extraction pass with a model.
+- **Questions with no seeds.** "What are the main themes in these documents?" has no entry point to expand from.
+  Microsoft's [GraphRAG](https://arxiv.org/abs/2404.16130) handles those with summaries precomputed for each cluster of
+  the graph. That's a different tool for a different kind of question.
+
+## Where to start
+
+Start with code. The edges are cheap and far more reliable than anything a model extracts from prose, and the gap
+between a grep-and-read loop and "here are the symbols you asked about, their source, and the call paths between them"
+is easy to measure: count the round trips and the tokens. Once that works, the same retrieval loop applies to any
+corpus where you can get edges you trust.
+
+Search is good at finding where to start. The graph knows what's next to it, and the budget tells you when to stop.
+
+## Try it
+
+This is the demo's graph, with nodes sized by how many edges they have. Replay the recorded runs step by step, type
+your own question to run the same loop in your browser, or paste your own Anthropic API key to let Claude drive it
+live. That mode uses Sonnet 5.5, which is cheaper than the Opus runs above. The key stays in the page and is only sent
+to api.anthropic.com.
+
+<GraphExplorer />

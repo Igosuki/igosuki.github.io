@@ -1,0 +1,2814 @@
+{
+ "nodes": [
+  {
+   "id": "shop",
+   "kind": "module",
+   "label": "shop",
+   "file": "shop/__init__.py",
+   "signature": "module shop",
+   "summary": "A small web shop: cart, pricing, checkout, payments and refunds.",
+   "text": "\"\"\"A small web shop: cart, pricing, checkout, payments and refunds.\"\"\"\n",
+   "tokens": 18,
+   "x": 0.678,
+   "y": 0.9
+  },
+  {
+   "id": "shop.audit",
+   "kind": "module",
+   "label": "audit",
+   "file": "shop/audit.py",
+   "signature": "module shop.audit",
+   "summary": "Append-only audit trail for money and stock movements.",
+   "text": "\"\"\"Append-only audit trail for money and stock movements.\"\"\"\nfrom shop import log\n\n_TRAIL: list[dict] = []\n\n\ndef record(action: str, actor: str, **details) -> None:\n    _TRAIL.append({\"action\": action, \"actor\": actor, **details})\n    log.event(\"audit\", action=action, actor=actor)\n\n\ndef trail_for(key: str, value: str) -> list[dict]:\n    return [entry for entry in _TRAIL if entry.get(key) == value]\n",
+   "tokens": 100,
+   "x": 0.4299,
+   "y": 0.5303
+  },
+  {
+   "id": "shop.audit.record",
+   "kind": "function",
+   "label": "record",
+   "file": "shop/audit.py",
+   "signature": "def record(action: str, actor: str, **details) -> None",
+   "summary": "",
+   "text": "def record(action: str, actor: str, **details) -> None:\n    _TRAIL.append({\"action\": action, \"actor\": actor, **details})\n    log.event(\"audit\", action=action, actor=actor)",
+   "tokens": 43,
+   "x": 0.4629,
+   "y": 0.5539
+  },
+  {
+   "id": "shop.audit.trail_for",
+   "kind": "function",
+   "label": "trail_for",
+   "file": "shop/audit.py",
+   "signature": "def trail_for(key: str, value: str) -> list[dict]",
+   "summary": "",
+   "text": "def trail_for(key: str, value: str) -> list[dict]:\n    return [entry for entry in _TRAIL if entry.get(key) == value]",
+   "tokens": 29,
+   "x": 0.43,
+   "y": 0.5708
+  },
+  {
+   "id": "shop.cart",
+   "kind": "module",
+   "label": "cart",
+   "file": "shop/cart.py",
+   "signature": "module shop.cart",
+   "summary": "Shopping cart.",
+   "text": "\"\"\"Shopping cart.\"\"\"\nfrom dataclasses import dataclass, field\n\nfrom shop import catalog, log\n\n\n@dataclass\nclass CartItem:\n    sku: str\n    quantity: int\n\n\n@dataclass\nclass Cart:\n    cart_id: str\n    items: list[CartItem] = field(default_factory=list)\n    coupon: str | None = None\n\n    def add(self, sku: str, quantity: int = 1) -> None:\n        catalog.get_product(sku)\n        for item in self.items:\n            if item.sku == sku:\n                item.quantity += quantity\n                break\n        else:\n            self.items.append(CartItem(sku, quantity))\n        log.event(\"cart.add\", cart_id=self.cart_id, sku=sku, quantity=quantity)\n\n    def remove(self, sku: str) -> None:\n        self.items = [item for item in self.items if item.sku != sku]\n        log.event(\"cart.remove\", cart_id=self.cart_id, sku=sku)\n\n    def weight_g(self) -> int:\n        return sum(catalog.get_product(i.sku).weight_g * i.quantity for i in self.items)\n\n    def is_empty(self) -> bool:\n        return not self.items\n",
+   "tokens": 252,
+   "x": 0.3172,
+   "y": 0.4474
+  },
+  {
+   "id": "shop.cart.CartItem",
+   "kind": "class",
+   "label": "CartItem",
+   "file": "shop/cart.py",
+   "signature": "class CartItem",
+   "summary": "",
+   "text": "@dataclass\nclass CartItem:\n    sku: str\n    quantity: int",
+   "tokens": 15,
+   "x": 0.2745,
+   "y": 0.4111
+  },
+  {
+   "id": "shop.cart.Cart",
+   "kind": "class",
+   "label": "Cart",
+   "file": "shop/cart.py",
+   "signature": "class Cart",
+   "summary": "",
+   "text": "@dataclass\nclass Cart:\n    cart_id: str\n    items: list[CartItem] = field(default_factory=list)\n    coupon: str | None = None\n\n    def add(self, sku: str, quantity: int = 1) -> None:\n        catalog.get_product(sku)\n        for item in self.items:\n            if item.sku == sku:\n                item.quantity += quantity\n                break\n        else:\n            self.items.append(CartItem(sku, quantity))\n        log.event(\"cart.add\", cart_id=self.cart_id, sku=sku, quantity=quantity)\n\n    def remove(self, sku: str) -> None:\n        self.items = [item for item in self.items if item.sku != sku]\n        log.event(\"cart.remove\", cart_id=self.cart_id, sku=sku)\n\n    def weight_g(self) -> int:\n        return sum(catalog.get_product(i.sku).weight_g * i.quantity for i in self.items)\n\n    def is_empty(self) -> bool:\n        return not self.items",
+   "tokens": 213,
+   "x": 0.3616,
+   "y": 0.4133
+  },
+  {
+   "id": "shop.cart.Cart.add",
+   "kind": "function",
+   "label": "add",
+   "file": "shop/cart.py",
+   "signature": "def add(self, sku: str, quantity: int=1) -> None",
+   "summary": "",
+   "text": "    def add(self, sku: str, quantity: int = 1) -> None:\n        catalog.get_product(sku)\n        for item in self.items:\n            if item.sku == sku:\n                item.quantity += quantity\n                break\n        else:\n            self.items.append(CartItem(sku, quantity))\n        log.event(\"cart.add\", cart_id=self.cart_id, sku=sku, quantity=quantity)",
+   "tokens": 92,
+   "x": 0.3715,
+   "y": 0.461
+  },
+  {
+   "id": "shop.cart.Cart.remove",
+   "kind": "function",
+   "label": "remove",
+   "file": "shop/cart.py",
+   "signature": "def remove(self, sku: str) -> None",
+   "summary": "",
+   "text": "    def remove(self, sku: str) -> None:\n        self.items = [item for item in self.items if item.sku != sku]\n        log.event(\"cart.remove\", cart_id=self.cart_id, sku=sku)",
+   "tokens": 44,
+   "x": 0.2916,
+   "y": 0.4972
+  },
+  {
+   "id": "shop.cart.Cart.weight_g",
+   "kind": "function",
+   "label": "weight_g",
+   "file": "shop/cart.py",
+   "signature": "def weight_g(self) -> int",
+   "summary": "",
+   "text": "    def weight_g(self) -> int:\n        return sum(catalog.get_product(i.sku).weight_g * i.quantity for i in self.items)",
+   "tokens": 30,
+   "x": 0.2623,
+   "y": 0.4582
+  },
+  {
+   "id": "shop.cart.Cart.is_empty",
+   "kind": "function",
+   "label": "is_empty",
+   "file": "shop/cart.py",
+   "signature": "def is_empty(self) -> bool",
+   "summary": "",
+   "text": "    def is_empty(self) -> bool:\n        return not self.items",
+   "tokens": 16,
+   "x": 0.3403,
+   "y": 0.4984
+  },
+  {
+   "id": "shop.catalog",
+   "kind": "module",
+   "label": "catalog",
+   "file": "shop/catalog.py",
+   "signature": "module shop.catalog",
+   "summary": "Product lookup.",
+   "text": "\"\"\"Product lookup.\"\"\"\nfrom dataclasses import dataclass\nfrom decimal import Decimal\n\nfrom shop import log\n\n\n@dataclass(frozen=True)\nclass Product:\n    sku: str\n    name: str\n    price: Decimal\n    weight_g: int\n\n\n_PRODUCTS = {\n    \"MUG-01\": Product(\"MUG-01\", \"Enamel mug\", Decimal(\"14.00\"), 320),\n    \"TEE-02\": Product(\"TEE-02\", \"Logo tee\", Decimal(\"28.00\"), 210),\n    \"LMP-07\": Product(\"LMP-07\", \"Desk lamp\", Decimal(\"64.50\"), 1400),\n    \"NTB-11\": Product(\"NTB-11\", \"Dot-grid notebook\", Decimal(\"9.50\"), 180),\n}\n\n\ndef get_product(sku: str) -> Product:\n    try:\n        return _PRODUCTS[sku]\n    except KeyError:\n        log.warn(\"catalog.unknown_sku\", sku=sku)\n        raise\n",
+   "tokens": 169,
+   "x": 0.6687,
+   "y": 0.062
+  },
+  {
+   "id": "shop.catalog.Product",
+   "kind": "class",
+   "label": "Product",
+   "file": "shop/catalog.py",
+   "signature": "class Product",
+   "summary": "",
+   "text": "@dataclass(frozen=True)\nclass Product:\n    sku: str\n    name: str\n    price: Decimal\n    weight_g: int",
+   "tokens": 26,
+   "x": 0.6868,
+   "y": 0.0258
+  },
+  {
+   "id": "shop.catalog.get_product",
+   "kind": "function",
+   "label": "get_product",
+   "file": "shop/catalog.py",
+   "signature": "def get_product(sku: str) -> Product",
+   "summary": "",
+   "text": "def get_product(sku: str) -> Product:\n    try:\n        return _PRODUCTS[sku]\n    except KeyError:\n        log.warn(\"catalog.unknown_sku\", sku=sku)\n        raise",
+   "tokens": 40,
+   "x": 0.7087,
+   "y": 0.0556
+  },
+  {
+   "id": "shop.checkout",
+   "kind": "module",
+   "label": "checkout",
+   "file": "shop/checkout.py",
+   "signature": "module shop.checkout",
+   "summary": "Turns a cart into a paid order.",
+   "text": "\"\"\"Turns a cart into a paid order.\"\"\"\nimport uuid\n\nfrom shop import audit, fraud, inventory, log, notifications, orders, payments, pricing\nfrom shop.cart import Cart\nfrom shop.customers import Customer\nfrom shop.errors import CheckoutFailed, PaymentDeclined, PricingError\n\n\ndef place_order(cart: Cart, customer: Customer, card_token: str) -> orders.Order:\n    log.event(\"checkout.start\", cart_id=cart.cart_id, customer_id=customer.customer_id)\n    try:\n        breakdown = pricing.total(cart, customer)\n    except PricingError as exc:\n        log.warn(\"checkout.pricing_failed\", cart_id=cart.cart_id, reason=str(exc))\n        raise CheckoutFailed(\"pricing_unavailable\") from exc\n\n    if fraud.needs_review(fraud.score(customer, breakdown.total, customer.country)):\n        raise CheckoutFailed(\"held_for_review\")\n\n    inventory.reserve(cart)\n    order_id = f\"ord_{uuid.uuid4().hex[:10]}\"\n    try:\n        charge_id = payments.charge_card(card_token, breakdown.total, order_id)\n    except PaymentDeclined as exc:\n        inventory.release(cart)\n        notifications.send_payment_failed(customer, exc.code)\n        audit.record(\"payment_declined\", customer.customer_id, code=exc.code)\n        raise CheckoutFailed(\"declined\") from exc\n\n    inventory.commit(cart)\n    order = orders.create(order_id, customer.customer_id, charge_id, breakdown.total)\n    notifications.send_order_confirmation(customer, order)\n    return order\n",
+   "tokens": 356,
+   "x": 0.062,
+   "y": 0.3811
+  },
+  {
+   "id": "shop.checkout.place_order",
+   "kind": "function",
+   "label": "place_order",
+   "file": "shop/checkout.py",
+   "signature": "def place_order(cart: Cart, customer: Customer, card_token: str) -> orders.Order",
+   "summary": "",
+   "text": "def place_order(cart: Cart, customer: Customer, card_token: str) -> orders.Order:\n    log.event(\"checkout.start\", cart_id=cart.cart_id, customer_id=customer.customer_id)\n    try:\n        breakdown = pricing.total(cart, customer)\n    except PricingError as exc:\n        log.warn(\"checkout.pricing_failed\", cart_id=cart.cart_id, reason=str(exc))\n        raise CheckoutFailed(\"pricing_unavailable\") from exc\n\n    if fraud.needs_review(fraud.score(customer, breakdown.total, customer.country)):\n        raise CheckoutFailed(\"held_for_review\")\n\n    inventory.reserve(cart)\n    order_id = f\"ord_{uuid.uuid4().hex[:10]}\"\n    try:\n        charge_id = payments.charge_card(card_token, breakdown.total, order_id)\n    except PaymentDeclined as exc:\n        inventory.release(cart)\n        notifications.send_payment_failed(customer, exc.code)\n        audit.record(\"payment_declined\", customer.customer_id, code=exc.code)\n        raise CheckoutFailed(\"declined\") from exc\n\n    inventory.commit(cart)\n    order = orders.create(order_id, customer.customer_id, charge_id, breakdown.total)\n    notifications.send_order_confirmation(customer, order)\n    return order",
+   "tokens": 288,
+   "x": 0.0231,
+   "y": 0.3906
+  },
+  {
+   "id": "shop.config",
+   "kind": "module",
+   "label": "config",
+   "file": "shop/config.py",
+   "signature": "module shop.config",
+   "summary": "Settings read from the environment once at import.",
+   "text": "\"\"\"Settings read from the environment once at import.\"\"\"\nimport os\nfrom decimal import Decimal\n\nCURRENCY = \"USD\"\nSTORE_COUNTRY = \"US\"\n\nOSS_ID = os.environ.get(\"SHOP_OSS_ID\", \"\")\n\nGATEWAY_URL = os.environ.get(\"SHOP_GATEWAY_URL\", \"https://pay.example.test/v2\")\nGATEWAY_KEY = os.environ.get(\"SHOP_GATEWAY_KEY\", \"\")\nGATEWAY_TIMEOUT_S = 8\n\nMAX_PAYMENT_RETRIES = 3\nRETRY_BACKOFF_S = (0.5, 2.0, 5.0)\n\nRESERVATION_MINUTES = 15\nFREE_SHIPPING_OVER = Decimal(\"75.00\")\nFRAUD_REVIEW_SCORE = 0.8\n\nFINANCE_REFUND_LIMIT = Decimal(\"250.00\")\nSUPPORT_ADDRESS = \"support@shop.example.test\"\nFINANCE_ADDRESS = \"finance@shop.example.test\"\nOPS_WEBHOOK = os.environ.get(\"SHOP_OPS_WEBHOOK\", \"\")\n",
+   "tokens": 168,
+   "x": 0.4074,
+   "y": 0.3403
+  },
+  {
+   "id": "shop.countries",
+   "kind": "module",
+   "label": "countries",
+   "file": "shop/countries.py",
+   "signature": "module shop.countries",
+   "summary": "Country codes and groupings.",
+   "text": "\"\"\"Country codes and groupings.\"\"\"\n\nEU_MEMBERS = frozenset(\n    \"AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE\".split()\n)\n\n_NAMES = {\n    \"united states\": \"US\",\n    \"canada\": \"CA\",\n    \"united kingdom\": \"GB\",\n    \"germany\": \"DE\",\n    \"france\": \"FR\",\n    \"spain\": \"ES\",\n    \"italy\": \"IT\",\n    \"netherlands\": \"NL\",\n    \"ireland\": \"IE\",\n    \"sweden\": \"SE\",\n}\n\n\ndef normalize(country: str) -> str:\n    \"\"\"Accept an ISO code or an English name and return the ISO code.\"\"\"\n    value = country.strip()\n    if len(value) == 2:\n        return value.upper()\n    return _NAMES[value.lower()]\n\n\ndef is_eu(code: str) -> bool:\n    return code in EU_MEMBERS\n",
+   "tokens": 170,
+   "x": 0.062,
+   "y": 0.1866
+  },
+  {
+   "id": "shop.countries.normalize",
+   "kind": "function",
+   "label": "normalize",
+   "file": "shop/countries.py",
+   "signature": "def normalize(country: str) -> str",
+   "summary": "Accept an ISO code or an English name and return the ISO code.",
+   "text": "def normalize(country: str) -> str:\n    \"\"\"Accept an ISO code or an English name and return the ISO code.\"\"\"\n    value = country.strip()\n    if len(value) == 2:\n        return value.upper()\n    return _NAMES[value.lower()]",
+   "tokens": 56,
+   "x": 0.0383,
+   "y": 0.1537
+  },
+  {
+   "id": "shop.countries.is_eu",
+   "kind": "function",
+   "label": "is_eu",
+   "file": "shop/countries.py",
+   "signature": "def is_eu(code: str) -> bool",
+   "summary": "",
+   "text": "def is_eu(code: str) -> bool:\n    return code in EU_MEMBERS",
+   "tokens": 15,
+   "x": 0.0215,
+   "y": 0.1867
+  },
+  {
+   "id": "shop.customers",
+   "kind": "module",
+   "label": "customers",
+   "file": "shop/customers.py",
+   "signature": "module shop.customers",
+   "summary": "Customer records and contact preferences.",
+   "text": "\"\"\"Customer records and contact preferences.\"\"\"\nfrom dataclasses import dataclass, field\n\nfrom shop import countries, log\n\n\n@dataclass\nclass Customer:\n    customer_id: str\n    email: str\n    country: str\n    vat_id: str | None = None\n    refund_emails: bool = True\n    marketing_emails: bool = False\n    tags: list[str] = field(default_factory=list)\n\n\n_CUSTOMERS: dict[str, Customer] = {}\n\n\ndef register(customer_id: str, email: str, country: str) -> Customer:\n    customer = Customer(customer_id, email, countries.normalize(country))\n    _CUSTOMERS[customer_id] = customer\n    log.event(\"customer.registered\", customer_id=customer_id, country=customer.country)\n    return customer\n\n\ndef get(customer_id: str) -> Customer:\n    return _CUSTOMERS[customer_id]\n",
+   "tokens": 190,
+   "x": 0.1924,
+   "y": 0.5294
+  },
+  {
+   "id": "shop.customers.Customer",
+   "kind": "class",
+   "label": "Customer",
+   "file": "shop/customers.py",
+   "signature": "class Customer",
+   "summary": "",
+   "text": "@dataclass\nclass Customer:\n    customer_id: str\n    email: str\n    country: str\n    vat_id: str | None = None\n    refund_emails: bool = True\n    marketing_emails: bool = False\n    tags: list[str] = field(default_factory=list)",
+   "tokens": 57,
+   "x": 0.2078,
+   "y": 0.567
+  },
+  {
+   "id": "shop.customers.register",
+   "kind": "function",
+   "label": "register",
+   "file": "shop/customers.py",
+   "signature": "def register(customer_id: str, email: str, country: str) -> Customer",
+   "summary": "",
+   "text": "def register(customer_id: str, email: str, country: str) -> Customer:\n    customer = Customer(customer_id, email, countries.normalize(country))\n    _CUSTOMERS[customer_id] = customer\n    log.event(\"customer.registered\", customer_id=customer_id, country=customer.country)\n    return customer",
+   "tokens": 73,
+   "x": 0.1519,
+   "y": 0.533
+  },
+  {
+   "id": "shop.customers.get",
+   "kind": "function",
+   "label": "get",
+   "file": "shop/customers.py",
+   "signature": "def get(customer_id: str) -> Customer",
+   "summary": "",
+   "text": "def get(customer_id: str) -> Customer:\n    return _CUSTOMERS[customer_id]",
+   "tokens": 19,
+   "x": 0.1709,
+   "y": 0.5648
+  },
+  {
+   "id": "shop.discounts",
+   "kind": "module",
+   "label": "discounts",
+   "file": "shop/discounts.py",
+   "signature": "module shop.discounts",
+   "summary": "Coupon codes.",
+   "text": "\"\"\"Coupon codes.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import log, money\n\n_COUPONS = {\"WELCOME10\": Decimal(\"0.10\"), \"SPRING15\": Decimal(\"0.15\")}\n\n\ndef discount_for(code: str | None, subtotal: Decimal) -> Decimal:\n    if not code:\n        return Decimal(\"0\")\n    rate = _COUPONS.get(code.upper())\n    if rate is None:\n        log.warn(\"discount.unknown_coupon\", code=code)\n        return Decimal(\"0\")\n    return money.quantize(subtotal * rate)\n",
+   "tokens": 112,
+   "x": 0.186,
+   "y": 0.062
+  },
+  {
+   "id": "shop.discounts.discount_for",
+   "kind": "function",
+   "label": "discount_for",
+   "file": "shop/discounts.py",
+   "signature": "def discount_for(code: str | None, subtotal: Decimal) -> Decimal",
+   "summary": "",
+   "text": "def discount_for(code: str | None, subtotal: Decimal) -> Decimal:\n    if not code:\n        return Decimal(\"0\")\n    rate = _COUPONS.get(code.upper())\n    if rate is None:\n        log.warn(\"discount.unknown_coupon\", code=code)\n        return Decimal(\"0\")\n    return money.quantize(subtotal * rate)",
+   "tokens": 74,
+   "x": 0.1674,
+   "y": 0.0266
+  },
+  {
+   "id": "shop.errors",
+   "kind": "module",
+   "label": "errors",
+   "file": "shop/errors.py",
+   "signature": "module shop.errors",
+   "summary": "Exceptions raised across the shop.",
+   "text": "\"\"\"Exceptions raised across the shop.\"\"\"\n\n\nclass ShopError(Exception):\n    pass\n\n\nclass PricingError(ShopError):\n    pass\n\n\nclass TaxRegistrationError(PricingError):\n    def __init__(self, country: str):\n        super().__init__(f\"no tax registration for {country}\")\n        self.country = country\n\n\nclass OutOfStock(ShopError):\n    def __init__(self, sku: str):\n        super().__init__(f\"{sku} is out of stock\")\n        self.sku = sku\n\n\nclass PaymentDeclined(ShopError):\n    def __init__(self, code: str, retryable: bool = False):\n        super().__init__(f\"payment declined: {code}\")\n        self.code = code\n        self.retryable = retryable\n\n\nclass CheckoutFailed(ShopError):\n    def __init__(self, reason: str):\n        super().__init__(reason)\n        self.reason = reason\n\n\nclass RefundNotAllowed(ShopError):\n    pass\n",
+   "tokens": 207,
+   "x": 0.632,
+   "y": 0.2903
+  },
+  {
+   "id": "shop.errors.ShopError",
+   "kind": "class",
+   "label": "ShopError",
+   "file": "shop/errors.py",
+   "signature": "class ShopError(Exception)",
+   "summary": "",
+   "text": "class ShopError(Exception):\n    pass",
+   "tokens": 9,
+   "x": 0.6122,
+   "y": 0.2066
+  },
+  {
+   "id": "shop.errors.PricingError",
+   "kind": "class",
+   "label": "PricingError",
+   "file": "shop/errors.py",
+   "signature": "class PricingError(ShopError)",
+   "summary": "",
+   "text": "class PricingError(ShopError):\n    pass",
+   "tokens": 10,
+   "x": 0.5476,
+   "y": 0.2735
+  },
+  {
+   "id": "shop.errors.TaxRegistrationError",
+   "kind": "class",
+   "label": "TaxRegistrationError",
+   "file": "shop/errors.py",
+   "signature": "class TaxRegistrationError(PricingError)",
+   "summary": "",
+   "text": "class TaxRegistrationError(PricingError):\n    def __init__(self, country: str):\n        super().__init__(f\"no tax registration for {country}\")\n        self.country = country",
+   "tokens": 44,
+   "x": 0.6606,
+   "y": 0.2091
+  },
+  {
+   "id": "shop.errors.TaxRegistrationError.__init__",
+   "kind": "function",
+   "label": "__init__",
+   "file": "shop/errors.py",
+   "signature": "def __init__(self, country: str)",
+   "summary": "",
+   "text": "    def __init__(self, country: str):\n        super().__init__(f\"no tax registration for {country}\")\n        self.country = country",
+   "tokens": 33,
+   "x": 0.6999,
+   "y": 0.2375
+  },
+  {
+   "id": "shop.errors.OutOfStock",
+   "kind": "class",
+   "label": "OutOfStock",
+   "file": "shop/errors.py",
+   "signature": "class OutOfStock(ShopError)",
+   "summary": "",
+   "text": "class OutOfStock(ShopError):\n    def __init__(self, sku: str):\n        super().__init__(f\"{sku} is out of stock\")\n        self.sku = sku",
+   "tokens": 34,
+   "x": 0.6746,
+   "y": 0.365
+  },
+  {
+   "id": "shop.errors.OutOfStock.__init__",
+   "kind": "function",
+   "label": "__init__",
+   "file": "shop/errors.py",
+   "signature": "def __init__(self, sku: str)",
+   "summary": "",
+   "text": "    def __init__(self, sku: str):\n        super().__init__(f\"{sku} is out of stock\")\n        self.sku = sku",
+   "tokens": 27,
+   "x": 0.6274,
+   "y": 0.3761
+  },
+  {
+   "id": "shop.errors.PaymentDeclined",
+   "kind": "class",
+   "label": "PaymentDeclined",
+   "file": "shop/errors.py",
+   "signature": "class PaymentDeclined(ShopError)",
+   "summary": "",
+   "text": "class PaymentDeclined(ShopError):\n    def __init__(self, code: str, retryable: bool = False):\n        super().__init__(f\"payment declined: {code}\")\n        self.code = code\n        self.retryable = retryable",
+   "tokens": 52,
+   "x": 0.5817,
+   "y": 0.36
+  },
+  {
+   "id": "shop.errors.PaymentDeclined.__init__",
+   "kind": "function",
+   "label": "__init__",
+   "file": "shop/errors.py",
+   "signature": "def __init__(self, code: str, retryable: bool=False)",
+   "summary": "",
+   "text": "    def __init__(self, code: str, retryable: bool = False):\n        super().__init__(f\"payment declined: {code}\")\n        self.code = code\n        self.retryable = retryable",
+   "tokens": 44,
+   "x": 0.552,
+   "y": 0.3218
+  },
+  {
+   "id": "shop.errors.CheckoutFailed",
+   "kind": "class",
+   "label": "CheckoutFailed",
+   "file": "shop/errors.py",
+   "signature": "class CheckoutFailed(ShopError)",
+   "summary": "",
+   "text": "class CheckoutFailed(ShopError):\n    def __init__(self, reason: str):\n        super().__init__(reason)\n        self.reason = reason",
+   "tokens": 33,
+   "x": 0.7177,
+   "y": 0.2826
+  },
+  {
+   "id": "shop.errors.CheckoutFailed.__init__",
+   "kind": "function",
+   "label": "__init__",
+   "file": "shop/errors.py",
+   "signature": "def __init__(self, reason: str)",
+   "summary": "",
+   "text": "    def __init__(self, reason: str):\n        super().__init__(reason)\n        self.reason = reason",
+   "tokens": 25,
+   "x": 0.7082,
+   "y": 0.3301
+  },
+  {
+   "id": "shop.errors.RefundNotAllowed",
+   "kind": "class",
+   "label": "RefundNotAllowed",
+   "file": "shop/errors.py",
+   "signature": "class RefundNotAllowed(ShopError)",
+   "summary": "",
+   "text": "class RefundNotAllowed(ShopError):\n    pass",
+   "tokens": 11,
+   "x": 0.5701,
+   "y": 0.2306
+  },
+  {
+   "id": "shop.fraud",
+   "kind": "module",
+   "label": "fraud",
+   "file": "shop/fraud.py",
+   "signature": "module shop.fraud",
+   "summary": "Order risk scoring.",
+   "text": "\"\"\"Order risk scoring.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import config, log\nfrom shop.customers import Customer\n\n\ndef score(customer: Customer, amount: Decimal, shipping_country: str) -> float:\n    value = 0.0\n    if shipping_country != customer.country:\n        value += 0.4\n    if amount > Decimal(\"500\"):\n        value += 0.3\n    if \"new\" in customer.tags:\n        value += 0.2\n    log.event(\"fraud.score\", customer_id=customer.customer_id, score=value)\n    return min(value, 1.0)\n\n\ndef needs_review(value: float) -> bool:\n    return value >= config.FRAUD_REVIEW_SCORE\n",
+   "tokens": 145,
+   "x": 0.1835,
+   "y": 0.4057
+  },
+  {
+   "id": "shop.fraud.score",
+   "kind": "function",
+   "label": "score",
+   "file": "shop/fraud.py",
+   "signature": "def score(customer: Customer, amount: Decimal, shipping_country: str) -> float",
+   "summary": "",
+   "text": "def score(customer: Customer, amount: Decimal, shipping_country: str) -> float:\n    value = 0.0\n    if shipping_country != customer.country:\n        value += 0.4\n    if amount > Decimal(\"500\"):\n        value += 0.3\n    if \"new\" in customer.tags:\n        value += 0.2\n    log.event(\"fraud.score\", customer_id=customer.customer_id, score=value)\n    return min(value, 1.0)",
+   "tokens": 93,
+   "x": 0.1432,
+   "y": 0.4095
+  },
+  {
+   "id": "shop.fraud.needs_review",
+   "kind": "function",
+   "label": "needs_review",
+   "file": "shop/fraud.py",
+   "signature": "def needs_review(value: float) -> bool",
+   "summary": "",
+   "text": "def needs_review(value: float) -> bool:\n    return value >= config.FRAUD_REVIEW_SCORE",
+   "tokens": 22,
+   "x": 0.1631,
+   "y": 0.4406
+  },
+  {
+   "id": "shop.gateway",
+   "kind": "module",
+   "label": "gateway",
+   "file": "shop/gateway.py",
+   "signature": "module shop.gateway",
+   "summary": "Client for the card processor's HTTP API.",
+   "text": "\"\"\"Client for the card processor's HTTP API.\"\"\"\nimport uuid\nfrom decimal import Decimal\n\nfrom shop import config, log, money\n\nHARD_DECLINES = {\"insufficient_funds\", \"card_expired\", \"do_not_honor\", \"stolen_card\"}\n\n\nclass GatewayDeclined(Exception):\n    def __init__(self, code: str):\n        super().__init__(code)\n        self.code = code\n\n\ndef _post(path: str, body: dict) -> dict:\n    with log.timed(\"gateway.request\", path=path):\n        if body[\"token\"].startswith(\"tok_decline_\"):\n            return {\"ok\": False, \"code\": body[\"token\"].removeprefix(\"tok_decline_\")}\n        return {\"ok\": True, \"id\": f\"ch_{uuid.uuid4().hex[:12]}\"}\n\n\ndef authorize(token: str, amount: Decimal, reference: str) -> str:\n    reply = _post(\"/charges\", {\"token\": token, \"amount\": money.to_cents(amount), \"ref\": reference})\n    if not reply[\"ok\"]:\n        raise GatewayDeclined(reply[\"code\"])\n    return reply[\"id\"]\n\n\ndef refund(charge_id: str, amount: Decimal) -> str:\n    reply = _post(\"/refunds\", {\"token\": charge_id, \"amount\": money.to_cents(amount)})\n    log.event(\"gateway.refund\", charge_id=charge_id)\n    return reply[\"id\"]\n",
+   "tokens": 279,
+   "x": 0.5513,
+   "y": 0.1265
+  },
+  {
+   "id": "shop.gateway.GatewayDeclined",
+   "kind": "class",
+   "label": "GatewayDeclined",
+   "file": "shop/gateway.py",
+   "signature": "class GatewayDeclined(Exception)",
+   "summary": "",
+   "text": "class GatewayDeclined(Exception):\n    def __init__(self, code: str):\n        super().__init__(code)\n        self.code = code",
+   "tokens": 31,
+   "x": 0.5114,
+   "y": 0.0963
+  },
+  {
+   "id": "shop.gateway.GatewayDeclined.__init__",
+   "kind": "function",
+   "label": "__init__",
+   "file": "shop/gateway.py",
+   "signature": "def __init__(self, code: str)",
+   "summary": "",
+   "text": "    def __init__(self, code: str):\n        super().__init__(code)\n        self.code = code",
+   "tokens": 23,
+   "x": 0.5501,
+   "y": 0.0765
+  },
+  {
+   "id": "shop.gateway._post",
+   "kind": "function",
+   "label": "_post",
+   "file": "shop/gateway.py",
+   "signature": "def _post(path: str, body: dict) -> dict",
+   "summary": "",
+   "text": "def _post(path: str, body: dict) -> dict:\n    with log.timed(\"gateway.request\", path=path):\n        if body[\"token\"].startswith(\"tok_decline_\"):\n            return {\"ok\": False, \"code\": body[\"token\"].removeprefix(\"tok_decline_\")}\n        return {\"ok\": True, \"id\": f\"ch_{uuid.uuid4().hex[:12]}\"}",
+   "tokens": 74,
+   "x": 0.5897,
+   "y": 0.0945
+  },
+  {
+   "id": "shop.gateway.authorize",
+   "kind": "function",
+   "label": "authorize",
+   "file": "shop/gateway.py",
+   "signature": "def authorize(token: str, amount: Decimal, reference: str) -> str",
+   "summary": "",
+   "text": "def authorize(token: str, amount: Decimal, reference: str) -> str:\n    reply = _post(\"/charges\", {\"token\": token, \"amount\": money.to_cents(amount), \"ref\": reference})\n    if not reply[\"ok\"]:\n        raise GatewayDeclined(reply[\"code\"])\n    return reply[\"id\"]",
+   "tokens": 65,
+   "x": 0.6002,
+   "y": 0.1367
+  },
+  {
+   "id": "shop.gateway.refund",
+   "kind": "function",
+   "label": "refund",
+   "file": "shop/gateway.py",
+   "signature": "def refund(charge_id: str, amount: Decimal) -> str",
+   "summary": "",
+   "text": "def refund(charge_id: str, amount: Decimal) -> str:\n    reply = _post(\"/refunds\", {\"token\": charge_id, \"amount\": money.to_cents(amount)})\n    log.event(\"gateway.refund\", charge_id=charge_id)\n    return reply[\"id\"]",
+   "tokens": 54,
+   "x": 0.5737,
+   "y": 0.1712
+  },
+  {
+   "id": "shop.inventory",
+   "kind": "module",
+   "label": "inventory",
+   "file": "shop/inventory.py",
+   "signature": "module shop.inventory",
+   "summary": "Stock levels and checkout reservations.",
+   "text": "\"\"\"Stock levels and checkout reservations.\"\"\"\nimport time\n\nfrom shop import config, log\nfrom shop.cart import Cart\nfrom shop.errors import OutOfStock\n\n_STOCK = {\"MUG-01\": 120, \"TEE-02\": 45, \"LMP-07\": 8, \"NTB-11\": 300}\n_RESERVED: dict[str, tuple[float, dict[str, int]]] = {}\n\n\ndef reserve(cart: Cart) -> None:\n    for item in cart.items:\n        if _STOCK.get(item.sku, 0) < item.quantity:\n            raise OutOfStock(item.sku)\n    for item in cart.items:\n        _STOCK[item.sku] -= item.quantity\n    expires = time.time() + config.RESERVATION_MINUTES * 60\n    _RESERVED[cart.cart_id] = (expires, {i.sku: i.quantity for i in cart.items})\n    log.event(\"inventory.reserved\", cart_id=cart.cart_id)\n\n\ndef release(cart: Cart) -> None:\n    held = _RESERVED.pop(cart.cart_id, None)\n    if held is None:\n        return\n    for sku, quantity in held[1].items():\n        _STOCK[sku] += quantity\n    log.event(\"inventory.released\", cart_id=cart.cart_id)\n\n\ndef commit(cart: Cart) -> None:\n    _RESERVED.pop(cart.cart_id, None)\n    log.event(\"inventory.committed\", cart_id=cart.cart_id)\n\n\ndef expire_stale() -> int:\n    now = time.time()\n    stale = [cid for cid, (expires, _) in _RESERVED.items() if expires < now]\n    for cart_id in stale:\n        for sku, quantity in _RESERVED.pop(cart_id)[1].items():\n            _STOCK[sku] += quantity\n    log.event(\"inventory.expired\", count=len(stale))\n    return len(stale)\n",
+   "tokens": 352,
+   "x": 0.066,
+   "y": 0.5091
+  },
+  {
+   "id": "shop.inventory.reserve",
+   "kind": "function",
+   "label": "reserve",
+   "file": "shop/inventory.py",
+   "signature": "def reserve(cart: Cart) -> None",
+   "summary": "",
+   "text": "def reserve(cart: Cart) -> None:\n    for item in cart.items:\n        if _STOCK.get(item.sku, 0) < item.quantity:\n            raise OutOfStock(item.sku)\n    for item in cart.items:\n        _STOCK[item.sku] -= item.quantity\n    expires = time.time() + config.RESERVATION_MINUTES * 60\n    _RESERVED[cart.cart_id] = (expires, {i.sku: i.quantity for i in cart.items})\n    log.event(\"inventory.reserved\", cart_id=cart.cart_id)",
+   "tokens": 105,
+   "x": 0.0325,
+   "y": 0.4805
+  },
+  {
+   "id": "shop.inventory.release",
+   "kind": "function",
+   "label": "release",
+   "file": "shop/inventory.py",
+   "signature": "def release(cart: Cart) -> None",
+   "summary": "",
+   "text": "def release(cart: Cart) -> None:\n    held = _RESERVED.pop(cart.cart_id, None)\n    if held is None:\n        return\n    for sku, quantity in held[1].items():\n        _STOCK[sku] += quantity\n    log.event(\"inventory.released\", cart_id=cart.cart_id)",
+   "tokens": 62,
+   "x": 0.0228,
+   "y": 0.5175
+  },
+  {
+   "id": "shop.inventory.commit",
+   "kind": "function",
+   "label": "commit",
+   "file": "shop/inventory.py",
+   "signature": "def commit(cart: Cart) -> None",
+   "summary": "",
+   "text": "def commit(cart: Cart) -> None:\n    _RESERVED.pop(cart.cart_id, None)\n    log.event(\"inventory.committed\", cart_id=cart.cart_id)",
+   "tokens": 32,
+   "x": 0.084,
+   "y": 0.5492
+  },
+  {
+   "id": "shop.inventory.expire_stale",
+   "kind": "function",
+   "label": "expire_stale",
+   "file": "shop/inventory.py",
+   "signature": "def expire_stale() -> int",
+   "summary": "",
+   "text": "def expire_stale() -> int:\n    now = time.time()\n    stale = [cid for cid, (expires, _) in _RESERVED.items() if expires < now]\n    for cart_id in stale:\n        for sku, quantity in _RESERVED.pop(cart_id)[1].items():\n            _STOCK[sku] += quantity\n    log.event(\"inventory.expired\", count=len(stale))\n    return len(stale)",
+   "tokens": 82,
+   "x": 0.0458,
+   "y": 0.5481
+  },
+  {
+   "id": "shop.log",
+   "kind": "module",
+   "label": "log",
+   "file": "shop/log.py",
+   "signature": "module shop.log",
+   "summary": "Structured logging shared by every shop module.",
+   "text": "\"\"\"Structured logging shared by every shop module.\"\"\"\nimport json\nimport logging\nimport os\nimport time\nfrom contextlib import contextmanager\n\nlogging.basicConfig(level=os.environ.get(\"SHOP_LOG_LEVEL\", \"INFO\"), format=\"%(message)s\")\n_root = logging.getLogger(\"shop\")\n\n\ndef get_logger(name: str) -> logging.Logger:\n    \"\"\"Return a logger namespaced under shop.\"\"\"\n    return _root.getChild(name)\n\n\ndef event(name: str, **fields) -> None:\n    \"\"\"Emit one JSON log line with an event name and its fields.\"\"\"\n    _root.info(json.dumps({\"event\": name, \"ts\": time.time(), **fields}, default=str))\n\n\ndef warn(name: str, **fields) -> None:\n    \"\"\"Same as event, at warning level.\"\"\"\n    _root.warning(json.dumps({\"event\": name, \"ts\": time.time(), **fields}, default=str))\n\n\n@contextmanager\ndef timed(name: str, **fields):\n    \"\"\"Log an event with the elapsed milliseconds when the block exits.\"\"\"\n    start = time.monotonic()\n    try:\n        yield\n    finally:\n        event(name, elapsed_ms=round((time.monotonic() - start) * 1000), **fields)\n",
+   "tokens": 259,
+   "x": 0.15,
+   "y": 0.75
+  },
+  {
+   "id": "shop.log.get_logger",
+   "kind": "function",
+   "label": "get_logger",
+   "file": "shop/log.py",
+   "signature": "def get_logger(name: str) -> logging.Logger",
+   "summary": "Return a logger namespaced under shop.",
+   "text": "def get_logger(name: str) -> logging.Logger:\n    \"\"\"Return a logger namespaced under shop.\"\"\"\n    return _root.getChild(name)",
+   "tokens": 32,
+   "x": 0.1544,
+   "y": 0.8098
+  },
+  {
+   "id": "shop.log.event",
+   "kind": "function",
+   "label": "event",
+   "file": "shop/log.py",
+   "signature": "def event(name: str, **fields) -> None",
+   "summary": "Emit one JSON log line with an event name and its fields.",
+   "text": "def event(name: str, **fields) -> None:\n    \"\"\"Emit one JSON log line with an event name and its fields.\"\"\"\n    _root.info(json.dumps({\"event\": name, \"ts\": time.time(), **fields}, default=str))",
+   "tokens": 49,
+   "x": 0.1996,
+   "y": 0.7837
+  },
+  {
+   "id": "shop.log.warn",
+   "kind": "function",
+   "label": "warn",
+   "file": "shop/log.py",
+   "signature": "def warn(name: str, **fields) -> None",
+   "summary": "Same as event, at warning level.",
+   "text": "def warn(name: str, **fields) -> None:\n    \"\"\"Same as event, at warning level.\"\"\"\n    _root.warning(json.dumps({\"event\": name, \"ts\": time.time(), **fields}, default=str))",
+   "tokens": 43,
+   "x": 0.0907,
+   "y": 0.7407
+  },
+  {
+   "id": "shop.log.timed",
+   "kind": "function",
+   "label": "timed",
+   "file": "shop/log.py",
+   "signature": "def timed(name: str, **fields)",
+   "summary": "Log an event with the elapsed milliseconds when the block exits.",
+   "text": "@contextmanager\ndef timed(name: str, **fields):\n    \"\"\"Log an event with the elapsed milliseconds when the block exits.\"\"\"\n    start = time.monotonic()\n    try:\n        yield\n    finally:\n        event(name, elapsed_ms=round((time.monotonic() - start) * 1000), **fields)",
+   "tokens": 68,
+   "x": 0.1059,
+   "y": 0.7907
+  },
+  {
+   "id": "shop.money",
+   "kind": "module",
+   "label": "money",
+   "file": "shop/money.py",
+   "signature": "module shop.money",
+   "summary": "Decimal helpers for currency amounts.",
+   "text": "\"\"\"Decimal helpers for currency amounts.\"\"\"\nfrom decimal import ROUND_HALF_UP, Decimal\n\nCENT = Decimal(\"0.01\")\n\n\ndef quantize(amount: Decimal) -> Decimal:\n    return amount.quantize(CENT, rounding=ROUND_HALF_UP)\n\n\ndef to_cents(amount: Decimal) -> int:\n    return int(quantize(amount) * 100)\n",
+   "tokens": 73,
+   "x": 0.062,
+   "y": 0.062
+  },
+  {
+   "id": "shop.money.quantize",
+   "kind": "function",
+   "label": "quantize",
+   "file": "shop/money.py",
+   "signature": "def quantize(amount: Decimal) -> Decimal",
+   "summary": "",
+   "text": "def quantize(amount: Decimal) -> Decimal:\n    return amount.quantize(CENT, rounding=ROUND_HALF_UP)",
+   "tokens": 25,
+   "x": 0.0234,
+   "y": 0.0498
+  },
+  {
+   "id": "shop.money.to_cents",
+   "kind": "function",
+   "label": "to_cents",
+   "file": "shop/money.py",
+   "signature": "def to_cents(amount: Decimal) -> int",
+   "summary": "",
+   "text": "def to_cents(amount: Decimal) -> int:\n    return int(quantize(amount) * 100)",
+   "tokens": 19,
+   "x": 0.0494,
+   "y": 0.0235
+  },
+  {
+   "id": "shop.notifications",
+   "kind": "module",
+   "label": "notifications",
+   "file": "shop/notifications.py",
+   "signature": "module shop.notifications",
+   "summary": "Outgoing email and ops alerts.",
+   "text": "\"\"\"Outgoing email and ops alerts.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import config, customers, log, templates\nfrom shop.customers import Customer\nfrom shop.orders import Order\n\n\ndef send_email(to: str, template: str, **context) -> None:\n    body = templates.render(template, **context)\n    log.event(\"email.sent\", to=to, template=template, size=len(body))\n\n\ndef send_order_confirmation(customer: Customer, order: Order) -> None:\n    send_email(customer.email, \"order_confirmation\", order_id=order.order_id, total=order.total)\n\n\ndef send_payment_failed(customer: Customer, reason: str) -> None:\n    send_email(customer.email, \"payment_failed\", reason=reason)\n\n\ndef refund_recipients(customer: Customer, amount: Decimal, reason: str) -> list[tuple[str, str]]:\n    \"\"\"(address, template) pairs that hear about a refund.\"\"\"\n    recipients = []\n    if customer.refund_emails:\n        recipients.append((customer.email, \"refund_issued\"))\n    if amount > config.FINANCE_REFUND_LIMIT:\n        recipients.append((config.FINANCE_ADDRESS, \"refund_finance\"))\n    if reason == \"fraud\":\n        recipients.append((config.SUPPORT_ADDRESS, \"refund_fraud\"))\n    return recipients\n\n\ndef notify_refund(order: Order, amount: Decimal, reason: str) -> None:\n    customer = customers.get(order.customer_id)\n    for address, template in refund_recipients(customer, amount, reason):\n        send_email(address, template, order_id=order.order_id, amount=amount, reason=reason)\n",
+   "tokens": 365,
+   "x": 0.5118,
+   "y": 0.4243
+  },
+  {
+   "id": "shop.notifications.send_email",
+   "kind": "function",
+   "label": "send_email",
+   "file": "shop/notifications.py",
+   "signature": "def send_email(to: str, template: str, **context) -> None",
+   "summary": "",
+   "text": "def send_email(to: str, template: str, **context) -> None:\n    body = templates.render(template, **context)\n    log.event(\"email.sent\", to=to, template=template, size=len(body))",
+   "tokens": 45,
+   "x": 0.5556,
+   "y": 0.4485
+  },
+  {
+   "id": "shop.notifications.send_order_confirmation",
+   "kind": "function",
+   "label": "send_order_confirmation",
+   "file": "shop/notifications.py",
+   "signature": "def send_order_confirmation(customer: Customer, order: Order) -> None",
+   "summary": "",
+   "text": "def send_order_confirmation(customer: Customer, order: Order) -> None:\n    send_email(customer.email, \"order_confirmation\", order_id=order.order_id, total=order.total)",
+   "tokens": 42,
+   "x": 0.5201,
+   "y": 0.4736
+  },
+  {
+   "id": "shop.notifications.send_payment_failed",
+   "kind": "function",
+   "label": "send_payment_failed",
+   "file": "shop/notifications.py",
+   "signature": "def send_payment_failed(customer: Customer, reason: str) -> None",
+   "summary": "",
+   "text": "def send_payment_failed(customer: Customer, reason: str) -> None:\n    send_email(customer.email, \"payment_failed\", reason=reason)",
+   "tokens": 33,
+   "x": 0.4783,
+   "y": 0.4614
+  },
+  {
+   "id": "shop.notifications.refund_recipients",
+   "kind": "function",
+   "label": "refund_recipients",
+   "file": "shop/notifications.py",
+   "signature": "def refund_recipients(customer: Customer, amount: Decimal, reason: str) -> list[tuple[str, str]]",
+   "summary": "(address, template) pairs that hear about a refund.",
+   "text": "def refund_recipients(customer: Customer, amount: Decimal, reason: str) -> list[tuple[str, str]]:\n    \"\"\"(address, template) pairs that hear about a refund.\"\"\"\n    recipients = []\n    if customer.refund_emails:\n        recipients.append((customer.email, \"refund_issued\"))\n    if amount > config.FINANCE_REFUND_LIMIT:\n        recipients.append((config.FINANCE_ADDRESS, \"refund_finance\"))\n    if reason == \"fraud\":\n        recipients.append((config.SUPPORT_ADDRESS, \"refund_fraud\"))\n    return recipients",
+   "tokens": 126,
+   "x": 0.558,
+   "y": 0.4051
+  },
+  {
+   "id": "shop.notifications.notify_refund",
+   "kind": "function",
+   "label": "notify_refund",
+   "file": "shop/notifications.py",
+   "signature": "def notify_refund(order: Order, amount: Decimal, reason: str) -> None",
+   "summary": "",
+   "text": "def notify_refund(order: Order, amount: Decimal, reason: str) -> None:\n    customer = customers.get(order.customer_id)\n    for address, template in refund_recipients(customer, amount, reason):\n        send_email(address, template, order_id=order.order_id, amount=amount, reason=reason)",
+   "tokens": 72,
+   "x": 0.5255,
+   "y": 0.3762
+  },
+  {
+   "id": "shop.orders",
+   "kind": "module",
+   "label": "orders",
+   "file": "shop/orders.py",
+   "signature": "module shop.orders",
+   "summary": "Order records.",
+   "text": "\"\"\"Order records.\"\"\"\nfrom dataclasses import dataclass, field\nfrom decimal import Decimal\n\nfrom shop import log\nfrom shop.errors import RefundNotAllowed\n\n\n@dataclass\nclass Order:\n    order_id: str\n    customer_id: str\n    charge_id: str\n    total: Decimal\n    status: str = \"paid\"\n    refunded: Decimal = Decimal(\"0\")\n    history: list[str] = field(default_factory=list)\n\n\n_ORDERS: dict[str, Order] = {}\n\n\ndef create(order_id: str, customer_id: str, charge_id: str, total: Decimal) -> Order:\n    order = Order(order_id, customer_id, charge_id, total)\n    _ORDERS[order_id] = order\n    log.event(\"order.created\", order_id=order_id, total=total)\n    return order\n\n\ndef get(order_id: str) -> Order:\n    return _ORDERS[order_id]\n\n\ndef refundable(order: Order) -> Decimal:\n    return order.total - order.refunded\n\n\ndef mark_refunded(order: Order, amount: Decimal) -> None:\n    if amount > refundable(order):\n        raise RefundNotAllowed(f\"{amount} exceeds refundable {refundable(order)}\")\n    order.refunded += amount\n    order.status = \"refunded\" if refundable(order) == 0 else \"partially_refunded\"\n    order.history.append(f\"refund {amount}\")\n    log.event(\"order.refunded\", order_id=order.order_id, amount=amount)\n",
+   "tokens": 304,
+   "x": 0.2803,
+   "y": 0.298
+  },
+  {
+   "id": "shop.orders.Order",
+   "kind": "class",
+   "label": "Order",
+   "file": "shop/orders.py",
+   "signature": "class Order",
+   "summary": "",
+   "text": "@dataclass\nclass Order:\n    order_id: str\n    customer_id: str\n    charge_id: str\n    total: Decimal\n    status: str = \"paid\"\n    refunded: Decimal = Decimal(\"0\")\n    history: list[str] = field(default_factory=list)",
+   "tokens": 54,
+   "x": 0.2685,
+   "y": 0.3466
+  },
+  {
+   "id": "shop.orders.create",
+   "kind": "function",
+   "label": "create",
+   "file": "shop/orders.py",
+   "signature": "def create(order_id: str, customer_id: str, charge_id: str, total: Decimal) -> Order",
+   "summary": "",
+   "text": "def create(order_id: str, customer_id: str, charge_id: str, total: Decimal) -> Order:\n    order = Order(order_id, customer_id, charge_id, total)\n    _ORDERS[order_id] = order\n    log.event(\"order.created\", order_id=order_id, total=total)\n    return order",
+   "tokens": 64,
+   "x": 0.2349,
+   "y": 0.319
+  },
+  {
+   "id": "shop.orders.get",
+   "kind": "function",
+   "label": "get",
+   "file": "shop/orders.py",
+   "signature": "def get(order_id: str) -> Order",
+   "summary": "",
+   "text": "def get(order_id: str) -> Order:\n    return _ORDERS[order_id]",
+   "tokens": 16,
+   "x": 0.2356,
+   "y": 0.2755
+  },
+  {
+   "id": "shop.orders.refundable",
+   "kind": "function",
+   "label": "refundable",
+   "file": "shop/orders.py",
+   "signature": "def refundable(order: Order) -> Decimal",
+   "summary": "",
+   "text": "def refundable(order: Order) -> Decimal:\n    return order.total - order.refunded",
+   "tokens": 20,
+   "x": 0.3123,
+   "y": 0.2596
+  },
+  {
+   "id": "shop.orders.mark_refunded",
+   "kind": "function",
+   "label": "mark_refunded",
+   "file": "shop/orders.py",
+   "signature": "def mark_refunded(order: Order, amount: Decimal) -> None",
+   "summary": "",
+   "text": "def mark_refunded(order: Order, amount: Decimal) -> None:\n    if amount > refundable(order):\n        raise RefundNotAllowed(f\"{amount} exceeds refundable {refundable(order)}\")\n    order.refunded += amount\n    order.status = \"refunded\" if refundable(order) == 0 else \"partially_refunded\"\n    order.history.append(f\"refund {amount}\")\n    log.event(\"order.refunded\", order_id=order.order_id, amount=amount)",
+   "tokens": 101,
+   "x": 0.2701,
+   "y": 0.249
+  },
+  {
+   "id": "shop.payments",
+   "kind": "module",
+   "label": "payments",
+   "file": "shop/payments.py",
+   "signature": "module shop.payments",
+   "summary": "Card payments on top of the gateway.",
+   "text": "\"\"\"Card payments on top of the gateway.\"\"\"\nimport time\nfrom decimal import Decimal\n\nfrom shop import config, gateway, log\nfrom shop.errors import PaymentDeclined\n\n\ndef charge_card(token: str, amount: Decimal, reference: str) -> str:\n    \"\"\"Charge a card token and return the charge id.\"\"\"\n    for attempt in range(config.MAX_PAYMENT_RETRIES):\n        try:\n            charge_id = gateway.authorize(token, amount, reference)\n        except gateway.GatewayDeclined as exc:\n            if exc.code in gateway.HARD_DECLINES:\n                log.event(\"payment.declined\", code=exc.code, reference=reference)\n                raise PaymentDeclined(exc.code) from exc\n            log.warn(\"payment.retry\", code=exc.code, attempt=attempt + 1)\n            time.sleep(config.RETRY_BACKOFF_S[attempt])\n        else:\n            log.event(\"payment.charged\", charge_id=charge_id, reference=reference)\n            return charge_id\n    raise PaymentDeclined(\"processing_error\", retryable=True)\n\n\ndef refund_charge(charge_id: str, amount: Decimal) -> str:\n    return gateway.refund(charge_id, amount)\n",
+   "tokens": 271,
+   "x": 0.4338,
+   "y": 0.062
+  },
+  {
+   "id": "shop.payments.charge_card",
+   "kind": "function",
+   "label": "charge_card",
+   "file": "shop/payments.py",
+   "signature": "def charge_card(token: str, amount: Decimal, reference: str) -> str",
+   "summary": "Charge a card token and return the charge id.",
+   "text": "def charge_card(token: str, amount: Decimal, reference: str) -> str:\n    \"\"\"Charge a card token and return the charge id.\"\"\"\n    for attempt in range(config.MAX_PAYMENT_RETRIES):\n        try:\n            charge_id = gateway.authorize(token, amount, reference)\n        except gateway.GatewayDeclined as exc:\n            if exc.code in gateway.HARD_DECLINES:\n                log.event(\"payment.declined\", code=exc.code, reference=reference)\n                raise PaymentDeclined(exc.code) from exc\n            log.warn(\"payment.retry\", code=exc.code, attempt=attempt + 1)\n            time.sleep(config.RETRY_BACKOFF_S[attempt])\n        else:\n            log.event(\"payment.charged\", charge_id=charge_id, reference=reference)\n            return charge_id\n    raise PaymentDeclined(\"processing_error\", retryable=True)",
+   "tokens": 204,
+   "x": 0.4315,
+   "y": 0.0216
+  },
+  {
+   "id": "shop.payments.refund_charge",
+   "kind": "function",
+   "label": "refund_charge",
+   "file": "shop/payments.py",
+   "signature": "def refund_charge(charge_id: str, amount: Decimal) -> str",
+   "summary": "",
+   "text": "def refund_charge(charge_id: str, amount: Decimal) -> str:\n    return gateway.refund(charge_id, amount)",
+   "tokens": 26,
+   "x": 0.4653,
+   "y": 0.0365
+  },
+  {
+   "id": "shop.pricing",
+   "kind": "module",
+   "label": "pricing",
+   "file": "shop/pricing.py",
+   "signature": "module shop.pricing",
+   "summary": "Order totals.",
+   "text": "\"\"\"Order totals.\"\"\"\nfrom dataclasses import dataclass\nfrom decimal import Decimal\n\nfrom shop import catalog, discounts, log, money, shipping, tax\nfrom shop.cart import Cart\nfrom shop.customers import Customer\n\n\n@dataclass\nclass Breakdown:\n    subtotal: Decimal\n    discount: Decimal\n    shipping: Decimal\n    tax: Decimal\n    total: Decimal\n\n\ndef subtotal(cart: Cart) -> Decimal:\n    return money.quantize(\n        sum((catalog.get_product(i.sku).price * i.quantity for i in cart.items), Decimal(\"0\"))\n    )\n\n\ndef total(cart: Cart, customer: Customer) -> Breakdown:\n    \"\"\"Price a cart for a customer, including shipping and tax.\"\"\"\n    sub = subtotal(cart)\n    off = discounts.discount_for(cart.coupon, sub)\n    ship = shipping.quote(cart.weight_g(), customer.country, sub - off)\n    taxed = tax.tax_amount(sub - off + ship, customer.country)\n    result = Breakdown(sub, off, ship, taxed, sub - off + ship + taxed)\n    log.event(\"pricing.total\", cart_id=cart.cart_id, total=result.total)\n    return result\n",
+   "tokens": 252,
+   "x": 0.144,
+   "y": 0.2881
+  },
+  {
+   "id": "shop.pricing.Breakdown",
+   "kind": "class",
+   "label": "Breakdown",
+   "file": "shop/pricing.py",
+   "signature": "class Breakdown",
+   "summary": "",
+   "text": "@dataclass\nclass Breakdown:\n    subtotal: Decimal\n    discount: Decimal\n    shipping: Decimal\n    tax: Decimal\n    total: Decimal",
+   "tokens": 33,
+   "x": 0.1147,
+   "y": 0.3163
+  },
+  {
+   "id": "shop.pricing.subtotal",
+   "kind": "function",
+   "label": "subtotal",
+   "file": "shop/pricing.py",
+   "signature": "def subtotal(cart: Cart) -> Decimal",
+   "summary": "",
+   "text": "def subtotal(cart: Cart) -> Decimal:\n    return money.quantize(\n        sum((catalog.get_product(i.sku).price * i.quantity for i in cart.items), Decimal(\"0\"))\n    )",
+   "tokens": 41,
+   "x": 0.1032,
+   "y": 0.2812
+  },
+  {
+   "id": "shop.pricing.total",
+   "kind": "function",
+   "label": "total",
+   "file": "shop/pricing.py",
+   "signature": "def total(cart: Cart, customer: Customer) -> Breakdown",
+   "summary": "Price a cart for a customer, including shipping and tax.",
+   "text": "def total(cart: Cart, customer: Customer) -> Breakdown:\n    \"\"\"Price a cart for a customer, including shipping and tax.\"\"\"\n    sub = subtotal(cart)\n    off = discounts.discount_for(cart.coupon, sub)\n    ship = shipping.quote(cart.weight_g(), customer.country, sub - off)\n    taxed = tax.tax_amount(sub - off + ship, customer.country)\n    result = Breakdown(sub, off, ship, taxed, sub - off + ship + taxed)\n    log.event(\"pricing.total\", cart_id=cart.cart_id, total=result.total)\n    return result",
+   "tokens": 124,
+   "x": 0.1257,
+   "y": 0.2518
+  },
+  {
+   "id": "shop.refunds",
+   "kind": "module",
+   "label": "refunds",
+   "file": "shop/refunds.py",
+   "signature": "module shop.refunds",
+   "summary": "Refund workflow.",
+   "text": "\"\"\"Refund workflow.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import audit, log, notifications, orders, payments\n\n\ndef issue_refund(order_id: str, amount: Decimal, reason: str, actor: str) -> None:\n    order = orders.get(order_id)\n    log.event(\"refund.start\", order_id=order_id, amount=amount)\n    payments.refund_charge(order.charge_id, amount)\n    orders.mark_refunded(order, amount)\n    audit.record(\"refund\", actor, order_id=order_id, amount=str(amount), reason=reason)\n    notifications.notify_refund(order, amount, reason)\n",
+   "tokens": 133,
+   "x": 0.4715,
+   "y": 0.2342
+  },
+  {
+   "id": "shop.refunds.issue_refund",
+   "kind": "function",
+   "label": "issue_refund",
+   "file": "shop/refunds.py",
+   "signature": "def issue_refund(order_id: str, amount: Decimal, reason: str, actor: str) -> None",
+   "summary": "",
+   "text": "def issue_refund(order_id: str, amount: Decimal, reason: str, actor: str) -> None:\n    order = orders.get(order_id)\n    log.event(\"refund.start\", order_id=order_id, amount=amount)\n    payments.refund_charge(order.charge_id, amount)\n    orders.mark_refunded(order, amount)\n    audit.record(\"refund\", actor, order_id=order_id, amount=str(amount), reason=reason)\n    notifications.notify_refund(order, amount, reason)",
+   "tokens": 104,
+   "x": 0.5065,
+   "y": 0.2147
+  },
+  {
+   "id": "shop.shipping",
+   "kind": "module",
+   "label": "shipping",
+   "file": "shop/shipping.py",
+   "signature": "module shop.shipping",
+   "summary": "Shipping quotes.",
+   "text": "\"\"\"Shipping quotes.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import config, countries, log, money\n\n_BASE = Decimal(\"4.90\")\n_PER_KG = Decimal(\"2.10\")\n_INTERNATIONAL = Decimal(\"9.00\")\n\n\ndef quote(weight_g: int, country: str, subtotal: Decimal) -> Decimal:\n    if subtotal >= config.FREE_SHIPPING_OVER and country == config.STORE_COUNTRY:\n        return Decimal(\"0\")\n    cost = _BASE + _PER_KG * (Decimal(weight_g) / 1000)\n    if country != config.STORE_COUNTRY:\n        cost += _INTERNATIONAL\n    log.event(\"shipping.quote\", country=country, eu=countries.is_eu(country))\n    return money.quantize(cost)\n",
+   "tokens": 151,
+   "x": 0.3099,
+   "y": 0.0669
+  },
+  {
+   "id": "shop.shipping.quote",
+   "kind": "function",
+   "label": "quote",
+   "file": "shop/shipping.py",
+   "signature": "def quote(weight_g: int, country: str, subtotal: Decimal) -> Decimal",
+   "summary": "",
+   "text": "def quote(weight_g: int, country: str, subtotal: Decimal) -> Decimal:\n    if subtotal >= config.FREE_SHIPPING_OVER and country == config.STORE_COUNTRY:\n        return Decimal(\"0\")\n    cost = _BASE + _PER_KG * (Decimal(weight_g) / 1000)\n    if country != config.STORE_COUNTRY:\n        cost += _INTERNATIONAL\n    log.event(\"shipping.quote\", country=country, eu=countries.is_eu(country))\n    return money.quantize(cost)",
+   "tokens": 104,
+   "x": 0.3082,
+   "y": 0.027
+  },
+  {
+   "id": "shop.tax",
+   "kind": "module",
+   "label": "tax",
+   "file": "shop/tax.py",
+   "signature": "module shop.tax",
+   "summary": "Sales tax and VAT.",
+   "text": "\"\"\"Sales tax and VAT.\"\"\"\nfrom decimal import Decimal\n\nfrom shop import config, log, money\nfrom shop.countries import is_eu\nfrom shop.errors import TaxRegistrationError\n\nDESTINATION_RATES = {\n    \"AT\": \"0.20\", \"BE\": \"0.21\", \"BG\": \"0.20\", \"HR\": \"0.25\", \"CY\": \"0.19\", \"CZ\": \"0.21\",\n    \"DK\": \"0.25\", \"EE\": \"0.22\", \"FI\": \"0.255\", \"FR\": \"0.20\", \"DE\": \"0.19\", \"GR\": \"0.24\",\n    \"HU\": \"0.27\", \"IE\": \"0.23\", \"IT\": \"0.22\", \"LV\": \"0.21\", \"LT\": \"0.21\", \"LU\": \"0.17\",\n    \"MT\": \"0.18\", \"NL\": \"0.21\", \"PL\": \"0.23\", \"PT\": \"0.23\", \"RO\": \"0.19\", \"SK\": \"0.23\",\n    \"SI\": \"0.22\", \"ES\": \"0.21\", \"SE\": \"0.25\",\n}\n\n_US_SALES_TAX = Decimal(\"0.0725\")\n\n\ndef vat_rate(country: str) -> Decimal:\n    \"\"\"Rate applied to goods delivered to `country`.\"\"\"\n    code = country.upper()\n    if code == \"US\":\n        return _US_SALES_TAX\n    if not is_eu(code):\n        return Decimal(\"0\")\n    if not config.OSS_ID:\n        log.warn(\"tax.no_registration\", country=code)\n        raise TaxRegistrationError(code)\n    return Decimal(DESTINATION_RATES[code])\n\n\ndef tax_amount(net: Decimal, country: str) -> Decimal:\n    return money.quantize(net * vat_rate(country))\n",
+   "tokens": 282,
+   "x": 0.3598,
+   "y": 0.1805
+  },
+  {
+   "id": "shop.tax.vat_rate",
+   "kind": "function",
+   "label": "vat_rate",
+   "file": "shop/tax.py",
+   "signature": "def vat_rate(country: str) -> Decimal",
+   "summary": "Rate applied to goods delivered to `country`.",
+   "text": "def vat_rate(country: str) -> Decimal:\n    \"\"\"Rate applied to goods delivered to `country`.\"\"\"\n    code = country.upper()\n    if code == \"US\":\n        return _US_SALES_TAX\n    if not is_eu(code):\n        return Decimal(\"0\")\n    if not config.OSS_ID:\n        log.warn(\"tax.no_registration\", country=code)\n        raise TaxRegistrationError(code)\n    return Decimal(DESTINATION_RATES[code])",
+   "tokens": 97,
+   "x": 0.3874,
+   "y": 0.1509
+  },
+  {
+   "id": "shop.tax.tax_amount",
+   "kind": "function",
+   "label": "tax_amount",
+   "file": "shop/tax.py",
+   "signature": "def tax_amount(net: Decimal, country: str) -> Decimal",
+   "summary": "",
+   "text": "def tax_amount(net: Decimal, country: str) -> Decimal:\n    return money.quantize(net * vat_rate(country))",
+   "tokens": 27,
+   "x": 0.3518,
+   "y": 0.1407
+  },
+  {
+   "id": "shop.templates",
+   "kind": "module",
+   "label": "templates",
+   "file": "shop/templates.py",
+   "signature": "module shop.templates",
+   "summary": "Plain-text email templates.",
+   "text": "\"\"\"Plain-text email templates.\"\"\"\nfrom shop import log\n\n_TEMPLATES = {\n    \"order_confirmation\": \"Thanks for your order {order_id}. Total: {total}.\",\n    \"payment_failed\": \"Your payment could not be completed ({reason}). Nothing was charged.\",\n    \"refund_issued\": \"We refunded {amount} for order {order_id}.\",\n    \"refund_finance\": \"Refund of {amount} on order {order_id} ({reason}) needs a ledger entry.\",\n    \"refund_fraud\": \"Order {order_id} was refunded as fraud. Review the account.\",\n}\n\n\ndef render(name: str, **context) -> str:\n    log.event(\"template.render\", template=name)\n    return _TEMPLATES[name].format(**context)\n",
+   "tokens": 158,
+   "x": 0.2106,
+   "y": 0.1835
+  },
+  {
+   "id": "shop.templates.render",
+   "kind": "function",
+   "label": "render",
+   "file": "shop/templates.py",
+   "signature": "def render(name: str, **context) -> str",
+   "summary": "",
+   "text": "def render(name: str, **context) -> str:\n    log.event(\"template.render\", template=name)\n    return _TEMPLATES[name].format(**context)",
+   "tokens": 34,
+   "x": 0.1854,
+   "y": 0.1525
+  },
+  {
+   "id": "docs/adr/0007-destination-vat.md",
+   "kind": "doc",
+   "label": "0007-destination-vat.md",
+   "file": "docs/adr/0007-destination-vat.md",
+   "signature": "ADR 7: Charge destination VAT through the OSS",
+   "summary": "Status: accepted",
+   "text": "# ADR 7: Charge destination VAT through the OSS\n\nStatus: accepted\n\n## Context\n\nSince July 2021 a seller outside the EU has to charge VAT at the buyer's national rate on consumer orders. The\nalternative to the One Stop Shop is registering for VAT in each member state we ship to.\n\n## Decision\n\nRegister once for the non-Union OSS and charge the destination rate in `shop.tax.vat_rate`. The rate table is\n`DESTINATION_RATES`. Quarterly returns go to finance; see [VAT](../vat.md).\n\n## Consequences\n\n- Pricing depends on an OSS number being configured. We prefer a loud failure to a silently wrong rate.\n- Rate changes are a code change to the table, reviewed by finance.\n",
+   "tokens": 168,
+   "x": 0.82,
+   "y": 0.1
+  },
+  {
+   "id": "docs/architecture.md",
+   "kind": "doc",
+   "label": "architecture.md",
+   "file": "docs/architecture.md",
+   "signature": "Shop architecture",
+   "summary": "The shop is one Python package, `shop`, with no framework.",
+   "text": "# Shop architecture\n\nThe shop is one Python package, `shop`, with no framework. A request handler builds a `Cart` and a `Customer` and\ncalls `shop.checkout.place_order`.\n\n## Layers\n\n- Pricing: `shop.pricing.total` combines the catalog, `shop.discounts`, `shop.shipping` and `shop.tax`.\n  See [VAT](vat.md) for the tax rules.\n- Payments: `shop.payments.charge_card` wraps the processor client in `shop.gateway`.\n  See [payments](payments.md).\n- Fulfilment: `shop.inventory` holds stock while a payment is in flight.\n- After the sale: `shop.refunds` and `shop.notifications`. See [refunds](refunds.md) and\n  [notifications](notifications.md).\n\nEvery module writes structured events through `shop.log`; see [logging](logging.md).\n\n## Money\n\nAmounts are `Decimal` and rounded half-up to cents by `shop.money.quantize`. Never use floats for amounts.\n",
+   "tokens": 212,
+   "x": 0.93,
+   "y": 0.5
+  },
+  {
+   "id": "docs/audit.md",
+   "kind": "doc",
+   "label": "audit.md",
+   "file": "docs/audit.md",
+   "signature": "Audit trail",
+   "summary": "`shop.audit.record` stores who did what to money or stock.",
+   "text": "# Audit trail\n\n`shop.audit.record` stores who did what to money or stock. Finance reads it at month end. It is separate from the\noperational events in [logging](logging.md): audit entries are kept, log lines rotate.\n",
+   "tokens": 54,
+   "x": 0.93,
+   "y": 0.82
+  },
+  {
+   "id": "docs/inventory.md",
+   "kind": "doc",
+   "label": "inventory.md",
+   "file": "docs/inventory.md",
+   "signature": "Inventory",
+   "summary": "Stock is reserved when checkout starts charging and committed once the payment succeeds.",
+   "text": "# Inventory\n\nStock is reserved when checkout starts charging and committed once the payment succeeds. See `shop.inventory` for\nthe reservation window. Warehouse counts are synced nightly and are the source of truth when they differ.\n",
+   "tokens": 59,
+   "x": 0.82,
+   "y": 0.74
+  },
+  {
+   "id": "docs/logging.md",
+   "kind": "doc",
+   "label": "logging.md",
+   "file": "docs/logging.md",
+   "signature": "Logging",
+   "summary": "All modules log through `shop.log`: `event` for normal records, `warn` for things worth a look, and `timed` around anything slow.",
+   "text": "# Logging\n\nAll modules log through `shop.log`: `event` for normal records, `warn` for things worth a look, and `timed` around\nanything slow. Fields are JSON so the aggregator can index them. Do not log card tokens or full email bodies.\n\nSearch the aggregator by `event` name, for example `checkout.pricing_failed` or `payment.declined`.\n",
+   "tokens": 85,
+   "x": 0.82,
+   "y": 0.9
+  },
+  {
+   "id": "docs/notifications.md",
+   "kind": "doc",
+   "label": "notifications.md",
+   "file": "docs/notifications.md",
+   "signature": "Notifications",
+   "summary": "Emails are rendered from `shop.templates` and sent with `shop.notifications.send_email`.",
+   "text": "# Notifications\n\nEmails are rendered from `shop.templates` and sent with `shop.notifications.send_email`.\n\nOrder confirmations and payment failures go to the customer only. Refunds have a recipient list built by\n`refund_recipients`; the rules are in code so they can be tested. Finance's threshold is `FINANCE_REFUND_LIMIT` in\n`shop.config`. Customers can opt out of refund emails on their profile.\n\nSee [refunds](refunds.md) for the workflow that triggers them.\n",
+   "tokens": 116,
+   "x": 0.82,
+   "y": 0.58
+  },
+  {
+   "id": "docs/payments.md",
+   "kind": "doc",
+   "label": "payments.md",
+   "file": "docs/payments.md",
+   "signature": "Payments",
+   "summary": "`shop.payments.charge_card` authorizes a card token through `shop.gateway.authorize`.",
+   "text": "# Payments\n\n`shop.payments.charge_card` authorizes a card token through `shop.gateway.authorize`.\n\n## Declines\n\nThe processor returns a code with each decline. Codes in `HARD_DECLINES` (insufficient funds, expired card, do not\nhonor, stolen card) end the attempt at once: `charge_card` raises `PaymentDeclined`. Anything else is treated as\ntransient and retried up to `MAX_PAYMENT_RETRIES` times with the backoff in `shop.config`.\n\nWhat the customer and the stock do after a decline is handled by `shop.checkout.place_order`; see\n[declined payments](runbooks/declined-payments.md).\n\n## Testing\n\nTokens that start with `tok_decline_` make the gateway stub return that decline code.\n",
+   "tokens": 171,
+   "x": 0.82,
+   "y": 0.26
+  },
+  {
+   "id": "docs/refunds.md",
+   "kind": "doc",
+   "label": "refunds.md",
+   "file": "docs/refunds.md",
+   "signature": "Refunds",
+   "summary": "`shop.refunds.issue_refund` returns money through the gateway, updates the order with `shop.orders.mark_refunded`, writes an audit entry and then tells the people who need to know.",
+   "text": "# Refunds\n\n`shop.refunds.issue_refund` returns money through the gateway, updates the order with `shop.orders.mark_refunded`,\nwrites an audit entry and then tells the people who need to know. Who that is lives in\n[notifications](notifications.md).\n\nPartial refunds are allowed up to the amount still refundable on the order. A refund never changes stock.\n",
+   "tokens": 89,
+   "x": 0.82,
+   "y": 0.42
+  },
+  {
+   "id": "docs/runbooks/declined-payments.md",
+   "kind": "doc",
+   "label": "declined-payments.md",
+   "file": "docs/runbooks/declined-payments.md",
+   "signature": "Declined payments",
+   "summary": "When a payment is declined during checkout:",
+   "text": "# Declined payments\n\nWhen a payment is declined during checkout:\n\n- The stock reserved for the cart is put back with `shop.inventory.release`. Reservations that are never released\n  expire after `RESERVATION_MINUTES`; `expire_stale` sweeps them.\n- The customer gets the `payment_failed` email from `shop.notifications.send_payment_failed`. It contains the decline\n  code and says nothing was charged.\n- An `audit` entry records the code. See [audit](audit.md) for what the trail is for.\n\nSupport should not ask customers to retry a `stolen_card` decline.\n",
+   "tokens": 139,
+   "x": 0.93,
+   "y": 0.66
+  },
+  {
+   "id": "docs/runbooks/oss-registration.md",
+   "kind": "doc",
+   "label": "oss-registration.md",
+   "file": "docs/runbooks/oss-registration.md",
+   "signature": "OSS registration",
+   "summary": "1.",
+   "text": "# OSS registration\n\n1. Finance registers the company for the non-Union OSS and receives an identification number.\n2. Put the number in the deploy environment as `SHOP_OSS_ID`. `shop.config` reads it at import, so restart the\n   service after changing it.\n3. Check `shop.tax.vat_rate(\"DE\")` in a shell; it should return `0.19`.\n\nRates are reviewed each January. Quarterly returns are due by the end of the month after each quarter.\n",
+   "tokens": 108,
+   "x": 0.93,
+   "y": 0.34
+  },
+  {
+   "id": "docs/vat.md",
+   "kind": "doc",
+   "label": "vat.md",
+   "file": "docs/vat.md",
+   "signature": "VAT and sales tax",
+   "summary": "Rates live in `shop.tax`.",
+   "text": "# VAT and sales tax\n\nRates live in `shop.tax`. `vat_rate` returns the rate for the delivery country, and `tax_amount` applies it to a net\namount.\n\n## Rules\n\n- US orders pay the flat sales tax we collect for our home state.\n- Orders to the EU are charged the VAT rate of the destination country, not ours. The reasoning is in\n  [ADR 7](adr/0007-destination-vat.md).\n- Everything else is untaxed at checkout; the customer pays import duties on delivery.\n\nDestination VAT is only lawful once we are registered for the EU One Stop Shop. The registration number is read from\n`SHOP_OSS_ID` in `shop.config`. When it is not set, `vat_rate` refuses to guess and raises `TaxRegistrationError`\ninstead of charging a wrong rate. [OSS registration](runbooks/oss-registration.md) explains how to get and deploy the\nnumber.\n\n## Rounding\n\nTax is computed on the net amount after discounts, including shipping, then rounded with `shop.money.quantize`.\n",
+   "tokens": 234,
+   "x": 0.93,
+   "y": 0.18
+  }
+ ],
+ "edges": [
+  {
+   "source": "shop.audit",
+   "target": "shop.audit.record",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.audit",
+   "target": "shop.audit.trail_for",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart",
+   "target": "shop.cart.CartItem",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart",
+   "target": "shop.cart.Cart",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart.Cart",
+   "target": "shop.cart.Cart.add",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart.Cart",
+   "target": "shop.cart.Cart.remove",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart.Cart",
+   "target": "shop.cart.Cart.weight_g",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.cart.Cart",
+   "target": "shop.cart.Cart.is_empty",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.catalog",
+   "target": "shop.catalog.Product",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.catalog",
+   "target": "shop.catalog.get_product",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.checkout.place_order",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.countries",
+   "target": "shop.countries.normalize",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.countries",
+   "target": "shop.countries.is_eu",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.customers",
+   "target": "shop.customers.Customer",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.customers",
+   "target": "shop.customers.register",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.customers",
+   "target": "shop.customers.get",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.discounts",
+   "target": "shop.discounts.discount_for",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.ShopError",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.PricingError",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.TaxRegistrationError",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors.TaxRegistrationError",
+   "target": "shop.errors.TaxRegistrationError.__init__",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.OutOfStock",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors.OutOfStock",
+   "target": "shop.errors.OutOfStock.__init__",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.PaymentDeclined",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors.PaymentDeclined",
+   "target": "shop.errors.PaymentDeclined.__init__",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.CheckoutFailed",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors.CheckoutFailed",
+   "target": "shop.errors.CheckoutFailed.__init__",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.errors",
+   "target": "shop.errors.RefundNotAllowed",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.fraud",
+   "target": "shop.fraud.score",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.fraud",
+   "target": "shop.fraud.needs_review",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.gateway.GatewayDeclined",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.gateway.GatewayDeclined",
+   "target": "shop.gateway.GatewayDeclined.__init__",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.gateway._post",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.gateway.authorize",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.gateway.refund",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.inventory.reserve",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.inventory.release",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.inventory.commit",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.inventory.expire_stale",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.log",
+   "target": "shop.log.get_logger",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.log",
+   "target": "shop.log.event",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.log",
+   "target": "shop.log.warn",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.log",
+   "target": "shop.log.timed",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.money",
+   "target": "shop.money.quantize",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.money",
+   "target": "shop.money.to_cents",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.notifications.send_email",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.notifications.send_order_confirmation",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.notifications.send_payment_failed",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.notifications.refund_recipients",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.notifications.notify_refund",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.orders.Order",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.orders.create",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.orders.get",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.orders.refundable",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.orders.mark_refunded",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.payments.charge_card",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.payments.refund_charge",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.pricing.Breakdown",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.pricing.subtotal",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.pricing.total",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.refunds.issue_refund",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.shipping",
+   "target": "shop.shipping.quote",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.tax.vat_rate",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.tax.tax_amount",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.templates",
+   "target": "shop.templates.render",
+   "type": "defines",
+   "weight": 0.6
+  },
+  {
+   "source": "shop.audit",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.audit.record",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.cart",
+   "target": "shop.catalog",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.cart",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.cart.Cart.add",
+   "target": "shop.catalog.get_product",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.cart.Cart.add",
+   "target": "shop.cart.CartItem",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.cart.Cart.add",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.cart.Cart.remove",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.cart.Cart.weight_g",
+   "target": "shop.catalog.get_product",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.catalog",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.catalog",
+   "target": "shop.catalog.Product",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.catalog.get_product",
+   "target": "shop.log.warn",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.audit",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.fraud",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.inventory",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.notifications",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.orders",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.payments",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.pricing",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.cart",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.customers",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout",
+   "target": "shop.errors",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.pricing.total",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.log.warn",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.errors.CheckoutFailed",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.fraud.needs_review",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.fraud.score",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.inventory.reserve",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.payments.charge_card",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.inventory.release",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.notifications.send_payment_failed",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.audit.record",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.inventory.commit",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.orders.create",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.checkout.place_order",
+   "target": "shop.notifications.send_order_confirmation",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.customers",
+   "target": "shop.countries",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.customers",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.customers.register",
+   "target": "shop.customers.Customer",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.customers.register",
+   "target": "shop.countries.normalize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.customers.register",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.discounts",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.discounts",
+   "target": "shop.money",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.discounts.discount_for",
+   "target": "shop.log.warn",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.discounts.discount_for",
+   "target": "shop.money.quantize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.fraud",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.fraud",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.fraud",
+   "target": "shop.customers",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.fraud.score",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.gateway",
+   "target": "shop.money",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.gateway._post",
+   "target": "shop.log.timed",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.authorize",
+   "target": "shop.gateway._post",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.authorize",
+   "target": "shop.money.to_cents",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.authorize",
+   "target": "shop.gateway.GatewayDeclined",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.refund",
+   "target": "shop.gateway._post",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.refund",
+   "target": "shop.money.to_cents",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.gateway.refund",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.cart",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.inventory",
+   "target": "shop.errors",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.inventory.reserve",
+   "target": "shop.errors.OutOfStock",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.inventory.reserve",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.inventory.release",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.inventory.commit",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.inventory.expire_stale",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.log.timed",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.money.to_cents",
+   "target": "shop.money.quantize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.customers",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.templates",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.notifications",
+   "target": "shop.orders",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.notifications.send_email",
+   "target": "shop.templates.render",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.send_email",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.send_order_confirmation",
+   "target": "shop.notifications.send_email",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.send_payment_failed",
+   "target": "shop.notifications.send_email",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.notify_refund",
+   "target": "shop.customers.get",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.notify_refund",
+   "target": "shop.notifications.refund_recipients",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.notifications.notify_refund",
+   "target": "shop.notifications.send_email",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.orders",
+   "target": "shop.errors",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.orders.create",
+   "target": "shop.orders.Order",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.orders.create",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.orders.mark_refunded",
+   "target": "shop.orders.refundable",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.orders.mark_refunded",
+   "target": "shop.errors.RefundNotAllowed",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.orders.mark_refunded",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.gateway",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.payments",
+   "target": "shop.errors",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.payments.charge_card",
+   "target": "shop.gateway.authorize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.payments.charge_card",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.payments.charge_card",
+   "target": "shop.log.warn",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.payments.charge_card",
+   "target": "shop.errors.PaymentDeclined",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.payments.refund_charge",
+   "target": "shop.gateway.refund",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.catalog",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.discounts",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.money",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.shipping",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.tax",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.cart",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing",
+   "target": "shop.customers",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.pricing.subtotal",
+   "target": "shop.money.quantize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.subtotal",
+   "target": "shop.catalog.get_product",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.pricing.subtotal",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.discounts.discount_for",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.shipping.quote",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.tax.tax_amount",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.pricing.Breakdown",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.pricing.total",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.audit",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.notifications",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.orders",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.refunds",
+   "target": "shop.payments",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.orders.get",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.payments.refund_charge",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.orders.mark_refunded",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.audit.record",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.refunds.issue_refund",
+   "target": "shop.notifications.notify_refund",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.shipping",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.shipping",
+   "target": "shop.countries",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.shipping",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.shipping",
+   "target": "shop.money",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.shipping.quote",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.shipping.quote",
+   "target": "shop.countries.is_eu",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.shipping.quote",
+   "target": "shop.money.quantize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.config",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.money",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.countries",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.tax",
+   "target": "shop.errors",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.tax.vat_rate",
+   "target": "shop.countries.is_eu",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.tax.vat_rate",
+   "target": "shop.log.warn",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.tax.vat_rate",
+   "target": "shop.errors.TaxRegistrationError",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.tax.tax_amount",
+   "target": "shop.money.quantize",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.tax.tax_amount",
+   "target": "shop.tax.vat_rate",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "shop.templates",
+   "target": "shop.log",
+   "type": "imports",
+   "weight": 0.5
+  },
+  {
+   "source": "shop.templates.render",
+   "target": "shop.log.event",
+   "type": "calls",
+   "weight": 1.0
+  },
+  {
+   "source": "docs/adr/0007-destination-vat.md",
+   "target": "docs/vat.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/adr/0007-destination-vat.md",
+   "target": "shop.tax.vat_rate",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/adr/0007-destination-vat.md",
+   "target": "shop.tax",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "docs/vat.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "docs/payments.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "docs/refunds.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "docs/notifications.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "docs/logging.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.cart.Cart",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.customers.Customer",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.checkout.place_order",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.pricing.total",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.discounts",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.shipping",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.tax",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.payments.charge_card",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.gateway",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.inventory",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.refunds",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.notifications",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.log",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/architecture.md",
+   "target": "shop.money.quantize",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/audit.md",
+   "target": "docs/logging.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/audit.md",
+   "target": "shop.audit.record",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/inventory.md",
+   "target": "shop.inventory",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/logging.md",
+   "target": "shop.log",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/logging.md",
+   "target": "shop.log.event",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/logging.md",
+   "target": "shop.log.warn",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/logging.md",
+   "target": "shop.log.timed",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/notifications.md",
+   "target": "docs/refunds.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/notifications.md",
+   "target": "shop.templates",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/notifications.md",
+   "target": "shop.notifications.send_email",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/notifications.md",
+   "target": "shop.notifications.refund_recipients",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/notifications.md",
+   "target": "shop.config",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "docs/runbooks/declined-payments.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.payments.charge_card",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.gateway.authorize",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.gateway",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.errors.PaymentDeclined",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.config",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/payments.md",
+   "target": "shop.checkout.place_order",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/refunds.md",
+   "target": "docs/notifications.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/refunds.md",
+   "target": "shop.refunds.issue_refund",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/refunds.md",
+   "target": "shop.orders.mark_refunded",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/declined-payments.md",
+   "target": "shop.inventory.release",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/declined-payments.md",
+   "target": "shop.config",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/declined-payments.md",
+   "target": "shop.inventory.expire_stale",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/declined-payments.md",
+   "target": "shop.notifications.send_payment_failed",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/declined-payments.md",
+   "target": "shop.audit",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/oss-registration.md",
+   "target": "shop.config",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/runbooks/oss-registration.md",
+   "target": "shop.tax.vat_rate",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "docs/adr/0007-destination-vat.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "docs/runbooks/oss-registration.md",
+   "type": "links",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.tax",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.tax.vat_rate",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.tax.tax_amount",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.config",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.errors.TaxRegistrationError",
+   "type": "mentions",
+   "weight": 0.8
+  },
+  {
+   "source": "docs/vat.md",
+   "target": "shop.money.quantize",
+   "type": "mentions",
+   "weight": 0.8
+  }
+ ]
+}

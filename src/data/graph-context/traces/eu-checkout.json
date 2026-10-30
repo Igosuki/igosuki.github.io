@@ -1,0 +1,269 @@
+{
+ "id": "eu-checkout",
+ "question": "Why does checkout fail for EU customers?",
+ "model": "claude-opus-5-5",
+ "recorded": "2026-10-20",
+ "answer": "EU checkout most likely fails because the shop's EU One Stop Shop (OSS) VAT registration number isn't configured, so the VAT lookup refuses to return a rate.\n\n**How it fails:**\n\n1. `shop/config.py`: `OSS_ID = os.environ.get(\"SHOP_OSS_ID\", \"\")` falls back to an empty string when the `SHOP_OSS_ID` environment variable isn't set.\n2. `shop.tax.vat_rate`: for an EU country (`shop.countries.is_eu`), if `config.OSS_ID` is empty it logs `tax.no_registration` and raises `shop.errors.TaxRegistrationError`. It deliberately doesn't guess a rate. US orders and orders outside the EU never reach this check, which is why only EU customers are affected.\n3. `TaxRegistrationError` is a subclass of `PricingError`. In `shop.checkout.place_order`, the error from `pricing.total(cart, customer)` is caught, logged as `checkout.pricing_failed`, and re-raised as `CheckoutFailed(\"pricing_unavailable\")`. This happens before any stock is reserved or any card is charged.\n\nI didn't open `shop.pricing.total` itself. That it reaches `vat_rate` is an inference from the graph, where `pricing.total` is listed as a caller, and from `docs/vat.md`.\n\n**What to check:** look for `tax.no_registration` warnings and `checkout.pricing_failed` events with reason `pricing_unavailable` in the logs. If they're there, set `SHOP_OSS_ID` in the deployment environment and restart. The config is read once at import, so a restart is needed. `docs/runbooks/oss-registration.md` covers getting and deploying the number, and `docs/vat.md` and `docs/adr/0007-destination-vat.md` explain why EU orders need it.",
+ "steps": [
+  {
+   "tool": "search",
+   "input": {
+    "query": "checkout fails EU customers"
+   },
+   "note": "",
+   "nodes": [
+    {
+     "id": "shop.countries.is_eu",
+     "detail": "full",
+     "score": 1.0,
+     "via": null
+    },
+    {
+     "id": "docs/runbooks/declined-payments.md",
+     "detail": "full",
+     "score": 0.974,
+     "via": null
+    },
+    {
+     "id": "shop.checkout",
+     "detail": "full",
+     "score": 0.905,
+     "via": null
+    },
+    {
+     "id": "docs/vat.md",
+     "detail": "full",
+     "score": 0.843,
+     "via": null
+    },
+    {
+     "id": "shop.customers.get",
+     "detail": "full",
+     "score": 0.773,
+     "via": null
+    },
+    {
+     "id": "shop.notifications.notify_refund",
+     "detail": "summary",
+     "score": 0.309,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.shipping.quote",
+     "detail": "summary",
+     "score": 0.267,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.tax.vat_rate",
+     "detail": "summary",
+     "score": 0.267,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.customers",
+     "detail": "summary",
+     "score": 0.185,
+     "via": "defined_in"
+    },
+    {
+     "id": "shop.countries",
+     "detail": "summary",
+     "score": 0.16,
+     "via": "defined_in"
+    },
+    {
+     "id": "docs/payments.md",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "linked_from"
+    },
+    {
+     "id": "shop.inventory.release",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.config",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.inventory.expire_stale",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.notifications.send_payment_failed",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.audit",
+     "detail": "summary",
+     "score": 0.104,
+     "via": "mentions"
+    },
+    {
+     "id": "docs/adr/0007-destination-vat.md",
+     "detail": "summary",
+     "score": 0.054,
+     "via": "linked_from"
+    },
+    {
+     "id": "docs/architecture.md",
+     "detail": "summary",
+     "score": 0.054,
+     "via": "linked_from"
+    },
+    {
+     "id": "docs/runbooks/oss-registration.md",
+     "detail": "summary",
+     "score": 0.054,
+     "via": "links"
+    },
+    {
+     "id": "shop.tax",
+     "detail": "summary",
+     "score": 0.054,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.errors.TaxRegistrationError",
+     "detail": "summary",
+     "score": 0.054,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.tax.tax_amount",
+     "detail": "stub",
+     "score": null,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.money.quantize",
+     "detail": "stub",
+     "score": null,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.notifications.refund_recipients",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_email",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.refunds.issue_refund",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.pricing.total",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.log.event",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.checkout.place_order",
+     "detail": "stub",
+     "score": null,
+     "via": "defines"
+    },
+    {
+     "id": "shop.fraud",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.inventory",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.log",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.notifications",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.orders",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.payments",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.pricing",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.cart",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.errors",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.log.warn",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.shipping",
+     "detail": "stub",
+     "score": null,
+     "via": "defined_in"
+    },
+    {
+     "id": "shop.countries.normalize",
+     "detail": "stub",
+     "score": null,
+     "via": "defines"
+    }
+   ],
+   "context_tokens": 1341
+  }
+ ],
+ "totals": {
+  "tool_calls": 1,
+  "context_tokens": 1341
+ }
+}

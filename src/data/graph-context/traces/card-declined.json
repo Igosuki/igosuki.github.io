@@ -1,0 +1,369 @@
+{
+ "id": "card-declined",
+ "question": "What happens when a card payment is declined?",
+ "model": "claude-opus-5-5",
+ "recorded": "2026-10-20",
+ "answer": "A declined card goes through two steps: the payments module decides whether the decline is final, and checkout then cleans up.\n\n**1. Payment layer: `shop.payments.charge_card` (`shop/payments.py`)**\n- It calls `shop.gateway.authorize`. A decline comes back as `gateway.GatewayDeclined` with a code.\n- **Hard declines** are the codes in `gateway.HARD_DECLINES`: insufficient funds, expired card, do not honor and stolen card. For these it logs a `payment.declined` event and raises `shop.errors.PaymentDeclined(code)` straight away, with no retry.\n- **Any other code** counts as temporary. It logs a `payment.retry` warning, waits for the time set in `config.RETRY_BACKOFF_S[attempt]`, and tries again, up to `config.MAX_PAYMENT_RETRIES` times.\n- If every retry fails, it raises `PaymentDeclined(\"processing_error\", retryable=True)`.\n\n**2. Checkout layer: `shop.checkout.place_order` (`shop/checkout.py`)**\nStock for the cart is reserved before the charge. When `PaymentDeclined` is caught, checkout:\n- puts the reserved stock back with `inventory.release(cart)`;\n- emails the customer through `notifications.send_payment_failed(customer, exc.code)`;\n- writes an audit entry with `audit.record(\"payment_declined\", customer_id, code=...)`;\n- raises `CheckoutFailed(\"declined\")` to the caller.\n\nBecause of this, no order is created, `inventory.commit` is never called, and no confirmation email is sent.\n\nThe docs match the code: `docs/payments.md` and `docs/runbooks/declined-payments.md`. The runbook adds two points:\n- The decline email says nothing was charged.\n- Support should not ask customers to retry a `stolen_card` decline.\n\nIt also says reservations that are never released expire after `RESERVATION_MINUTES` and are cleared by `shop.inventory.expire_stale`. That's a safety net in case `release` never runs, not part of the normal decline path. I only have that from the docs; I didn't open its code.",
+ "steps": [
+  {
+   "tool": "search",
+   "input": {
+    "query": "card payment declined"
+   },
+   "note": "",
+   "nodes": [
+    {
+     "id": "shop.payments.charge_card",
+     "detail": "full",
+     "score": 1.0,
+     "via": null
+    },
+    {
+     "id": "shop.payments",
+     "detail": "full",
+     "score": 0.959,
+     "via": null
+    },
+    {
+     "id": "docs/payments.md",
+     "detail": "full",
+     "score": 0.95,
+     "via": null
+    },
+    {
+     "id": "docs/runbooks/declined-payments.md",
+     "detail": "full",
+     "score": 0.89,
+     "via": null
+    },
+    {
+     "id": "shop.checkout.place_order",
+     "detail": "summary",
+     "score": 0.776,
+     "via": null
+    },
+    {
+     "id": "shop.gateway.authorize",
+     "detail": "summary",
+     "score": 0.1,
+     "via": "calls"
+    },
+    {
+     "id": "shop.log.event",
+     "detail": "summary",
+     "score": 0.1,
+     "via": "calls"
+    },
+    {
+     "id": "shop.log.warn",
+     "detail": "summary",
+     "score": 0.1,
+     "via": "calls"
+    },
+    {
+     "id": "shop.errors.PaymentDeclined",
+     "detail": "summary",
+     "score": 0.1,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.release",
+     "detail": "summary",
+     "score": 0.095,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.config",
+     "detail": "summary",
+     "score": 0.095,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.inventory.expire_stale",
+     "detail": "summary",
+     "score": 0.095,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.notifications.send_payment_failed",
+     "detail": "summary",
+     "score": 0.095,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.audit",
+     "detail": "summary",
+     "score": 0.095,
+     "via": "mentions"
+    },
+    {
+     "id": "docs/architecture.md",
+     "detail": "summary",
+     "score": 0.08,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.gateway",
+     "detail": "summary",
+     "score": 0.076,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.payments.refund_charge",
+     "detail": "summary",
+     "score": 0.058,
+     "via": "defines"
+    },
+    {
+     "id": "shop.refunds",
+     "detail": "summary",
+     "score": 0.048,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.checkout",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.log",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.errors",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.pricing.total",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.errors.CheckoutFailed",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.fraud.needs_review",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.fraud.score",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.reserve",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.audit.record",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.commit",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.orders.create",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_order_confirmation",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_email",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.gateway.refund",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.refunds.issue_refund",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.inventory",
+     "detail": "stub",
+     "score": null,
+     "via": "defined_in"
+    },
+    {
+     "id": "shop.gateway._post",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.money.to_cents",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.gateway.GatewayDeclined",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.errors.PaymentDeclined.__init__",
+     "detail": "stub",
+     "score": null,
+     "via": "defines"
+    }
+   ],
+   "context_tokens": 1327
+  },
+  {
+   "tool": "expand",
+   "input": {
+    "node": "shop.checkout.place_order"
+   },
+   "note": "Need place_order's actual code to verify the runbook.",
+   "nodes": [
+    {
+     "id": "shop.checkout.place_order",
+     "detail": "full",
+     "score": 1.0,
+     "via": null
+    },
+    {
+     "id": "shop.fraud.needs_review",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.errors.CheckoutFailed",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.fraud.score",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.commit",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_order_confirmation",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.release",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.inventory.reserve",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_payment_failed",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.orders.create",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.audit.record",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.log.warn",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.payments.charge_card",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.pricing.total",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.log.event",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "docs/payments.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/architecture.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.checkout",
+     "detail": "stub",
+     "score": null,
+     "via": "defined_in"
+    }
+   ],
+   "context_tokens": 1775
+  }
+ ],
+ "totals": {
+  "tool_calls": 2,
+  "context_tokens": 1775
+ }
+}

@@ -1,0 +1,460 @@
+---
+// Interactive demo for the graph-context post. Usage in an .mdx post:
+//   import GraphExplorer from '../../components/GraphExplorer.astro';
+//   <GraphExplorer />
+---
+
+<div class="gx-wrap">
+  <graph-explorer>
+    <noscript><p>This demo needs JavaScript.</p></noscript>
+  </graph-explorer>
+</div>
+
+<script>
+  import './graph-context/element';
+</script>
+
+<style is:global>
+  .gx-wrap {
+    margin: 2rem 0;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  graph-explorer {
+    display: block;
+    min-width: 0;
+  }
+  graph-explorer button,
+  graph-explorer input,
+  graph-explorer output {
+    font: inherit;
+    color: var(--ink);
+  }
+  graph-explorer code,
+  graph-explorer pre {
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    overflow-wrap: anywhere;
+  }
+  .gx-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .gx-tabs button {
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    padding: 0.5rem 0;
+    font-weight: 500;
+    color: var(--graphite);
+    cursor: pointer;
+  }
+  .gx-tabs button[aria-selected='true'] {
+    color: var(--ink);
+    border-bottom-color: var(--cobalt);
+  }
+  .gx-controls {
+    margin: 1rem 0 0.75rem;
+  }
+  .gx-choices {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .gx-choices button,
+  .gx-ideas button,
+  .gx-bar button,
+  .gx-form button {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    text-align: left;
+  }
+  .gx-choices button[aria-checked='true'] {
+    border-color: var(--cobalt);
+    box-shadow: inset 3px 0 0 var(--cobalt);
+  }
+  .gx-bar button:disabled,
+  .gx-form button:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .gx-primary {
+    background: var(--cobalt) !important;
+    border-color: var(--cobalt) !important;
+    color: var(--paper) !important;
+    font-weight: 600;
+    text-align: center !important;
+  }
+  .gx-form {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .gx-form label {
+    font-weight: 600;
+    margin-top: 0.4rem;
+  }
+  .gx-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .gx-row input[type='text'],
+  .gx-row input[type='password'] {
+    flex: 1;
+    min-width: 0;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+  }
+  .gx-row input[type='range'] {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--cobalt);
+  }
+  .gx-row output {
+    min-width: 6.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .gx-note,
+  .gx-meta,
+  .gx-hint,
+  .gx-sub {
+    color: var(--graphite);
+    font-size: 0.85rem;
+    margin: 0.2rem 0;
+  }
+  .gx-ideas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: 0.6rem;
+    color: var(--graphite);
+    font-size: 0.85rem;
+  }
+  .gx-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-bottom: 0.6rem;
+  }
+  .gx-bar[hidden] {
+    display: none;
+  }
+  .gx-count {
+    margin-left: auto;
+    color: var(--graphite);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gx-graph {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  .gx-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    --u: 1;
+  }
+  .gx-edge {
+    stroke: var(--rule);
+    stroke-opacity: 0.6;
+    stroke-width: 1px;
+    vector-effect: non-scaling-stroke;
+  }
+  .gx-edge.gx-live {
+    stroke: var(--graphite);
+    stroke-opacity: 0.55;
+  }
+  .gx-node {
+    cursor: pointer;
+    outline: none;
+  }
+  .gx-dot {
+    fill: var(--rule);
+    stroke: none;
+  }
+  .gx-hit {
+    fill: transparent;
+  }
+  .gx-ring {
+    fill: none;
+    stroke: none;
+  }
+  .gx-label {
+    display: none;
+    font-family: var(--font-display);
+    font-size: calc(12px * var(--u));
+    fill: var(--ink);
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: calc(3px * var(--u));
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+  .gx-full .gx-dot {
+    fill: var(--cobalt);
+    stroke: var(--cobalt);
+  }
+  .gx-summary .gx-dot {
+    fill: var(--cobalt);
+    fill-opacity: 0.4;
+    stroke: var(--cobalt);
+    stroke-width: 1px;
+  }
+  .gx-stub .gx-dot {
+    fill: var(--surface);
+    stroke: var(--cobalt);
+    stroke-width: 1.5px;
+  }
+  .gx-seed .gx-ring {
+    stroke: var(--ink);
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+  }
+  .gx-cur .gx-dot {
+    stroke: var(--ink);
+    stroke-width: 2px;
+  }
+  .gx-lab .gx-label,
+  .gx-node:hover .gx-label,
+  .gx-node:focus .gx-label {
+    display: block;
+  }
+  .gx-sel .gx-dot {
+    stroke: var(--ink);
+    stroke-width: 2px;
+  }
+  .gx-node:focus-visible .gx-ring {
+    stroke: var(--cobalt);
+    stroke-width: 2px;
+  }
+
+  .gx-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem 1rem;
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+    font-size: 0.8rem;
+    color: var(--graphite);
+  }
+  .gx-key {
+    display: inline-block;
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 0.35rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--cobalt);
+    vertical-align: -0.05rem;
+  }
+  .gx-key.gx-full {
+    background: var(--cobalt);
+  }
+  .gx-key.gx-summary {
+    background: color-mix(in srgb, var(--cobalt) 40%, transparent);
+  }
+  .gx-key.gx-stub {
+    background: var(--surface);
+  }
+  .gx-key.gx-seed {
+    background: var(--cobalt);
+    margin-right: 0.5rem;
+    margin-left: 0.2rem;
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--ink);
+  }
+
+  .gx-step,
+  .gx-detail {
+    margin-top: 1rem;
+    min-width: 0;
+  }
+  .gx-detail {
+    border-top: 1px solid var(--rule);
+    padding-top: 0.8rem;
+  }
+  .gx-call {
+    margin: 0 0 0.3rem;
+    font-weight: 600;
+  }
+  .gx-call code {
+    background: none;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+  .gx-model-note,
+  .gx-line {
+    margin: 0.2rem 0 0.6rem;
+    font-family: var(--font-body);
+    font-size: 1.02rem;
+  }
+  .gx-model-note {
+    border-left: 3px solid var(--rule);
+    padding-left: 0.7rem;
+    color: var(--graphite);
+    font-style: italic;
+  }
+  .gx-status {
+    margin: 0 0 0.6rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--cobalt);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+  .gx-meter {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+  }
+  .gx-meter-bar {
+    height: 6px;
+    background: var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .gx-meter-bar span {
+    display: block;
+    height: 100%;
+    background: var(--cobalt);
+  }
+  .gx-group {
+    margin: 0.6rem 0 0.1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .gx-nodes {
+    list-style: none;
+    margin: 0.3rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+  .gx-nodes button {
+    all: unset;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem 0.6rem;
+    align-items: baseline;
+    width: 100%;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .gx-nodes button:hover {
+    background: var(--surface);
+  }
+  .gx-nodes button:focus-visible {
+    outline: 2px solid var(--cobalt);
+  }
+  .gx-nodes code {
+    font-size: 0.82rem;
+    background: none;
+    padding: 0;
+  }
+  .gx-tag,
+  .gx-via {
+    font-size: 0.8rem;
+    color: var(--graphite);
+  }
+  .gx-tag {
+    color: var(--ink);
+  }
+  .gx-link {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: var(--cobalt);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  .gx-answer {
+    margin-top: 1rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .gx-answer h4,
+  .gx-detail h4 {
+    margin: 0 0 0.3rem;
+    font-size: 1rem;
+  }
+  .gx-prose {
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+  .gx-prose > :first-child {
+    margin-top: 0;
+  }
+  .gx-prose > :last-child {
+    margin-bottom: 0;
+  }
+  .gx-prose p,
+  .gx-prose ul,
+  .gx-prose ol {
+    margin: 0 0 0.7em;
+  }
+  .gx-prose li {
+    margin: 0.2em 0;
+  }
+  .gx-prose code {
+    font-size: 0.82em;
+  }
+  .gx-table {
+    overflow-x: auto;
+    margin: 0 0 0.7em;
+  }
+  .gx-prose table {
+    font-size: 0.88rem;
+    min-width: 28rem;
+  }
+  .gx-detail h4 code {
+    background: none;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+  .gx-detail p {
+    margin: 0.3rem 0;
+  }
+  .gx-wrap pre {
+    max-height: 18rem;
+    overflow: auto;
+    margin: 0.5rem 0;
+    padding: 0.7rem 0.8rem;
+    font-size: 0.8rem;
+    background: var(--surface);
+  }
+  .gx-wrap pre code {
+    white-space: pre-wrap;
+  }
+  .gx-wrap details {
+    margin-top: 0.6rem;
+  }
+  .gx-wrap summary {
+    cursor: pointer;
+    color: var(--cobalt);
+  }
+  .gx-empty {
+    color: var(--graphite);
+    padding: 1rem;
+    border: 1px dashed var(--rule);
+    border-radius: 6px;
+  }
+</style>

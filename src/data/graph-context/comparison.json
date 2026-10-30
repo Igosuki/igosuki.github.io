@@ -1,0 +1,488 @@
+{
+ "k": 5,
+ "budget": 1000,
+ "embedding_model": "BAAI/bge-small-en-v1.5",
+ "questions": [
+  {
+   "id": "eu-checkout",
+   "question": "Why does checkout fail for EU customers?",
+   "answer_nodes": [
+    "shop.tax.vat_rate",
+    "shop.config",
+    "docs/vat.md"
+   ],
+   "embedding_top_k": {
+    "nodes": [
+     "shop.errors.CheckoutFailed",
+     "shop.checkout",
+     "shop.config",
+     "shop.checkout.place_order",
+     "shop.notifications.send_payment_failed"
+    ],
+    "tokens": 878,
+    "found": [
+     "shop.config"
+    ]
+   },
+   "bm25_top_k": {
+    "nodes": [
+     "shop.countries.is_eu",
+     "docs/runbooks/declined-payments.md",
+     "shop.checkout",
+     "docs/vat.md",
+     "shop.customers.get"
+    ],
+    "tokens": 763,
+    "found": [
+     "docs/vat.md"
+    ]
+   },
+   "graph": {
+    "nodes": [
+     {
+      "id": "shop.countries.is_eu",
+      "detail": "full"
+     },
+     {
+      "id": "docs/runbooks/declined-payments.md",
+      "detail": "full"
+     },
+     {
+      "id": "shop.checkout",
+      "detail": "full"
+     },
+     {
+      "id": "docs/vat.md",
+      "detail": "full"
+     },
+     {
+      "id": "shop.customers.get",
+      "detail": "full"
+     },
+     {
+      "id": "shop.notifications.notify_refund",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.shipping.quote",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.tax.vat_rate",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.customers",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.countries",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/payments.md",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.release",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.config",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.expire_stale",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.notifications.send_payment_failed",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.audit",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/adr/0007-destination-vat.md",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/architecture.md",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/runbooks/oss-registration.md",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.tax",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.errors.TaxRegistrationError",
+      "detail": "summary"
+     }
+    ],
+    "stubs": [
+     "shop.tax.tax_amount",
+     "shop.money.quantize",
+     "shop.notifications.refund_recipients",
+     "shop.notifications.send_email",
+     "shop.refunds.issue_refund",
+     "shop.pricing.total",
+     "shop.log.event",
+     "shop.checkout.place_order",
+     "shop.fraud",
+     "shop.inventory",
+     "shop.log",
+     "shop.notifications",
+     "shop.orders",
+     "shop.payments",
+     "shop.pricing",
+     "shop.cart",
+     "shop.errors",
+     "shop.log.warn",
+     "shop.shipping",
+     "shop.countries.normalize"
+    ],
+    "tokens": 998,
+    "found": [
+     "shop.tax.vat_rate",
+     "shop.config",
+     "docs/vat.md"
+    ],
+    "found_full": [
+     "docs/vat.md"
+    ],
+    "found_as_stub": []
+   },
+   "whole_files": {
+    "files": [
+     "docs/runbooks/declined-payments.md",
+     "docs/vat.md",
+     "shop/checkout.py",
+     "shop/countries.py",
+     "shop/customers.py"
+    ],
+    "tokens": 1089,
+    "found": [
+     "docs/vat.md"
+    ]
+   }
+  },
+  {
+   "id": "card-declined",
+   "question": "What happens when a card payment is declined?",
+   "answer_nodes": [
+    "shop.payments.charge_card",
+    "shop.inventory.release",
+    "shop.notifications.send_payment_failed"
+   ],
+   "embedding_top_k": {
+    "nodes": [
+     "docs/runbooks/declined-payments.md",
+     "docs/payments.md",
+     "shop.errors.PaymentDeclined",
+     "shop.errors.PaymentDeclined.__init__",
+     "shop.payments.charge_card"
+    ],
+    "tokens": 610,
+    "found": [
+     "shop.payments.charge_card"
+    ]
+   },
+   "bm25_top_k": {
+    "nodes": [
+     "shop.payments.charge_card",
+     "shop.payments",
+     "docs/payments.md",
+     "docs/runbooks/declined-payments.md",
+     "shop.checkout.place_order"
+    ],
+    "tokens": 1073,
+    "found": [
+     "shop.payments.charge_card"
+    ]
+   },
+   "graph": {
+    "nodes": [
+     {
+      "id": "shop.payments.charge_card",
+      "detail": "full"
+     },
+     {
+      "id": "shop.payments",
+      "detail": "full"
+     },
+     {
+      "id": "docs/payments.md",
+      "detail": "full"
+     },
+     {
+      "id": "docs/runbooks/declined-payments.md",
+      "detail": "full"
+     },
+     {
+      "id": "shop.checkout.place_order",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.gateway.authorize",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.log.event",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.log.warn",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.errors.PaymentDeclined",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.release",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.config",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.expire_stale",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.notifications.send_payment_failed",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.audit",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/architecture.md",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.gateway",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.payments.refund_charge",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.refunds",
+      "detail": "summary"
+     }
+    ],
+    "stubs": [
+     "shop.checkout",
+     "shop.log",
+     "shop.errors",
+     "shop.pricing.total",
+     "shop.errors.CheckoutFailed",
+     "shop.fraud.needs_review",
+     "shop.fraud.score",
+     "shop.inventory.reserve",
+     "shop.audit.record",
+     "shop.inventory.commit",
+     "shop.orders.create",
+     "shop.notifications.send_order_confirmation",
+     "shop.notifications.send_email",
+     "shop.gateway.refund",
+     "shop.refunds.issue_refund",
+     "shop.inventory",
+     "shop.gateway._post",
+     "shop.money.to_cents",
+     "shop.gateway.GatewayDeclined",
+     "shop.errors.PaymentDeclined.__init__"
+    ],
+    "tokens": 998,
+    "found": [
+     "shop.payments.charge_card",
+     "shop.inventory.release",
+     "shop.notifications.send_payment_failed"
+    ],
+    "found_full": [
+     "shop.payments.charge_card"
+    ],
+    "found_as_stub": []
+   },
+   "whole_files": {
+    "files": [
+     "docs/payments.md",
+     "docs/runbooks/declined-payments.md",
+     "shop/checkout.py",
+     "shop/payments.py"
+    ],
+    "tokens": 937,
+    "found": [
+     "shop.payments.charge_card"
+    ]
+   }
+  },
+  {
+   "id": "refund-notified",
+   "question": "Who gets notified when a refund is issued?",
+   "answer_nodes": [
+    "shop.refunds.issue_refund",
+    "shop.notifications.notify_refund",
+    "shop.notifications.refund_recipients"
+   ],
+   "embedding_top_k": {
+    "nodes": [
+     "shop.notifications.notify_refund",
+     "docs/refunds.md",
+     "shop.notifications.refund_recipients",
+     "shop.refunds.issue_refund",
+     "docs/notifications.md"
+    ],
+    "tokens": 507,
+    "found": [
+     "shop.refunds.issue_refund",
+     "shop.notifications.notify_refund",
+     "shop.notifications.refund_recipients"
+    ]
+   },
+   "bm25_top_k": {
+    "nodes": [
+     "shop.notifications.refund_recipients",
+     "shop.templates",
+     "shop.notifications",
+     "docs/runbooks/declined-payments.md",
+     "shop.payments.refund_charge"
+    ],
+    "tokens": 814,
+    "found": [
+     "shop.notifications.refund_recipients"
+    ]
+   },
+   "graph": {
+    "nodes": [
+     {
+      "id": "shop.notifications.refund_recipients",
+      "detail": "full"
+     },
+     {
+      "id": "shop.templates",
+      "detail": "full"
+     },
+     {
+      "id": "shop.notifications",
+      "detail": "full"
+     },
+     {
+      "id": "docs/runbooks/declined-payments.md",
+      "detail": "full"
+     },
+     {
+      "id": "shop.payments.refund_charge",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.notifications.notify_refund",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/notifications.md",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.gateway.refund",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.refunds.issue_refund",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.templates.render",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.log",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.payments",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/payments.md",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.release",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.config",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.inventory.expire_stale",
+      "detail": "summary"
+     },
+     {
+      "id": "shop.notifications.send_payment_failed",
+      "detail": "summary"
+     },
+     {
+      "id": "docs/runbooks/oss-registration.md",
+      "detail": "summary"
+     }
+    ],
+    "stubs": [
+     "shop.audit",
+     "shop.customers.get",
+     "shop.notifications.send_email",
+     "docs/architecture.md",
+     "shop.log.event",
+     "shop.notifications.send_order_confirmation",
+     "shop.checkout",
+     "shop.customers",
+     "shop.orders",
+     "shop.refunds",
+     "shop.gateway._post",
+     "shop.money.to_cents",
+     "docs/refunds.md",
+     "shop.checkout.place_order",
+     "shop.orders.get",
+     "shop.orders.mark_refunded",
+     "shop.audit.record",
+     "shop.gateway",
+     "shop.inventory",
+     "shop.payments.charge_card"
+    ],
+    "tokens": 1000,
+    "found": [
+     "shop.refunds.issue_refund",
+     "shop.notifications.notify_refund",
+     "shop.notifications.refund_recipients"
+    ],
+    "found_full": [
+     "shop.notifications.refund_recipients"
+    ],
+    "found_as_stub": []
+   },
+   "whole_files": {
+    "files": [
+     "docs/runbooks/declined-payments.md",
+     "shop/notifications.py",
+     "shop/payments.py",
+     "shop/templates.py"
+    ],
+    "tokens": 933,
+    "found": [
+     "shop.notifications.notify_refund",
+     "shop.notifications.refund_recipients"
+    ]
+   }
+  }
+ ]
+}

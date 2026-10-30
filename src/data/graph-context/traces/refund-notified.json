@@ -1,0 +1,363 @@
+{
+ "id": "refund-notified",
+ "question": "Who gets notified when a refund is issued?",
+ "model": "claude-opus-5-5",
+ "recorded": "2026-10-20",
+ "answer": "It depends on the refund. There are up to three recipients, and each gets an email only if its condition holds.\n\nThe last step of `shop.refunds.issue_refund` calls `shop.notifications.notify_refund`. That function looks up the customer and emails every recipient that `shop.notifications.refund_recipients` returns:\n\n| Recipient | Condition | Template |\n|---|---|---|\n| The customer (`customer.email`) | Only if `customer.refund_emails` is set (the customer's own setting) | `refund_issued` |\n| Finance (`config.FINANCE_ADDRESS` = `finance@shop.example.test`) | Only if the amount is over `config.FINANCE_REFUND_LIMIT` (250.00) | `refund_finance` |\n| Support (`config.SUPPORT_ADDRESS` = `support@shop.example.test`) | Only if `reason == \"fraud\"` | `refund_fraud` |\n\nIf none of the conditions hold, nobody is notified. Each email goes through `shop.notifications.send_email`, which records an `email.sent` event in the log.\n\nSource: the `shop.refunds`, `shop.notifications` and `shop.config` modules.",
+ "steps": [
+  {
+   "tool": "search",
+   "input": {
+    "query": "refund notify"
+   },
+   "note": "",
+   "nodes": [
+    {
+     "id": "shop.notifications.notify_refund",
+     "detail": "full",
+     "score": 1.0,
+     "via": null
+    },
+    {
+     "id": "shop.refunds.issue_refund",
+     "detail": "full",
+     "score": 0.73,
+     "via": null
+    },
+    {
+     "id": "shop.refunds",
+     "detail": "full",
+     "score": 0.725,
+     "via": null
+    },
+    {
+     "id": "shop.notifications",
+     "detail": "full",
+     "score": 0.556,
+     "via": null
+    },
+    {
+     "id": "shop.notifications.refund_recipients",
+     "detail": "summary",
+     "score": 0.399,
+     "via": null
+    },
+    {
+     "id": "shop.customers.get",
+     "detail": "summary",
+     "score": 0.16,
+     "via": "calls"
+    },
+    {
+     "id": "shop.notifications.send_email",
+     "detail": "summary",
+     "score": 0.16,
+     "via": "calls"
+    },
+    {
+     "id": "docs/notifications.md",
+     "detail": "summary",
+     "score": 0.085,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.orders.get",
+     "detail": "summary",
+     "score": 0.073,
+     "via": "calls"
+    },
+    {
+     "id": "shop.log.event",
+     "detail": "summary",
+     "score": 0.073,
+     "via": "calls"
+    },
+    {
+     "id": "shop.payments.refund_charge",
+     "detail": "summary",
+     "score": 0.073,
+     "via": "calls"
+    },
+    {
+     "id": "shop.orders.mark_refunded",
+     "detail": "summary",
+     "score": 0.073,
+     "via": "calls"
+    },
+    {
+     "id": "shop.audit.record",
+     "detail": "summary",
+     "score": 0.073,
+     "via": "calls"
+    },
+    {
+     "id": "docs/architecture.md",
+     "detail": "summary",
+     "score": 0.066,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/refunds.md",
+     "detail": "summary",
+     "score": 0.058,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.audit",
+     "detail": "summary",
+     "score": 0.041,
+     "via": "imports"
+    },
+    {
+     "id": "shop.log",
+     "detail": "summary",
+     "score": 0.041,
+     "via": "imports"
+    },
+    {
+     "id": "shop.orders",
+     "detail": "summary",
+     "score": 0.041,
+     "via": "imports"
+    },
+    {
+     "id": "shop.payments",
+     "detail": "summary",
+     "score": 0.041,
+     "via": "imports"
+    },
+    {
+     "id": "shop.customers",
+     "detail": "summary",
+     "score": 0.038,
+     "via": "defined_in"
+    },
+    {
+     "id": "shop.notifications.send_order_confirmation",
+     "detail": "summary",
+     "score": 0.021,
+     "via": "defines"
+    },
+    {
+     "id": "shop.cart.Cart",
+     "detail": "summary",
+     "score": 0.002,
+     "via": "mentions"
+    },
+    {
+     "id": "shop.notifications.send_payment_failed",
+     "detail": "stub",
+     "score": null,
+     "via": "defines"
+    },
+    {
+     "id": "shop.gateway.refund",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.templates.render",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.checkout",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.config",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.templates",
+     "detail": "stub",
+     "score": null,
+     "via": "imports"
+    },
+    {
+     "id": "shop.checkout.place_order",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.orders.refundable",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "shop.errors.RefundNotAllowed",
+     "detail": "stub",
+     "score": null,
+     "via": "calls"
+    },
+    {
+     "id": "docs/audit.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/runbooks/declined-payments.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.audit.trail_for",
+     "detail": "stub",
+     "score": null,
+     "via": "defines"
+    },
+    {
+     "id": "shop.cart.Cart.add",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.cart.Cart.remove",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.customers.register",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.fraud.score",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.inventory.reserve",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.inventory.release",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.inventory.commit",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    },
+    {
+     "id": "shop.inventory.expire_stale",
+     "detail": "stub",
+     "score": null,
+     "via": "called_by"
+    }
+   ],
+   "context_tokens": 1370
+  },
+  {
+   "tool": "expand",
+   "input": {
+    "node": "shop.config"
+   },
+   "note": "",
+   "nodes": [
+    {
+     "id": "shop.config",
+     "detail": "full",
+     "score": 1.0,
+     "via": null
+    },
+    {
+     "id": "docs/runbooks/oss-registration.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/runbooks/declined-payments.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/notifications.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/payments.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "docs/vat.md",
+     "detail": "stub",
+     "score": null,
+     "via": "mentioned_by"
+    },
+    {
+     "id": "shop.fraud",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.shipping",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.payments",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.gateway",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.inventory",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.tax",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    },
+    {
+     "id": "shop.notifications",
+     "detail": "stub",
+     "score": null,
+     "via": "imported_by"
+    }
+   ],
+   "context_tokens": 1655
+  }
+ ],
+ "totals": {
+  "tool_calls": 2,
+  "context_tokens": 1655
+ }
+}

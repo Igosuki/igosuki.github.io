@@ -1,0 +1,17 @@
+[
+  {
+    "id": "eu-checkout",
+    "question": "Why does checkout fail for EU customers?",
+    "answer_nodes": ["shop.tax.vat_rate", "shop.config", "docs/vat.md"]
+  },
+  {
+    "id": "card-declined",
+    "question": "What happens when a card payment is declined?",
+    "answer_nodes": ["shop.payments.charge_card", "shop.inventory.release", "shop.notifications.send_payment_failed"]
+  },
+  {
+    "id": "refund-notified",
+    "question": "Who gets notified when a refund is issued?",
+    "answer_nodes": ["shop.refunds.issue_refund", "shop.notifications.notify_refund", "shop.notifications.refund_recipients"]
+  }
+]
