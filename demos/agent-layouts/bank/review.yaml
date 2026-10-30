@@ -1,0 +1,21 @@
+name: review
+description: A reviewing agent on one side, the diff and the PR checks on the other.
+vars:
+  agent: claude
+  base: master
+  prompt: >-
+    Review the changes on this branch against {base}. Report bugs with file:line, most severe first.
+    Don't edit files.
+tabs:
+  - name: review
+    split: columns
+    panes:
+      - name: reviewer
+        agent: "{agent}"
+        prompt: "{prompt}"
+        size: 50%
+        focus: true
+      - split: rows
+        panes:
+          - { name: diff, run: "watch -c -n 10 git diff --stat --color=always {base}...HEAD" }
+          - { name: checks, run: "gh pr checks --watch" }

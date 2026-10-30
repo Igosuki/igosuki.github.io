@@ -1,0 +1,25 @@
+name: backend
+description: An agent next to the API server, the test watcher, a database shell and the logs.
+vars:
+  agent: claude
+  serve: cargo watch -x run
+  test: cargo nextest run --no-fail-fast
+  db: psql "$DATABASE_URL"
+  logs: tail -F log/development.log
+tabs:
+  - name: code
+    split: columns
+    panes:
+      - name: agent
+        agent: "{agent}"
+        size: 55%
+        focus: true
+      - split: rows
+        panes:
+          - { name: server, run: "{serve}" }
+          - { name: tests, run: "{test}" }
+  - name: data
+    split: rows
+    panes:
+      - { name: db, run: "{db}" }
+      - { name: logs, run: "{logs}" }

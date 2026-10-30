@@ -1,0 +1,30 @@
+name: sre
+description: An investigating agent on the bastion, with logs, the cluster view and a running incident timeline.
+vars:
+  agent: claude
+  namespace: default
+  service: api
+  prompt: >-
+    Investigate elevated errors on {service} in namespace {namespace}. Read-only: no kubectl apply,
+    delete, scale or rollout. Append every finding with a timestamp to incident.md.
+targets:
+  bastion:
+    ssh: bastion
+    cwd: ~/incidents
+tabs:
+  - name: triage
+    split: columns
+    panes:
+      - name: agent
+        agent: "{agent}"
+        prompt: "{prompt}"
+        target: bastion
+        size: 50%
+        focus: true
+      - split: rows
+        panes:
+          - { name: logs, run: "stern -n {namespace} {service} --since 15m" }
+          - { name: timeline, run: "touch incident.md && tail -F incident.md", target: bastion }
+  - name: cluster
+    panes:
+      - { name: k9s, run: "k9s -n {namespace}" }

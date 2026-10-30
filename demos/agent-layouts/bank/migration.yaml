@@ -1,0 +1,25 @@
+name: migration
+description: Old and new code side by side, an agent porting from one to the other, and a check that compares their output.
+vars:
+  agent: claude
+  old: ../{repo}-old
+  run_old: make golden
+  run_new: make golden
+  compare: watch -n 30 diff -r ../{repo}-old/out out
+  prompt: >-
+    Port the behaviour in {old} to this tree, one module at a time. After each module, run
+    `{run_new}` and make the compare pane go quiet before moving on.
+tabs:
+  - name: port
+    split: columns
+    panes:
+      - { name: old, run: "{run_old}", cwd: "{old}", size: 25% }
+      - name: agent
+        agent: "{agent}"
+        prompt: "{prompt}"
+        size: 50%
+        focus: true
+      - { name: new, run: "{run_new}" }
+  - name: compare
+    panes:
+      - { name: compare, run: "{compare}" }

@@ -1,0 +1,24 @@
+name: night-shift
+description: Headless agents working through a queue on a remote box overnight, with a board you read in the morning.
+vars:
+  agent: claude -p --permission-mode acceptEdits
+  queue: bd ready --json
+  prompt: >-
+    Take the first task from `{queue}`, claim it, do it in a new worktree, and close it with a
+    summary. Repeat until the queue is empty.
+targets:
+  buildbox:
+    ssh: buildbox
+    cwd: ~/src/{repo}
+tabs:
+  - name: shift
+    split: columns
+    panes:
+      - { name: worker-1, agent: "{agent}", prompt: "{prompt}", target: buildbox }
+      - { name: worker-2, agent: "{agent}", prompt: "{prompt}", target: buildbox }
+      - { name: worker-3, agent: "{agent}", prompt: "{prompt}", target: buildbox }
+  - name: board
+    split: rows
+    panes:
+      - { name: queue, run: "watch -n 60 {queue}" }
+      - { name: board, run: "watch -n 30 layouts ps --session {session}" }

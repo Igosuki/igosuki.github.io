@@ -1,0 +1,31 @@
+name: agents
+description: An orchestrator that spawns workers into the workers tab, locally or on other machines, with a board to watch them.
+vars:
+  agent: claude
+  prompt: >-
+    You coordinate other agents. Split the task into independent pieces, and start each one with
+    `layouts spawn --session {session} --name <slug> [--target <name>] -- {agent} "<task>"`.
+    Watch them with `layouts ps --session {session}` and report when all are done.
+targets:
+  buildbox:
+    ssh: buildbox
+    cwd: ~/src/{repo}
+  dev:
+    devcontainer: "{root}"
+tabs:
+  - name: control
+    split: columns
+    panes:
+      - name: orchestrator
+        agent: "{agent}"
+        prompt: "{prompt}"
+        size: 60%
+        focus: true
+      - split: rows
+        panes:
+          - { name: board, run: "watch -n 5 layouts ps --session {session}" }
+          - { name: git, run: "watch -n 10 git worktree list" }
+  # `layouts spawn` adds a pane here for each worker.
+  - name: workers
+    panes:
+      - { name: inbox, run: "echo 'workers appear here'; exec $SHELL" }

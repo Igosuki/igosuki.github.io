@@ -1,0 +1,26 @@
+name: frontend
+description: An agent next to the dev server and a live preview, with type checks and tests on a second tab.
+vars:
+  agent: claude
+  dev: pnpm dev
+  url: http://localhost:5173
+  typecheck: pnpm tsc --noEmit --watch --preserveWatchOutput
+  test: pnpm vitest
+tabs:
+  - name: code
+    split: columns
+    panes:
+      - name: agent
+        agent: "{agent}"
+        size: 50%
+        focus: true
+      - split: rows
+        panes:
+          - { name: dev, run: "{dev}", size: 30% }
+          # A browser tab in cmux; a status-code probe everywhere else.
+          - { name: preview, url: "{url}" }
+  - name: checks
+    split: columns
+    panes:
+      - { name: types, run: "{typecheck}" }
+      - { name: tests, run: "{test}" }
