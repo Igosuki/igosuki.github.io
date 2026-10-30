@@ -1,0 +1,213 @@
+---
+title: Record your practice interviews and let Claude grade the tape
+description: Practicing alone gives you no feedback, and practicing with a friend gives you kind feedback. Record each mock, turn the recording into a transcript, frames and code snapshots, and have Claude grade it against the real rubric, measuring before it judges. The setup is three fish functions and a prompt.
+pubDate: 2026-10-30
+kind: note
+tags: [interviews, claude-code, whisper, fish, practice]
+draft: true
+---
+
+import Gist from '../../components/Gist.astro';
+
+{/*
+Q: OK to say which company and level? The repos are "Google L6" and "Google FDE"; the post only says "a staff-level loop" for now.
+Q: OK to publish the real numbers from the reviews (85% silent, 0/15 on check.py, the NKFC typo)? They make the hook. If not, swap them for "most of the session".
+Q: the outcome of the interviews, if you want to add it later. Leave it out until then.
+*/}
+
+export const GIST = '485a8e13640ed6c01c05fc3ba9919e77';
+
+I came out of my first mock system design interview thinking it had gone fine. The review said I stopped talking at
+minute 12 and said nothing for the next 32 and a half minutes. That was 85% of the interview in silence, so there was no
+architecture, no evaluation plan and no failure modes on the record. I didn't remember any of it that way. I remembered
+thinking hard.
+
+That's the problem with practicing alone: you grade yourself from memory, and memory is generous. A friend playing the
+interviewer is better, but friends are kind, and they don't count silences. What worked was recording every session,
+turning the recording into data, and having Claude review it against the real rubric, measuring first and judging
+afterwards.
+
+This post is the general version of the setup I used to prepare for a staff-level loop: a coding round, an algorithms
+round and an AI system design round, over ten days. The code is in [a gist](#the-kit), embedded below one file at a
+time.
+
+## The loop
+
+Every session goes through the same five steps:
+
+1. **Rebuild the interview's constraints.** Same editor limits, same time box, same kind of problem statement.
+2. **Record everything.** Screen, webcam and mic, plus a snapshot of the code each time it changes.
+3. **Turn the recording into data.** Frames every few seconds and a timestamped transcript.
+4. **Review it against the rubric.** Claude measures the take with scripts, then scores it, and every score has to
+   quote a timestamp.
+5. **Keep one line per take.** The weakest point of each review goes into a ledger, and the ledger sets the next day's
+   drills.
+
+None of the steps is clever. Together, they replace "I think I did OK" with a table of what happened at each minute.
+
+## 1. Rebuild the interview's constraints
+
+Practice in the environment you'll be graded in, or you're training a different skill. Most coding interviews give
+you a shared editor with syntax highlighting and nothing else: no autocomplete, no linter, no AI, often no way to run
+the code. If you practice in your daily editor, you're practicing with a copilot you won't have.
+
+I use VS Code with its own profile and extensions folder, so my normal setup isn't touched. The settings turn off
+suggestions, hovers, parameter hints, auto-closing brackets, Copilot and chat, and save every second (that matters
+for the snapshots in step 2):
+
+<Gist id={GIST} file="vscode-settings.json" />
+
+The problem statement matters as much as the editor. Real interviewers give you a short scenario that leaves things
+out on purpose, and part of the grade is whether you ask about them. LeetCode statements come with constraints and
+three examples, which skips that part. So every exercise I practice on has:
+
+- A statement in the interviewer's style: a small real-world scenario, one example, two or three things left
+  underspecified on purpose.
+- Interviewer notes I don't read: the answers to the clarifying questions, the approaches, the follow-ups, the common
+  bugs, and what a strong answer looks like at the level.
+- Hidden tests, run only after the time is up, so I find out what my hand trace missed.
+
+Claude writes these, and I don't open the folder. For algorithm problems, a runner pastes the statement into the
+editor and shows the interviewer's answers to the clarifications at 2:00, so I can see which questions I didn't ask.
+For a longer practical exercise, the statement is an `EXERCISE.md` with a spec and a `check.py` that names the spec
+step each check tests.
+
+## 2. Record everything
+
+I record each session with OBS: the screen, the webcam and the mic. For a mock with a voice interviewer, I add desktop
+audio so the interviewer's voice is in the recording too. The webcam is there because the review looks at the frames,
+and "looked at the docs for 40 seconds without saying anything" is a finding.
+
+The video shows the code, but you can't diff a video. So while I work, a second terminal runs `snaps`, which copies
+the solution file into `snaps/` every time its hash changes, with the wall-clock time in the name:
+
+<Gist id={GIST} file="snaps.fish" />
+
+With autosave every second and a snapshot check every 30 seconds, the reviewer gets the code as it was at each moment
+of the session. It can tell when the first function parsed, when a stage was rewritten, and what the code looked like
+while I was saying something else.
+
+## 3. Turn the recording into data
+
+After the session, `codingtake` turns the video into a folder: one frame every 20 seconds, scaled to 1280 pixels
+wide, and a Whisper transcript in SRT, with timestamps.
+
+<Gist id={GIST} file="codingtake.fish" />
+
+```fish
+codingtake ~/Videos/"2026-10-27 15-17-27.mkv" -o takes
+mv snaps takes/2026-10-27_15-17-27/
+```
+
+OBS names recordings after their start time, and the take folder keeps that name, so the reviewer can turn snapshot
+times into minutes from the start. `whisper-ctranslate2` runs the small English model on the CPU in int8. That's
+accurate enough for timing and filler words, and it mangles technical terms, which the review prompt has to account
+for. When I have the GPU free, `transcribe` does the same with CUDA and word-level timestamps:
+
+<Gist id={GIST} file="transcribe.fish" />
+
+## 4. Review it against the rubric
+
+`review.sh` fills two placeholders in a prompt file (the take folder and the feedback file), then runs Claude Code
+headless with Opus. It can read the take and the past feedback, write the new feedback and run Python, and nothing
+else. The `jq` filter prints the reviewer's text and a one-line summary of each tool call, so you can watch it work.
+
+<Gist id={GIST} file="review.sh" />
+
+The prompt does most of the work. Three rules in it made the reviews worth reading.
+
+**Measure before judging.** The first step tells Claude to write and run a script, not to read the transcript and
+give an impression. From the SRT, it measures every silence over 8 seconds, with what I said just before and after,
+and the filler words and words per minute in each 5-minute window. From the snapshots, it measures lines of code,
+whether each one parses, and which functions exist. Then it copies the exercise to a temporary folder and runs the
+hidden checks against a handful of snapshots, which gives a curve of checks passed over time. Without the script,
+the review is a vibe. With it, it's "silent from 12:25 to 44:55".
+
+**Find the gaps between talk and code.** The step I'd keep if I could keep only one builds a timeline of what the
+code was doing, what I was saying and what was on screen, minute by minute. Then it lists every moment where they
+disagree: I said I'd handle a case and never did, the code changed a lot and I didn't explain why, or I was silent
+while nothing changed, which means I was stuck. Interviewers grade the narration as much as the code, and this is
+where it shows.
+
+**No score without evidence.** Each axis of the rubric gets a score from 1 to 4, and each score has to quote a moment
+with its timestamp. The prompt also says to quote the spec line before claiming I contradicted it, to credit a
+reasonable assumption when the spec is silent, and not to count Whisper's transcription errors against me. Without
+those rules, the reviewer invents violations. With them, it's harsh and fair.
+
+The rest is the feedback I'd want from a strict interviewer: the three moments that cost the most, each with the exact
+sentence I should have said; a drill list of every place I hesitated or wrote non-idiomatic code; a model narration
+of the first five minutes; and a verdict at the target level and one level below. Here's the template, with the
+exercise-specific parts in brackets:
+
+<Gist id={GIST} file="review-prompt.md" />
+
+## 5. Keep one line per take
+
+Each review ends by appending one line to `feedbacks/WEAK_POINTS.md`: the date, the exercise and my single weakest
+point. Reviews are long (mine run to 15 to 35 KB), and nobody rereads them. The ledger is short enough to read every
+morning, and it decides what I drill that day.
+
+The last step of the prompt reads the past feedback too. It adds a table of scores per take, and it flags any problem
+that shows up in two takes or more as a habit. That's how I found out that in all four takes of the practical round, I
+ran the checks late or not at all. An earlier review told me to run them by minute 10. In the fourth take, the first
+run came at minute 46, and the review called it the habit that decided the verdict.
+
+One more rule came from the ledger: any problem where I needed a hint or the reference solution gets rewritten the
+next morning from a blank file, in 10 minutes, with no notes. Reading a solution feels like learning it. Writing it
+cold the next day shows whether it stuck.
+
+## The interviewer by voice
+
+For design rounds, and for full mocks, Claude plays the interviewer in a voice chat. The trick is that I never read
+the brief. A script copies the interviewer prompt and the scenario to the clipboard; I paste it into a new chat
+without reading it, send it, and switch to voice. The interviewer opens the interview.
+
+The prompt is mostly about what the interviewer must not do: teach, hint, validate, or lead. It answers only the
+questions I ask, invents a consistent answer when the brief doesn't cover one, challenges every hand-wave ("what's
+the cache key?"), and asks "what did you reject, and why?" for every major decision. If I wait for it, it waits too,
+and after about 10 seconds it asks "what's next?" I announce the time at each phase change, and the interviewer uses
+it to bring in the brief's curveballs.
+
+<Gist id={GIST} file="interviewer.md" />
+
+When I say "end interview", it switches to feedback. That feedback is useful right away, but the recorded review is
+better, because the interviewer can't count my silences.
+
+## What the reviews found
+
+The reviews were hard to read, which is the point. A sample of the ledger:
+
+- In an algorithms take, I was silent 41% of the time at about 40 words a minute, read "count the subarrays" as "find
+  the largest window", never named prefix sums and asked no clarifying question.
+- In the first design mock, I made one design decision (a human approves every dispute) and never revisited it, even
+  after reading that the goal was to resolve half the disputes automatically.
+- In the practical round, my solution crashed on its first real line because I typed `"NKFC"` instead of `"NFKC"`,
+  so the checks scored 0 out of 15. I first ran them at minute 46 of 50.
+- In a 30-minute standard library drill, I solved 2 of 9 one-liners, because I was guessing at APIs instead of knowing
+  them: `heapq.heapify` returns `None`, and `bisect`'s `lo` and `hi` are indices.
+
+None of this was in my memory of the sessions. All of it was in the data.
+
+## Two sizes of setup
+
+**One exercise, one afternoon.** This is what I'd build first. You need an `EXERCISE.md` with a time box, a
+`check.py`, the three fish functions, `review.sh` and the prompt template. Record, run `codingtake`, run `review.sh`.
+Claude can write the exercise and the checks from a description of the round; ask it not to show you the checks.
+
+**A ten-day plan.** For the full loop, I added a runner on top. It picks the day's problem from a schedule I don't
+open, launches the locked-down editor with the statement pasted in, runs a phase timer that matches the interview's
+format (clarify by 2:00, brute force by 4:00, code from 7:00 to 17:00, and so on), sends a desktop notification at
+each phase change, freezes the code at 25:00 and then runs the hidden tests. The problems live in a bank with a fixed
+format (statement, stub, interviewer notes, tests, reference solution), and a self-test checks every reference
+against its tests, so a broken problem never reaches a session. Design scenarios live in sealed briefs, two of them
+saved for the last days so I'd face something I'd never seen.
+
+The bigger version is nicer, but the small one gives you most of the value. What changes your interview is not the
+runner. It's watching the measurements of your own session and seeing that they don't match what you remember.
+
+## The kit
+
+All the files are in [one gist](https://gist.github.com/Igosuki/485a8e13640ed6c01c05fc3ba9919e77). You need `ffmpeg`, `whisper-ctranslate2`
+(I installed it with `pipx`), `jq`, the Claude Code CLI, OBS and fish 3.5 or later for the `path` builtin.
+
+<Gist id={GIST} />
