@@ -1,0 +1,46 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="The injection can't add a step to the plan, but it can poison a value. The interpreter knows the recipient came out of an untrusted document and that the slides are only readable by the Q3 team, so the call to send_email fails both checks before it runs.">
+  <svg viewBox="0 0 608 344" role="img" aria-labelledby="camel-prov-title camel-prov-desc">
+    <title id="camel-prov-title">Provenance of the values passed to send_email</title>
+    <desc id="camel-prov-desc">The value notes comes from an untrusted meeting-notes document. The quarantined LLM extracts bob from it, and the injection makes that bob@evil.example. The value slides is readable by the q3-team only. Both flow into send_email, where the policy rejects the recipient because it came from untrusted data and is not a contact, and rejects the attachment because the recipient is not a reader.</desc>
+    <defs>
+      <marker id="camel-prov-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+      <marker id="camel-prov-arrow-alert" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-alert"></polygon>
+      </marker>
+    </defs>
+
+    <path d="M100 80 V118" class="d-line" marker-end="url(#camel-prov-arrow)"></path>
+    <text x="108" y="104" class="d-label">quarantined LLM</text>
+    <path d="M100 184 V248 H182" class="d-line-alert" marker-end="url(#camel-prov-arrow-alert)"></path>
+    <text x="108" y="240" class="d-label d-text-alert">to</text>
+    <path d="M508 80 V248 H426" class="d-line" marker-end="url(#camel-prov-arrow)"></path>
+    <text x="500" y="240" text-anchor="end" class="d-label">attachments</text>
+
+    <rect x="8" y="24" width="184" height="56" rx="6" class="d-box-alert"></rect>
+    <text x="20" y="47" class="d-name d-mono">notes</text>
+    <text x="20" y="65" class="d-sub">source: meeting-notes</text>
+
+    <rect x="416" y="24" width="184" height="56" rx="6" class="d-box"></rect>
+    <text x="428" y="47" class="d-name d-mono">slides</text>
+    <text x="428" y="65" class="d-sub">readers: q3-team</text>
+
+    <rect x="8" y="120" width="184" height="64" rx="6" class="d-box-alert"></rect>
+    <text x="20" y="142" class="d-name d-mono">bob</text>
+    <text x="20" y="158" class="d-sub">source: meeting-notes</text>
+    <text x="20" y="174" class="d-sub d-mono d-text-alert">bob@evil.example</text>
+
+    <rect x="184" y="224" width="240" height="48" rx="6" class="d-box"></rect>
+    <text x="196" y="245" class="d-name d-mono">send_email</text>
+    <text x="196" y="261" class="d-sub d-mono">to=bob, attachments=[slides]</text>
+
+    <text x="184" y="300" class="d-eyebrow">Policy, checked before the call</text>
+    <text x="184" y="318" class="d-label d-text-alert">to: came from meeting-notes and isn't a contact</text>
+    <text x="184" y="336" class="d-label d-text-alert">attachments: only q3-team may read them</text>
+  </svg>
+</Diagram>

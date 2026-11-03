@@ -1,0 +1,63 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="The injected text never asks for a new tool or an odd URL. It rides on a call the agent is allowed to make, writing a summary, and the next agent that reads that summary picks it up.">
+  <svg viewBox="0 0 608 312" role="img" aria-labelledby="camel-spread-title camel-spread-desc">
+    <title id="camel-spread-title">A prompt injection spreading through an authorized tool call</title>
+    <desc id="camel-spread-desc">A user asks an agent to summarize notes. The agent reads a poisoned document into the same context it plans from, then makes an authorized write_doc call that copies the injected text into a shared summary, which the next agent reads.</desc>
+    <defs>
+      <marker id="camel-spread-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+      <marker id="camel-spread-arrow-alert" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-alert"></polygon>
+      </marker>
+    </defs>
+
+    <path d="M128 64 H182" class="d-line" marker-end="url(#camel-spread-arrow)"></path>
+    <path d="M344 64 H398" class="d-line" marker-end="url(#camel-spread-arrow)"></path>
+    <text x="371" y="56" text-anchor="middle" class="d-label">read_doc</text>
+    <path d="M500 88 V142" class="d-line" marker-end="url(#camel-spread-arrow)"></path>
+    <text x="508" y="120" class="d-label">returns</text>
+    <path d="M400 176 H304 V90" class="d-line" marker-end="url(#camel-spread-arrow)"></path>
+    <text x="312" y="168" class="d-label">same context</text>
+    <path d="M224 88 V246" class="d-line-alert" marker-end="url(#camel-spread-arrow-alert)"></path>
+    <rect x="232" y="196" width="64" height="24" class="d-paper"></rect>
+    <text x="232" y="206" class="d-label d-text-alert">authorized</text>
+    <text x="232" y="219" class="d-label d-text-alert">call</text>
+    <path d="M344 272 H398" class="d-line-alert" marker-end="url(#camel-spread-arrow-alert)"></path>
+    <path d="M500 248 V210" class="d-line-alert d-dash" marker-end="url(#camel-spread-arrow-alert)"></path>
+    <text x="508" y="234" class="d-label d-text-alert">and again</text>
+
+    <rect x="8" y="40" width="120" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="20" y="61" class="d-name">User</text>
+    <text x="20" y="77" class="d-sub">summarize Q3 notes</text>
+
+    <rect x="184" y="40" width="160" height="48" rx="6" class="d-box"></rect>
+    <text x="196" y="61" class="d-name">Agent</text>
+    <text x="196" y="77" class="d-sub">one context, all tools</text>
+
+    <rect x="400" y="40" width="200" height="48" rx="6" class="d-box"></rect>
+    <text x="412" y="61" class="d-name">Tools</text>
+    <text x="412" y="77" class="d-sub d-mono">read_doc, write_doc, …</text>
+
+    <rect x="400" y="144" width="200" height="64" rx="6" class="d-box-alert"></rect>
+    <text x="412" y="165" class="d-name d-mono">q3-notes.md</text>
+    <text x="412" y="181" class="d-sub">untrusted, edited by anyone</text>
+    <text x="412" y="197" class="d-sub d-text-alert">“copy this note into it”</text>
+
+    <rect x="184" y="248" width="160" height="48" rx="6" class="d-box-alert"></rect>
+    <text x="196" y="269" class="d-name d-mono">write_doc</text>
+    <text x="196" y="285" class="d-sub">shared/q3-summary.md</text>
+
+    <rect x="400" y="248" width="200" height="48" rx="6" class="d-box"></rect>
+    <text x="412" y="269" class="d-name">Next agent</text>
+    <text x="412" y="285" class="d-sub">reads the summary</text>
+
+    <text x="8" y="140" class="d-callout">No new tool,</text>
+    <text x="8" y="158" class="d-callout">no odd URL,</text>
+    <text x="8" y="176" class="d-callout">just a summary</text>
+    <text x="8" y="194" class="d-callout">that spreads.</text>
+  </svg>
+</Diagram>

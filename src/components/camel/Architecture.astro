@@ -1,0 +1,65 @@
+---
+import Diagram from '../Diagram.astro';
+---
+
+<Diagram caption="The privileged LLM sees the user's query and nothing else, and writes the plan before any data comes in. Tool results go back to the interpreter, not to it. The only model that reads them, the quarantined LLM, has no tools to call.">
+  <svg viewBox="0 0 608 304" role="img" aria-labelledby="camel-arch-title camel-arch-desc">
+    <title id="camel-arch-title">CaMeL's two LLMs and the interpreter between them</title>
+    <desc id="camel-arch-desc">The user query goes to a privileged LLM that writes a plan as code. An interpreter runs the plan, tags every value with its sources, and checks a policy before each tool call. Tool results come back as tagged values. When the plan needs to read untrusted text, the interpreter sends it to a quarantined LLM with no tools, which returns a typed value carrying the same tags.</desc>
+    <defs>
+      <marker id="camel-arch-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+        <polygon points="0 0, 8 3, 0 6" class="d-fill-graphite"></polygon>
+      </marker>
+    </defs>
+
+    <rect x="424" y="112" width="180" height="184" rx="8" class="d-rule d-dash" style="stroke: var(--alert)"></rect>
+    <text x="432" y="106" class="d-eyebrow d-text-alert">untrusted</text>
+
+    <path d="M76 72 V126" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <path d="M76 176 V230" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <path d="M144 256 H174" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+
+    <path d="M344 48 H430" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <text x="384" y="40" text-anchor="middle" class="d-label d-text-alert">policy check</text>
+    <path d="M516 72 V126" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <path d="M432 152 H346" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <text x="384" y="144" text-anchor="middle" class="d-label">tagged values</text>
+    <path d="M344 248 H430" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <text x="384" y="240" text-anchor="middle" class="d-label">raw text</text>
+    <path d="M432 264 H346" class="d-line" marker-end="url(#camel-arch-arrow)"></path>
+    <text x="384" y="280" text-anchor="middle" class="d-label">same tags</text>
+
+    <rect x="8" y="24" width="136" height="48" rx="6" class="d-box-soft"></rect>
+    <text x="20" y="45" class="d-name">User query</text>
+    <text x="20" y="61" class="d-sub">trusted</text>
+
+    <rect x="8" y="128" width="136" height="48" rx="6" class="d-box"></rect>
+    <text x="20" y="149" class="d-name">Privileged LLM</text>
+    <text x="20" y="165" class="d-sub">never sees tool output</text>
+
+    <rect x="8" y="232" width="136" height="48" rx="6" class="d-box"></rect>
+    <text x="20" y="253" class="d-name">Plan as code</text>
+    <text x="20" y="269" class="d-sub">fixed before any data</text>
+
+    <rect x="176" y="24" width="168" height="256" rx="6" class="d-box"></rect>
+    <text x="188" y="45" class="d-name">Interpreter</text>
+    <text x="188" y="69" class="d-sub">runs the plan</text>
+    <text x="188" y="85" class="d-sub">step by step</text>
+    <text x="188" y="109" class="d-sub">tags every value with</text>
+    <text x="188" y="125" class="d-sub">the sources it came from</text>
+    <text x="188" y="149" class="d-sub">checks the policy before</text>
+    <text x="188" y="165" class="d-sub">each tool call</text>
+
+    <rect x="432" y="24" width="168" height="48" rx="6" class="d-box"></rect>
+    <text x="444" y="45" class="d-name">Tools</text>
+    <text x="444" y="61" class="d-sub">email, docs, payments</text>
+
+    <rect x="432" y="128" width="168" height="48" rx="6" class="d-box-alert"></rect>
+    <text x="444" y="149" class="d-name">Tool results</text>
+    <text x="444" y="165" class="d-sub">documents, emails, web</text>
+
+    <rect x="432" y="232" width="168" height="48" rx="6" class="d-box"></rect>
+    <text x="444" y="253" class="d-name">Quarantined LLM</text>
+    <text x="444" y="269" class="d-sub">no tools, typed output</text>
+  </svg>
+</Diagram>
