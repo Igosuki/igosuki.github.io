@@ -26,6 +26,11 @@ const posts = defineCollection({
     wip: z.boolean().default(false),
     // Email invitation at the end of the post. Ideas get one by default; this overrides its text.
     invite: z.object({ heading: z.string().optional(), ask: z.string() }).optional(),
+  }).superRefine((post, ctx) => {
+    if (post.draft) return;
+    // Search engines truncate past these lengths, and Bing reports them as errors.
+    if (post.title.length > 70) ctx.addIssue({ code: 'custom', path: ['title'], message: `title is ${post.title.length} characters, keep it at 70 or under` });
+    if (post.description.length > 160) ctx.addIssue({ code: 'custom', path: ['description'], message: `description is ${post.description.length} characters, keep it at 160 or under` });
   }),
 });
 
